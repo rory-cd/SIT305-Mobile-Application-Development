@@ -32,6 +32,34 @@ public class MainActivity extends AppCompatActivity {
     TextView tvToPrefix;
     EditText etOutput;
 
+    private class OnSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        private TextView prefix;
+
+        OnSpinnerSelectedListener(TextView prefix) {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            // Set currency
+            String code = parent.getSelectedItem().toString();
+            currencyFrom = Currency.getInstance(code);
+
+            // Apply correct symbol
+            String symbol = currencyFrom.getSymbol(Locale.US);  // US uses symbol only
+            if (symbol.contains("$")) symbol = "$";             // Ignore "A$" etc.
+            prefix.setText(symbol);
+
+            etOutput.removeTextChangedListener(outputWatcher);
+            applyConversion(etInput, etOutput);
+            etOutput.addTextChangedListener(outputWatcher);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) { }
+    }
+
     TextWatcher inputWatcher = new TextWatcher() {
         @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             etOutput.removeTextChangedListener(outputWatcher);
@@ -58,12 +86,36 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    // Clear leading and trailing zeroes from input fields
+    private class EditTextFocusChangeListener implements View.OnFocusChangeListener {
+
+        private EditText editText;
+
+        EditTextFocusChangeListener(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                String s = editText.getText().toString();
+                editText.removeTextChangedListener(inputWatcher);
+                editText.setText(s.replaceAll("(^0+)|(\\.0*$)|(0+$)", ""));
+                editText.addTextChangedListener(inputWatcher);
+            }
+        }
+    }
+
     protected void applyConversion(EditText origin, EditText target) {
         String strInput = origin.getText().toString();
         if (strInput.isEmpty()) strInput = "0.00";
         double newInput = Double.parseDouble(strInput);
         double convertedInput = convertCurrency(newInput, currencyFrom, currencyTo);
-        target.setText(String.format(Locale.getDefault(), "%.2f", convertedInput));
+        if (convertedInput > 0) {
+            target.setText(String.format(Locale.getDefault(), "%.2f", convertedInput));
+        } else {
+            target.setText("");
+        }
     }
 
     protected double convertCurrency(double value, Currency from, Currency to) {
@@ -113,49 +165,10 @@ public class MainActivity extends AppCompatActivity {
         // Set listeners
         etInput.addTextChangedListener(inputWatcher);
         etOutput.addTextChangedListener(outputWatcher);
+        etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput));
+        etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput));
+        spinFromCurrency.setOnItemSelectedListener(new OnSpinnerSelectedListener(tvFromPrefix));
+        spinToCurrency.setOnItemSelectedListener(new OnSpinnerSelectedListener(tvToPrefix));
 
-        // Set "from" currency
-        spinFromCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Set currency
-                String code = parent.getSelectedItem().toString();
-                currencyFrom = Currency.getInstance(code);
-
-                // Apply correct symbol
-                String symbol = currencyFrom.getSymbol(Locale.US);  // US uses symbol only
-                if (symbol.contains("$")) symbol = "$";             // Ignore "A$" etc.
-                tvFromPrefix.setText(symbol);
-
-                etOutput.removeTextChangedListener(outputWatcher);
-                applyConversion(etInput, etOutput);
-                etOutput.addTextChangedListener(outputWatcher);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-
-        // Set "to" currency
-        spinToCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Set currency
-                String code = parent.getSelectedItem().toString();
-                currencyTo = Currency.getInstance(code);
-
-                // Apply correct symbol
-                String symbol = currencyTo.getSymbol(Locale.US);    // US uses symbol only
-                if (symbol.contains("$")) symbol = "$";             // Ignore "A$" etc.
-                tvToPrefix.setText(symbol);
-
-                etOutput.removeTextChangedListener(outputWatcher);
-                applyConversion(etInput, etOutput);
-                etOutput.addTextChangedListener(outputWatcher);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
     }
 }
