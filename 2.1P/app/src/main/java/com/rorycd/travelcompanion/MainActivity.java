@@ -30,27 +30,40 @@ public class MainActivity extends AppCompatActivity {
 
     TextView tvFromPrefix;
     TextView tvToPrefix;
-    TextView tvOutput;
+    EditText etOutput;
 
     TextWatcher inputWatcher = new TextWatcher() {
-        @Override
-        public void afterTextChanged(Editable s) { }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            etOutput.removeTextChangedListener(outputWatcher);
+        }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            applyConversion();
+            applyConversion(etInput, etOutput);
+        }
+        @Override public void afterTextChanged(Editable s) {
+            etOutput.addTextChangedListener(outputWatcher);
         }
     };
 
-    protected void applyConversion() {
-        String strInput = etInput.getText().toString();
+    TextWatcher outputWatcher = new TextWatcher() {
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            etInput.removeTextChangedListener(inputWatcher);
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            applyConversion(etOutput, etInput);
+        }
+        @Override public void afterTextChanged(Editable s) {
+            etInput.addTextChangedListener(inputWatcher);
+        }
+    };
+
+    protected void applyConversion(EditText origin, EditText target) {
+        String strInput = origin.getText().toString();
         if (strInput.isEmpty()) strInput = "0.00";
         double newInput = Double.parseDouble(strInput);
         double convertedInput = convertCurrency(newInput, currencyFrom, currencyTo);
-        tvOutput.setText(String.format(Locale.getDefault(), "%.2f", convertedInput));
+        target.setText(String.format(Locale.getDefault(), "%.2f", convertedInput));
     }
 
     protected double convertCurrency(double value, Currency from, Currency to) {
@@ -58,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         String toCode = to.getCurrencyCode();
 
         // Get USD -> target rate
-        HashMap<String, Double> rates = new HashMap<String, Double>();
+        HashMap<String, Double> rates = new HashMap<>();
         rates.put("AUD", 1.55);
         rates.put("USD", 1.0);
         rates.put("EUR", 0.92);
@@ -85,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Get UI Elements
         etInput = findViewById(R.id.etInput);
-        tvOutput = findViewById(R.id.tvOutput);
+        etOutput = findViewById(R.id.etOutput);
         spinFromCurrency = findViewById(R.id.spinFromCurrency);
         spinToCurrency = findViewById(R.id.spinToCurrency);
         tvFromPrefix = findViewById(R.id.tvFromPrefix);
@@ -95,10 +108,11 @@ public class MainActivity extends AppCompatActivity {
         currencyFrom = Currency.getInstance(spinFromCurrency.getSelectedItem().toString());
         currencyTo = Currency.getInstance(spinToCurrency.getSelectedItem().toString());
         etInput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
-        tvOutput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
+        etOutput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
 
         // Set listeners
         etInput.addTextChangedListener(inputWatcher);
+        etOutput.addTextChangedListener(outputWatcher);
 
         // Set "from" currency
         spinFromCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -113,7 +127,9 @@ public class MainActivity extends AppCompatActivity {
                 if (symbol.contains("$")) symbol = "$";             // Ignore "A$" etc.
                 tvFromPrefix.setText(symbol);
 
-                applyConversion();
+                etOutput.removeTextChangedListener(outputWatcher);
+                applyConversion(etInput, etOutput);
+                etOutput.addTextChangedListener(outputWatcher);
             }
 
             @Override
@@ -133,7 +149,9 @@ public class MainActivity extends AppCompatActivity {
                 if (symbol.contains("$")) symbol = "$";             // Ignore "A$" etc.
                 tvToPrefix.setText(symbol);
 
-                applyConversion();
+                etOutput.removeTextChangedListener(outputWatcher);
+                applyConversion(etInput, etOutput);
+                etOutput.addTextChangedListener(outputWatcher);
             }
 
             @Override

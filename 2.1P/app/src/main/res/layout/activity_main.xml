@@ -50,7 +50,7 @@
         android:id="@+id/etInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/curr_input_hint"
+        android:hint="@string/currInputHint"
         android:inputType="numberDecimal"
         android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="@id/spinFromCurrency"
@@ -61,16 +61,17 @@
         android:id="@+id/tvToPrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/tvOutput"
-        app:layout_constraintEnd_toStartOf="@+id/tvOutput"
+        app:layout_constraintBottom_toBottomOf="@+id/etOutput"
+        app:layout_constraintEnd_toStartOf="@+id/etOutput"
         app:layout_constraintStart_toStartOf="@id/spinToCurrency"
         app:layout_constraintTop_toBottomOf="@+id/spinToCurrency" />
 
-    <TextView
-        android:id="@+id/tvOutput"
+    <EditText
+        android:id="@+id/etOutput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/curr_input_hint"
+        android:hint="@string/currInputHint"
+        android:inputType="numberDecimal"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toEndOf="@+id/spinToCurrency"
