@@ -7,13 +7,75 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <Spinner
+        android:id="@+id/spinFromCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:entries="@array/currencies"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvTo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/to"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/spinToCurrency"
+        app:layout_constraintStart_toEndOf="@id/spinFromCurrency"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinToCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/currencies"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvTo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFromPrefix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/etInput"
+        app:layout_constraintEnd_toStartOf="@+id/etInput"
+        app:layout_constraintStart_toStartOf="@id/spinFromCurrency"
+        app:layout_constraintTop_toBottomOf="@+id/spinFromCurrency" />
+
+    <EditText
+        android:id="@+id/etInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/curr_input_hint"
+        android:inputType="numberDecimal"
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="@id/spinFromCurrency"
+        app:layout_constraintStart_toEndOf="@id/tvFromPrefix"
+        app:layout_constraintTop_toBottomOf="@id/spinFromCurrency" />
+
+    <TextView
+        android:id="@+id/tvToPrefix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tvOutput"
+        app:layout_constraintEnd_toStartOf="@+id/tvOutput"
+        app:layout_constraintStart_toStartOf="@id/spinToCurrency"
+        app:layout_constraintTop_toBottomOf="@+id/spinToCurrency" />
+
+    <TextView
+        android:id="@+id/tvOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/curr_input_hint"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="@+id/etInput"
+        app:layout_constraintEnd_toEndOf="@+id/spinToCurrency"
+        app:layout_constraintStart_toStartOf="@id/spinToCurrency"
+        app:layout_constraintTop_toBottomOf="@id/spinToCurrency" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
