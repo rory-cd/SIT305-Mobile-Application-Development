@@ -3,21 +3,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/currency"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity" >
+<!--    android:background="@color/currency"-->
 
-    <Spinner
-        android:id="@+id/spinInputCurrency"
+    <!-- Input dropdown-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilInput"
         android:layout_width="wrap_content"
-        android:layout_height="50sp"
-        android:entries="@array/currencies"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="20sp"
+        app:endIconMode="dropdown_menu"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/etInput"
-        app:layout_constraintTop_toTopOf="@id/etInput" />
+        app:layout_constraintTop_toTopOf="@id/etInput" >
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropdownInput"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Output dropdown-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilOutput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20sp"
+        app:endIconMode="dropdown_menu"
+        app:layout_constraintBottom_toBottomOf="@id/etOutput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/etOutput"
+        app:layout_constraintTop_toTopOf="@id/etOutput" >
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/dropdownOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tvConvertWord"
@@ -29,21 +60,10 @@
         android:textSize="40sp"
         android:textStyle="bold"
         android:translationY="-6sp"
-        app:layout_constraintBottom_toTopOf="@id/spinOutputCurrency"
+        app:layout_constraintBottom_toTopOf="@id/tilOutput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/divider"
-        app:layout_constraintTop_toBottomOf="@id/spinInputCurrency" />
-
-    <Spinner
-        android:id="@+id/spinOutputCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="50sp"
-        android:entries="@array/currencies"
-        android:layout_marginEnd="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/etOutput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/etOutput"
-        app:layout_constraintTop_toTopOf="@id/etOutput" />
+        app:layout_constraintTop_toBottomOf="@id/tilInput" />
 
     <TextView
         android:id="@+id/tvInputPrefix"
@@ -68,7 +88,7 @@
         android:layout_marginEnd="10sp"
         android:layout_marginBottom="20sp"
         app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintEnd_toStartOf="@id/spinInputCurrency"
+        app:layout_constraintEnd_toStartOf="@id/tilInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -97,7 +117,7 @@
         android:layout_marginEnd="10sp"
         android:layout_marginTop="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/spinOutputCurrency"
+        app:layout_constraintEnd_toStartOf="@+id/tilOutput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -150,6 +170,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etOutput" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

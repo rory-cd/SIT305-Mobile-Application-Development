@@ -6,9 +6,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.text.DecimalFormat;
 import java.util.Currency;
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     // UI Elements
     EditText etInput, etOutput;
-    Spinner spinInputCurrency, spinOutputCurrency;
+    MaterialAutoCompleteTextView dropdownInput, dropdownOutput;
     TextView tvInputPrefix, tvOutputPrefix;
     Button btnClear;
 
@@ -47,15 +49,23 @@ public class MainActivity extends AppCompatActivity {
         // Get UI Elements
         etInput = findViewById(R.id.etInput);
         etOutput = findViewById(R.id.etOutput);
-        spinInputCurrency = findViewById(R.id.spinInputCurrency);
-        spinOutputCurrency = findViewById(R.id.spinOutputCurrency);
+        dropdownInput = findViewById(R.id.dropdownInput);
+        dropdownOutput = findViewById(R.id.dropdownOutput);
         tvInputPrefix = findViewById(R.id.tvInputPrefix);
         tvOutputPrefix = findViewById(R.id.tvOutputPrefix);
         btnClear = findViewById(R.id.btnClear);
 
-        // Set initial currencies and hints
-        inputCurrency = Currency.getInstance(spinInputCurrency.getSelectedItem().toString());
-        outputCurrency = Currency.getInstance(spinOutputCurrency.getSelectedItem().toString());
+        // Set initial state
+        String[] currencies = getResources().getStringArray(R.array.currencies);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currencies);
+        dropdownInput.setAdapter(adapter);
+        dropdownOutput.setAdapter(adapter);
+        dropdownInput.setText(currencies[0], false);
+        dropdownOutput.setText(currencies[1], false);
+        inputCurrency = Currency.getInstance(currencies[0]);
+        outputCurrency = Currency.getInstance(currencies[1]);
+        tvInputPrefix.setText(getSymbolFor(inputCurrency));
+        tvOutputPrefix.setText(getSymbolFor(outputCurrency));
         etInput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
         etOutput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
 
@@ -64,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
         etOutput.addTextChangedListener(outputWatcher);
         etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput, inputWatcher));
         etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput, outputWatcher));
-        spinInputCurrency.setOnItemSelectedListener(new OnSpinnerSelectedListener(tvInputPrefix, c -> inputCurrency = c));
-        spinOutputCurrency.setOnItemSelectedListener(new OnSpinnerSelectedListener(tvOutputPrefix, c -> outputCurrency = c));
+        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(tvInputPrefix, c -> inputCurrency = c));
+        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(tvOutputPrefix, c -> outputCurrency = c));
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,35 +86,37 @@ public class MainActivity extends AppCompatActivity {
 
     protected interface CurrencySelector { void selectCurrency(Currency currency); }
 
-    private class OnSpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+    private class OnDropdownSelectedListener implements AdapterView.OnItemClickListener {
 
         private TextView prefix;
         CurrencySelector selector;
 
-        OnSpinnerSelectedListener(TextView prefix, CurrencySelector selector) {
+        OnDropdownSelectedListener(TextView prefix, CurrencySelector selector) {
             this.prefix = prefix;
             this.selector = selector;
         }
 
         @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // Set currency
-            String code = parent.getSelectedItem().toString();
-            selector.selectCurrency(Currency.getInstance(code));
-
-            // Apply correct symbol prefix
-            String symbol = inputCurrency.getSymbol(Locale.US);  // US uses symbol only
-            if (symbol.contains("$")) symbol = "$";              // Ignore "A$" etc.
-            prefix.setText(symbol);
-
+        public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+            // Get newly selected currency
+            String code = parent.getItemAtPosition(pos).toString();
+            Currency c = Currency.getInstance(code);
+            // Select it (Apply it to either input or output)
+            selector.selectCurrency(c);
+            // Set corresponding prefix
+            prefix.setText(getSymbolFor(c));
             // Update output
             etOutput.removeTextChangedListener(outputWatcher);
             applyConversion(etInput, etOutput);
             etOutput.addTextChangedListener(outputWatcher);
         }
+    }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) { }
+    private String getSymbolFor(Currency c) {
+        // Get matching symbol prefix
+        String symbol = c.getSymbol(Locale.US);     // US uses symbol only
+        if (symbol.contains("$")) symbol = "$";     // Ignore "A$" etc.
+        return symbol;
     }
 
     TextWatcher inputWatcher = new TextWatcher() {
