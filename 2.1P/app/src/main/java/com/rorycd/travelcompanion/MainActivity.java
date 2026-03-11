@@ -141,10 +141,11 @@ public class MainActivity extends AppCompatActivity {
                 editText.removeTextChangedListener(watcher);
 
                 // Clean up input
-                if (s.equals(".")) editText.setText("");
+                double inputNumber = parseStringToDouble(s);
+                if (inputNumber == 0) editText.setText("");
                 else {
-                    double newInput = Double.parseDouble(s);
-                    editText.setText(formatNumber(newInput, 0, 50));
+                    String prettyNumber = formatDoubleAsString(inputNumber, 0, 50);
+                    editText.setText(prettyNumber);
                 }
 
                 editText.addTextChangedListener(watcher);
@@ -152,15 +153,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void applyConversion(EditText origin, EditText target) {
-        String strInput = origin.getText().toString();
-        if (strInput.isEmpty() || strInput.equals(".")) strInput = "0";
-        double newInput = Double.parseDouble(strInput);
-        double convertedInput = convertCurrency(newInput);
-        target.setText(formatNumber(convertedInput, 0, 2));
+    protected double parseStringToDouble(String s) {
+        s = s.replaceAll(",", "");
+        if (s.isEmpty() || s.equals(".")) s = "0";
+        return Double.parseDouble(s);
     }
 
-    protected String formatNumber(double number, int minFractionDigits, int maxFractionDigits) {
+    protected void applyConversion(EditText origin, EditText target) {
+        String strInput = origin.getText().toString().replaceAll(",", "");
+        double newInput = parseStringToDouble(strInput);
+        double convertedInput = convertCurrency(newInput);
+        target.setText(formatDoubleAsString(convertedInput, 0, 2));
+    }
+
+    protected String formatDoubleAsString(double number, int minFractionDigits, int maxFractionDigits) {
         // Base format on locale
         DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
         // Set digits after decimal "0.XXX"
