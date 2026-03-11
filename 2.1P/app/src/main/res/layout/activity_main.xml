@@ -8,75 +8,114 @@
     tools:context=".MainActivity">
 
     <Spinner
-        android:id="@+id/spinOutputCurrency"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:entries="@array/currencies"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvInput"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/to"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/spinInputCurrency"
-        app:layout_constraintStart_toEndOf="@id/spinOutputCurrency"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
         android:id="@+id/spinInputCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/currencies"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tvInput"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/etInput"
+        app:layout_constraintTop_toTopOf="@id/etInput" />
+
+    <TextView
+        android:id="@+id/tvConvertWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/to"
+        app:layout_constraintBottom_toTopOf="@id/spinOutputCurrency"
+        app:layout_constraintEnd_toEndOf="@id/spinOutputCurrency"
+        app:layout_constraintTop_toBottomOf="@id/spinInputCurrency" />
+
+    <Spinner
+        android:id="@+id/spinOutputCurrency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/currencies"
+        android:layout_marginEnd="20sp"
+        app:layout_constraintBottom_toBottomOf="@id/etOutput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/etOutput"
+        app:layout_constraintTop_toTopOf="@id/etOutput" />
 
     <TextView
         android:id="@+id/tvInputPrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="5sp"
+        android:hint="$"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toStartOf="@+id/etInput"
-        app:layout_constraintStart_toStartOf="@id/spinOutputCurrency"
-        app:layout_constraintTop_toBottomOf="@+id/spinOutputCurrency" />
+        app:layout_constraintTop_toTopOf="@+id/etInput" />
 
     <EditText
         android:id="@+id/etInput"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/currInputHint"
         android:inputType="numberDecimal"
-        android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="@id/spinOutputCurrency"
-        app:layout_constraintStart_toEndOf="@id/tvInputPrefix"
-        app:layout_constraintTop_toBottomOf="@id/spinOutputCurrency" />
+        android:textSize="45sp"
+        android:layout_marginStart="50sp"
+        android:layout_marginEnd="10sp"
+        app:layout_constraintBottom_toTopOf="@id/etOutput"
+        app:layout_constraintEnd_toStartOf="@id/spinInputCurrency"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tvOutputPrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:hint="$"
+        android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="@+id/etOutput"
         app:layout_constraintEnd_toStartOf="@+id/etOutput"
-        app:layout_constraintStart_toStartOf="@id/spinInputCurrency"
-        app:layout_constraintTop_toBottomOf="@+id/spinInputCurrency" />
+        app:layout_constraintTop_toTopOf="@+id/etOutput" />
 
     <EditText
         android:id="@+id/etOutput"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/currInputHint"
         android:inputType="numberDecimal"
-        android:textSize="35sp"
-        app:layout_constraintBottom_toBottomOf="@+id/etInput"
-        app:layout_constraintEnd_toEndOf="@+id/spinInputCurrency"
-        app:layout_constraintStart_toStartOf="@id/spinInputCurrency"
-        app:layout_constraintTop_toBottomOf="@id/spinInputCurrency" />
+        android:textSize="45sp"
+        android:layout_marginStart="50sp"
+        android:layout_marginEnd="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/spinOutputCurrency"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etInput"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monday" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tuesday" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wednesday" />
+
+    </com.google.android.material.tabs.TabLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

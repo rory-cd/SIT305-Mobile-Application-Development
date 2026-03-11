@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
         // Get UI Elements
         etInput = findViewById(R.id.etInput);
         etOutput = findViewById(R.id.etOutput);
-        spinInputCurrency = findViewById(R.id.spinOutputCurrency);
-        spinOutputCurrency = findViewById(R.id.spinInputCurrency);
+        spinInputCurrency = findViewById(R.id.spinInputCurrency);
+        spinOutputCurrency = findViewById(R.id.spinOutputCurrency);
         tvInputPrefix = findViewById(R.id.tvInputPrefix);
         tvOutputPrefix = findViewById(R.id.tvOutputPrefix);
 
