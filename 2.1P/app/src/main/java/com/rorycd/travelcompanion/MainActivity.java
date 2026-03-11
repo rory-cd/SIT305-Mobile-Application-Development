@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,10 +24,14 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    // UI Elements
     EditText etInput, etOutput;
-    Currency inputCurrency, outputCurrency;
     Spinner spinInputCurrency, spinOutputCurrency;
     TextView tvInputPrefix, tvOutputPrefix;
+    Button btnClear;
+
+    // State
+    Currency inputCurrency, outputCurrency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         spinOutputCurrency = findViewById(R.id.spinOutputCurrency);
         tvInputPrefix = findViewById(R.id.tvInputPrefix);
         tvOutputPrefix = findViewById(R.id.tvOutputPrefix);
+        btnClear = findViewById(R.id.btnClear);
 
         // Set initial currencies and hints
         inputCurrency = Currency.getInstance(spinInputCurrency.getSelectedItem().toString());
@@ -60,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput, outputWatcher));
         spinInputCurrency.setOnItemSelectedListener(new OnSpinnerSelectedListener(tvInputPrefix, c -> inputCurrency = c));
         spinOutputCurrency.setOnItemSelectedListener(new OnSpinnerSelectedListener(tvOutputPrefix, c -> outputCurrency = c));
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etInput.setText("");
+            }
+        });
     }
 
     protected interface CurrencySelector { void selectCurrency(Currency currency); }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@color/currency"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -10,9 +11,9 @@
     <Spinner
         android:id="@+id/spinInputCurrency"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50sp"
         android:entries="@array/currencies"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/etInput"
@@ -22,15 +23,21 @@
         android:id="@+id/tvConvertWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/to"
+        android:layout_marginStart="20sp"
+        android:layout_marginEnd="40sp"
+        android:text="@string/convertSymbol"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:translationY="-6sp"
         app:layout_constraintBottom_toTopOf="@id/spinOutputCurrency"
-        app:layout_constraintEnd_toEndOf="@id/spinOutputCurrency"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/divider"
         app:layout_constraintTop_toBottomOf="@id/spinInputCurrency" />
 
     <Spinner
         android:id="@+id/spinOutputCurrency"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50sp"
         android:entries="@array/currencies"
         android:layout_marginEnd="20sp"
         app:layout_constraintBottom_toBottomOf="@id/etOutput"
@@ -43,8 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="5sp"
-        android:hint="$"
         android:textSize="45sp"
+        android:alpha="0.5"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toStartOf="@+id/etInput"
         app:layout_constraintTop_toTopOf="@+id/etInput" />
@@ -54,22 +61,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/currInputHint"
+        android:background="@null"
         android:inputType="numberDecimal"
         android:textSize="45sp"
         android:layout_marginStart="50sp"
         android:layout_marginEnd="10sp"
-        app:layout_constraintBottom_toTopOf="@id/etOutput"
+        android:layout_marginBottom="20sp"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toStartOf="@id/spinInputCurrency"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tvOutputPrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="$"
+        android:alpha="0.5"
+        android:layout_marginEnd="5sp"
         android:textSize="45sp"
         app:layout_constraintBottom_toBottomOf="@+id/etOutput"
         app:layout_constraintEnd_toStartOf="@+id/etOutput"
@@ -81,13 +91,15 @@
         android:layout_height="wrap_content"
         android:hint="@string/currInputHint"
         android:inputType="numberDecimal"
+        android:background="@null"
         android:textSize="45sp"
         android:layout_marginStart="50sp"
         android:layout_marginEnd="10sp"
+        android:layout_marginTop="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/spinOutputCurrency"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etInput"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintVertical_chainStyle="packed" />
 
@@ -103,19 +115,41 @@
             android:id="@+id/tabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monday" />
+            android:text="Currency" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tuesday" />
+            android:text="Fuel" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wednesday" />
+            android:text="Temperature" />
 
     </com.google.android.material.tabs.TabLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1sp"
+        android:background="?android:attr/listDivider"
+        android:layout_marginStart="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/etOutput"
+        app:layout_constraintEnd_toStartOf="@id/tvConvertWord"
+        app:layout_constraintTop_toBottomOf="@id/etInput" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etOutput" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
