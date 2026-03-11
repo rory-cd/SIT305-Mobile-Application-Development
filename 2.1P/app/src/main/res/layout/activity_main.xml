@@ -8,43 +8,43 @@
     tools:context=".MainActivity">
 
     <Spinner
-        android:id="@+id/spinFromCurrency"
+        android:id="@+id/spinOutputCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/currencies"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvTo"
+        app:layout_constraintEnd_toStartOf="@id/tvInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvTo"
+        android:id="@+id/tvInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/to"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/spinToCurrency"
-        app:layout_constraintStart_toEndOf="@id/spinFromCurrency"
+        app:layout_constraintEnd_toStartOf="@id/spinInputCurrency"
+        app:layout_constraintStart_toEndOf="@id/spinOutputCurrency"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinToCurrency"
+        android:id="@+id/spinInputCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:entries="@array/currencies"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tvTo"
+        app:layout_constraintStart_toEndOf="@id/tvInput"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tvFromPrefix"
+        android:id="@+id/tvInputPrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toStartOf="@+id/etInput"
-        app:layout_constraintStart_toStartOf="@id/spinFromCurrency"
-        app:layout_constraintTop_toBottomOf="@+id/spinFromCurrency" />
+        app:layout_constraintStart_toStartOf="@id/spinOutputCurrency"
+        app:layout_constraintTop_toBottomOf="@+id/spinOutputCurrency" />
 
     <EditText
         android:id="@+id/etInput"
@@ -53,18 +53,18 @@
         android:hint="@string/currInputHint"
         android:inputType="numberDecimal"
         android:textSize="35sp"
-        app:layout_constraintEnd_toEndOf="@id/spinFromCurrency"
-        app:layout_constraintStart_toEndOf="@id/tvFromPrefix"
-        app:layout_constraintTop_toBottomOf="@id/spinFromCurrency" />
+        app:layout_constraintEnd_toEndOf="@id/spinOutputCurrency"
+        app:layout_constraintStart_toEndOf="@id/tvInputPrefix"
+        app:layout_constraintTop_toBottomOf="@id/spinOutputCurrency" />
 
     <TextView
-        android:id="@+id/tvToPrefix"
+        android:id="@+id/tvOutputPrefix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/etOutput"
         app:layout_constraintEnd_toStartOf="@+id/etOutput"
-        app:layout_constraintStart_toStartOf="@id/spinToCurrency"
-        app:layout_constraintTop_toBottomOf="@+id/spinToCurrency" />
+        app:layout_constraintStart_toStartOf="@id/spinInputCurrency"
+        app:layout_constraintTop_toBottomOf="@+id/spinInputCurrency" />
 
     <EditText
         android:id="@+id/etOutput"
@@ -74,9 +74,9 @@
         android:inputType="numberDecimal"
         android:textSize="35sp"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
-        app:layout_constraintEnd_toEndOf="@+id/spinToCurrency"
-        app:layout_constraintStart_toStartOf="@id/spinToCurrency"
-        app:layout_constraintTop_toBottomOf="@id/spinToCurrency" />
+        app:layout_constraintEnd_toEndOf="@+id/spinInputCurrency"
+        app:layout_constraintStart_toStartOf="@id/spinInputCurrency"
+        app:layout_constraintTop_toBottomOf="@id/spinInputCurrency" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
