@@ -17,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.text.DecimalFormat;
@@ -31,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
     MaterialAutoCompleteTextView dropdownInput, dropdownOutput;
     TextView tvInputPrefix, tvOutputPrefix;
     Button btnClear;
+    TabLayout tabLayout;
+    String currentTab;
 
     // State
-    Currency inputCurrency, outputCurrency;
+    String inputUnit, outputUnit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +57,35 @@ public class MainActivity extends AppCompatActivity {
         tvInputPrefix = findViewById(R.id.tvInputPrefix);
         tvOutputPrefix = findViewById(R.id.tvOutputPrefix);
         btnClear = findViewById(R.id.btnClear);
+        tabLayout = findViewById(R.id.tabLayout);
 
         // Set initial state
+        // Tab
+        int tabPos = tabLayout.getSelectedTabPosition();
+        TabLayout.Tab tab = tabLayout.getTabAt(tabPos);
+        currentTab = tab.getText().toString();
+
+        // Lists
         String[] currencies = getResources().getStringArray(R.array.currencies);
+
+        // Set dropdowns
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currencies);
         dropdownInput.setAdapter(adapter);
         dropdownOutput.setAdapter(adapter);
         dropdownInput.setText(currencies[0], false);
         dropdownOutput.setText(currencies[1], false);
-        inputCurrency = Currency.getInstance(currencies[0]);
-        outputCurrency = Currency.getInstance(currencies[1]);
-        tvInputPrefix.setText(getSymbolFor(inputCurrency));
-        tvOutputPrefix.setText(getSymbolFor(outputCurrency));
+
+        inputUnit = currencies[0];
+        outputUnit = currencies[1];
+
+        // Set prefixes and hints
+        String prefix = "";
+        switch (currentTab) {
+            case "Currency" :
+                prefix = getSymbolFor(inputUnit);
+        }
+        tvInputPrefix.setText(getSymbolFor(inputUnit));
+        tvOutputPrefix.setText(getSymbolFor(outputUnit));
         etInput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
         etOutput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
 
@@ -74,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
         etOutput.addTextChangedListener(outputWatcher);
         etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput, inputWatcher));
         etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput, outputWatcher));
-        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(tvInputPrefix, c -> inputCurrency = c));
-        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(tvOutputPrefix, c -> outputCurrency = c));
+        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(tvInputPrefix, c -> inputUnit = c));
+        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(tvOutputPrefix, c -> outputUnit = c));
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,27 +104,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    protected interface CurrencySelector { void selectCurrency(Currency currency); }
+    protected interface UnitSelector { void selectUnit(String unit); }
 
     private class OnDropdownSelectedListener implements AdapterView.OnItemClickListener {
 
         private TextView prefix;
-        CurrencySelector selector;
+        UnitSelector selector;
 
-        OnDropdownSelectedListener(TextView prefix, CurrencySelector selector) {
+        OnDropdownSelectedListener(TextView prefix, UnitSelector selector) {
             this.prefix = prefix;
             this.selector = selector;
         }
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-            // Get newly selected currency
-            String code = parent.getItemAtPosition(pos).toString();
-            Currency c = Currency.getInstance(code);
+            // Get newly selected unit
+            String unit = parent.getItemAtPosition(pos).toString();
             // Select it (Apply it to either input or output)
-            selector.selectCurrency(c);
+            selector.selectUnit(unit);
             // Set corresponding prefix
-            prefix.setText(getSymbolFor(c));
+            prefix.setText(getSymbolFor(unit));
             // Update output
             etOutput.removeTextChangedListener(outputWatcher);
             applyConversion(etInput, etOutput);
@@ -112,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getSymbolFor(Currency c) {
+    private String getSymbolFor(String unit) {
         // Get matching symbol prefix
+        Currency c = Currency.getInstance(unit);
         String symbol = c.getSymbol(Locale.US);     // US uses symbol only
         if (symbol.contains("$")) symbol = "$";     // Ignore "A$" etc.
         return symbol;
@@ -203,9 +223,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected double convertCurrency(double value) {
-        String inputCode = inputCurrency.getCurrencyCode();
-        String outputCode = outputCurrency.getCurrencyCode();
-
         // Get USD -> target rate
         HashMap<String, Double> rates = new HashMap<>();
         rates.put("AUD", 1.55);
@@ -215,11 +232,11 @@ public class MainActivity extends AppCompatActivity {
         rates.put("JPY", 148.50);
 
         // Convert to USD
-        double valueUSD = value / rates.get(inputCode);
+        double valueUSD = value / rates.get(inputUnit);
 
         // Convert to target currency
         Log.d("CONVERT", "USD: " + valueUSD);
-        Log.d("CONVERT", "new: " + valueUSD * rates.get(outputCode));
-        return valueUSD * rates.get(outputCode);
+        Log.d("CONVERT", "new: " + valueUSD * rates.get(outputUnit));
+        return valueUSD * rates.get(outputUnit);
     }
 }
