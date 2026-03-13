@@ -2,6 +2,7 @@ package com.rorycd.travelcompanion;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnClear;
     TabLayout tabLayout;
     String currentTab;
+    Boolean isUpdating;
 
     // State
     String inputUnit, outputUnit;
@@ -60,59 +62,130 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
 
         // Set initial state
-        // Tab
-        int tabPos = tabLayout.getSelectedTabPosition();
-        TabLayout.Tab tab = tabLayout.getTabAt(tabPos);
-        currentTab = tab.getText().toString();
-
-        // Lists
-        String[] currencies = getResources().getStringArray(R.array.currencies);
-
-        // Set dropdowns
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currencies);
-        dropdownInput.setAdapter(adapter);
-        dropdownOutput.setAdapter(adapter);
-        dropdownInput.setText(currencies[0], false);
-        dropdownOutput.setText(currencies[1], false);
-
-        inputUnit = currencies[0];
-        outputUnit = currencies[1];
-
-        // Set prefixes and hints
-        String prefix = "";
-        switch (currentTab) {
-            case "Currency" :
-                prefix = getSymbolFor(inputUnit);
-        }
-        tvInputPrefix.setText(getSymbolFor(inputUnit));
-        tvOutputPrefix.setText(getSymbolFor(outputUnit));
-        etInput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
-        etOutput.setHint(String.format(Locale.getDefault(), "%.2f", 0.00));
+        applyTab();
+        resetConverterState();
 
         // Set listeners
+        tabLayout.addOnTabSelectedListener(tabListener);
         etInput.addTextChangedListener(inputWatcher);
         etOutput.addTextChangedListener(outputWatcher);
-        etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput, inputWatcher));
-        etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput, outputWatcher));
-        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(tvInputPrefix, c -> inputUnit = c));
-        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(tvOutputPrefix, c -> outputUnit = c));
-        btnClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etInput.setText("");
-            }
-        });
+        etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput));
+        etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput));
+        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(c -> inputUnit = c));
+        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(c -> outputUnit = c));
+        btnClear.setOnClickListener(v -> clearInput());
     }
 
-    protected interface UnitSelector { void selectUnit(String unit); }
+    private interface UnitSelector { void selectUnit(String unit); }
 
+    private void resetConverterState() {
+        // Set field input types
+        if (currentTab.equals("temperature")) {
+            // Signed decimals for temperature
+            etInput.setInputType(
+                InputType.TYPE_CLASS_NUMBER |
+                InputType.TYPE_NUMBER_FLAG_DECIMAL |
+                InputType.TYPE_NUMBER_FLAG_SIGNED
+            );
+            etOutput.setInputType(
+                InputType.TYPE_CLASS_NUMBER |
+                InputType.TYPE_NUMBER_FLAG_DECIMAL |
+                InputType.TYPE_NUMBER_FLAG_SIGNED
+            );
+        } else {
+            // Unsigned decimals for fuel and currency
+            etInput.setInputType(
+                InputType.TYPE_CLASS_NUMBER |
+                InputType.TYPE_NUMBER_FLAG_DECIMAL
+            );
+            etOutput.setInputType(
+                InputType.TYPE_CLASS_NUMBER |
+                InputType.TYPE_NUMBER_FLAG_DECIMAL
+            );
+        }
+
+        // Assign unit lists
+        String[] units;
+        switch (currentTab) {
+            case "currency":
+                units = getResources().getStringArray(R.array.currencies);
+                break;
+            case "fuel":
+                units = getResources().getStringArray(R.array.fuelEfficiencyUnits);
+                break;
+            default:
+                units = getResources().getStringArray(R.array.temperatureUnits);
+                break;
+        }
+
+        // Set dropdown lists
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, units);
+        dropdownInput.setAdapter(adapter);
+        dropdownOutput.setAdapter(adapter);
+        dropdownInput.setText(units[0], false);
+        dropdownOutput.setText(units[1], false);
+
+        // Set initial state
+        clearInput();
+        inputUnit = units[0];
+        outputUnit = units[1];
+        setPrefixes();
+    }
+
+    private void clearInput() {
+        isUpdating = true;
+        etInput.setText("");
+        etOutput.setText("");
+        isUpdating = false;
+    }
+
+    private void setPrefixes() {
+        if (currentTab.equals("currency")) {
+            tvInputPrefix.setText(getSymbolFor(inputUnit));
+            tvOutputPrefix.setText(getSymbolFor(outputUnit));
+        } else {
+            tvInputPrefix.setText("");
+            tvOutputPrefix.setText("");
+        }
+    }
+
+    private String getSymbolFor(String unit) {
+        // Get matching symbol prefix
+        String result = "";
+
+        switch (currentTab) {
+            case "currency":
+                Currency c = Currency.getInstance(unit);
+                String symbol = c.getSymbol(Locale.US);     // US uses symbol only
+                if (symbol.contains("$")) symbol = "$";     // Ignore "A$" etc.
+                result = symbol;
+                break;
+            case "temperature":
+                result = unit.equals("Celsius") ? "°C" : unit.equals("Fahrenheit") ? "°F" : " K";
+                break;
+            default:
+                break;
+        }
+
+        return result;
+    }
+
+    // Sets the current tab based on the selection and reset the converter
+    private void applyTab() {
+        int tabPos = tabLayout.getSelectedTabPosition();
+        TabLayout.Tab tab = tabLayout.getTabAt(tabPos);
+        if (tab == null) return;
+        String tabString = tab.getText().toString();
+        int titleStartIndex = tabString.indexOf(" ") + 1;
+        currentTab = tabString.toLowerCase().substring(titleStartIndex);
+        resetConverterState();
+    }
+
+    // LISTENERS
     private class OnDropdownSelectedListener implements AdapterView.OnItemClickListener {
-
-        private TextView prefix;
         UnitSelector selector;
 
-        OnDropdownSelectedListener(TextView prefix, UnitSelector selector) {
-            this.prefix = prefix;
+        OnDropdownSelectedListener(UnitSelector selector) {
             this.selector = selector;
         }
 
@@ -122,58 +195,48 @@ public class MainActivity extends AppCompatActivity {
             String unit = parent.getItemAtPosition(pos).toString();
             // Select it (Apply it to either input or output)
             selector.selectUnit(unit);
-            // Set corresponding prefix
-            prefix.setText(getSymbolFor(unit));
+            setPrefixes();
             // Update output
-            etOutput.removeTextChangedListener(outputWatcher);
-            applyConversion(etInput, etOutput);
-            etOutput.addTextChangedListener(outputWatcher);
+            isUpdating = true;
+            applyConversion(inputUnit, etInput, outputUnit, etOutput);
+            isUpdating = false;
         }
     }
 
-    private String getSymbolFor(String unit) {
-        // Get matching symbol prefix
-        Currency c = Currency.getInstance(unit);
-        String symbol = c.getSymbol(Locale.US);     // US uses symbol only
-        if (symbol.contains("$")) symbol = "$";     // Ignore "A$" etc.
-        return symbol;
-    }
+    TabLayout.OnTabSelectedListener tabListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            applyTab();
+        }
+        @Override public void onTabUnselected(TabLayout.Tab tab) { }
+        @Override public void onTabReselected(TabLayout.Tab tab) { }
+    };
 
     TextWatcher inputWatcher = new TextWatcher() {
-        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            etOutput.removeTextChangedListener(outputWatcher);
-        }
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            applyConversion(etInput, etOutput);
+            if (!isUpdating) applyConversion(inputUnit, etInput, outputUnit, etOutput);
         }
-        @Override public void afterTextChanged(Editable s) {
-            etOutput.addTextChangedListener(outputWatcher);
-        }
+        @Override public void afterTextChanged(Editable s) { }
     };
 
     TextWatcher outputWatcher = new TextWatcher() {
-        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            etInput.removeTextChangedListener(inputWatcher);
-        }
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            applyConversion(etOutput, etInput);
+            if (!isUpdating) applyConversion(outputUnit, etOutput, inputUnit, etInput);
         }
-        @Override public void afterTextChanged(Editable s) {
-            etInput.addTextChangedListener(inputWatcher);
-        }
+        @Override public void afterTextChanged(Editable s) { }
     };
 
-    // Clean up input fields on unfocus
+    // Cleans up input fields on unfocus
     private class EditTextFocusChangeListener implements View.OnFocusChangeListener {
 
         private EditText editText;
-        private TextWatcher watcher;
 
-        EditTextFocusChangeListener(EditText editText, TextWatcher watcher) {
+        EditTextFocusChangeListener(EditText editText) {
             this.editText = editText;
-            this.watcher = watcher;
         }
 
         @Override
@@ -182,32 +245,40 @@ public class MainActivity extends AppCompatActivity {
                 String s = editText.getText().toString();
                 if (s.isEmpty()) return;
 
-                editText.removeTextChangedListener(watcher);
+                isUpdating = true;
 
-                // Clean up input
+                // Extract input value
                 double inputNumber = parseStringToDouble(s);
+                // Format input
                 if (inputNumber == 0) editText.setText("");
                 else {
                     String prettyNumber = formatDoubleAsString(inputNumber, 0, 50);
                     editText.setText(prettyNumber);
                 }
 
-                editText.addTextChangedListener(watcher);
+                isUpdating = false;
             }
         }
     }
 
     protected double parseStringToDouble(String s) {
-        s = s.replaceAll(",", "");
-        if (s.isEmpty() || s.equals(".")) s = "0";
-        return Double.parseDouble(s);
-    }
+        // Clean input
+        s = s.replaceAll(",", "").trim();
 
-    protected void applyConversion(EditText origin, EditText target) {
-        String strInput = origin.getText().toString().replaceAll(",", "");
-        double newInput = parseStringToDouble(strInput);
-        double convertedInput = convertCurrency(newInput);
-        target.setText(formatDoubleAsString(convertedInput, 0, 2));
+        // Handle symbols
+        if (s.isEmpty() ||
+            s.equals(".") ||
+            s.equals("-") ||
+            s.equals("-.")) {
+            return 0.0;
+        }
+
+        // Convert to double
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 
     protected String formatDoubleAsString(double number, int minFractionDigits, int maxFractionDigits) {
@@ -222,7 +293,32 @@ public class MainActivity extends AppCompatActivity {
         return formatted;
     }
 
-    protected double convertCurrency(double value) {
+    protected void applyConversion(String fromUnit, EditText origin, String toUnit, EditText target) {
+        String strInput = origin.getText().toString().replaceAll(",", "");
+        double input = parseStringToDouble(strInput);
+
+        // Convert
+        double converted = 0;
+        switch (currentTab) {
+            case "currency":
+                converted = convertCurrency(input, fromUnit, toUnit);
+                break;
+            case "temperature":
+                converted = convertTemperature(input, fromUnit, toUnit);
+                break;
+            default:
+                converted = convertFuel(input, fromUnit, toUnit);
+                break;
+        }
+
+        isUpdating = true;
+        target.setText(formatDoubleAsString(converted, 0, 2));
+        isUpdating = false;
+    }
+
+    private double convertCurrency(double value, String fromCurrency, String toCurrency) {
+        if (value == 0) return value;
+
         // Get USD -> target rate
         HashMap<String, Double> rates = new HashMap<>();
         rates.put("AUD", 1.55);
@@ -232,11 +328,57 @@ public class MainActivity extends AppCompatActivity {
         rates.put("JPY", 148.50);
 
         // Convert to USD
-        double valueUSD = value / rates.get(inputUnit);
+        Double rate = rates.get(inputUnit);
+        if (rate == null) return 0;
+        double valueUSD = value / rate;
 
         // Convert to target currency
-        Log.d("CONVERT", "USD: " + valueUSD);
-        Log.d("CONVERT", "new: " + valueUSD * rates.get(outputUnit));
-        return valueUSD * rates.get(outputUnit);
+        rate = rates.get(outputUnit);
+        if (rate == null) return 0;
+        return valueUSD * rate;
+    }
+
+    private double convertTemperature(double value, String fromUnit, String toUnit) {
+        // Convert to Celsius
+        double valueC = value;
+        switch (fromUnit) {
+            case "Fahrenheit":
+                valueC = (value - 32) / 1.8;
+                break;
+            case "Kelvin":
+                valueC = value - 273.15;
+                break;
+            default:
+                break;
+        }
+
+        // Convert to target unit
+        switch (toUnit) {
+            case "Fahrenheit":  return (valueC * 1.8) + 32;
+            case "Kelvin":      return valueC + 273.15;
+            default:            return valueC;
+        }
+    }
+
+    private double convertFuel(double value, String fromUnit, String toUnit) {
+        // Convert to mpg
+        double valueMPG = value;
+        switch (fromUnit) {
+            case "km/L":
+                valueMPG = value / 0.425;
+                break;
+            case "nmpg":
+                valueMPG = value * 1.150779;
+                break;
+            default:
+                break;
+        }
+
+        // Convert to target unit
+        switch (toUnit) {
+            case "km/L":    return valueMPG * 0.425;
+            case "nmpg":    return valueMPG / 1.150779;
+            default:        return valueMPG;
+        }
     }
 }

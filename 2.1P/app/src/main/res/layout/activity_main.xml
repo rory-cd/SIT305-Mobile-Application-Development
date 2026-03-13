@@ -8,12 +8,65 @@
     tools:context=".MainActivity" >
 <!--    android:background="@color/currency"-->
 
-    <!-- Input dropdown-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilInput"
+    <!-- Convert symbol -->
+    <TextView
+        android:id="@+id/tvConvertSymbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="40dp"
+        android:text="@string/convertSymbol"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:translationY="-6dp"
+        app:layout_constraintBottom_toTopOf="@id/tilOutputDropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/divider"
+        app:layout_constraintTop_toBottomOf="@id/tilInputDropdown" />
+
+    <!-- Input Prefix -->
+    <TextView
+        android:id="@+id/tvInputPrefix"
+        style="@style/PrefixSuffix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="45sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/etInput"
+        app:layout_constraintEnd_toStartOf="@+id/etInput"
+        app:layout_constraintTop_toTopOf="@+id/etInput" />
+
+    <!-- Input -->
+    <EditText
+        android:id="@+id/etInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:hint="@string/inputHint"
+        android:background="@null"
+        android:inputType="numberDecimal"
+        android:textSize="45sp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10sp"
+        android:layout_marginBottom="20sp"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintEnd_toStartOf="@id/tilInputDropdown"
+        app:layout_constraintStart_toEndOf="@id/tvInputPrefix"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <!-- Input dropdown-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilInputDropdown"
+        style="@style/DropDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="5dp"
         app:endIconMode="dropdown_menu"
         app:layout_constraintBottom_toBottomOf="@+id/etInput"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,18 +76,70 @@
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/dropdownInput"
             android:focusable="false"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:cursorVisible="false"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Output dropdown-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilOutput"
+    <!-- Divider -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/etOutput"
+        app:layout_constraintEnd_toStartOf="@id/tvConvertSymbol"
+        app:layout_constraintTop_toBottomOf="@id/etInput" />
+
+    <!-- Output Prefix -->
+    <TextView
+        android:id="@+id/tvOutputPrefix"
+        style="@style/PrefixSuffix"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20sp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="45sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/etOutput"
+        app:layout_constraintEnd_toStartOf="@+id/etOutput"
+        app:layout_constraintTop_toTopOf="@+id/etOutput" />
+
+    <!-- Output -->
+    <EditText
+        android:id="@+id/etOutput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:hint="@string/inputHint"
+        android:inputType="numberDecimal"
+        android:minWidth="10dp"
+        android:background="@null"
+        android:textSize="45sp"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="10sp"
+        android:layout_marginTop="20sp"
+        android:maxWidth="200sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tilOutputDropdown"
+        app:layout_constraintStart_toEndOf="@id/tvOutputPrefix"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <!-- Output dropdown-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilOutputDropdown"
+        style="@style/DropDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="20dp"
         app:endIconMode="dropdown_menu"
         app:layout_constraintBottom_toBottomOf="@id/etOutput"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,86 +148,16 @@
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/dropdownOutput"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:focusable="false"
             android:cursorVisible="false"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tvConvertWord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20sp"
-        android:layout_marginEnd="40sp"
-        android:text="@string/convertSymbol"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:translationY="-6sp"
-        app:layout_constraintBottom_toTopOf="@id/tilOutput"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/divider"
-        app:layout_constraintTop_toBottomOf="@id/tilInput" />
-
-    <TextView
-        android:id="@+id/tvInputPrefix"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5sp"
-        android:textSize="45sp"
-        android:alpha="0.5"
-        app:layout_constraintBottom_toBottomOf="@+id/etInput"
-        app:layout_constraintEnd_toStartOf="@+id/etInput"
-        app:layout_constraintTop_toTopOf="@+id/etInput" />
-
-    <EditText
-        android:id="@+id/etInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/currInputHint"
-        android:background="@null"
-        android:inputType="numberDecimal"
-        android:textSize="45sp"
-        android:layout_marginStart="50sp"
-        android:layout_marginEnd="10sp"
-        android:layout_marginBottom="20sp"
-        app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintEnd_toStartOf="@id/tilInput"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/tvOutputPrefix"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0.5"
-        android:layout_marginEnd="5sp"
-        android:textSize="45sp"
-        app:layout_constraintBottom_toBottomOf="@+id/etOutput"
-        app:layout_constraintEnd_toStartOf="@+id/etOutput"
-        app:layout_constraintTop_toTopOf="@+id/etOutput" />
-
-    <EditText
-        android:id="@+id/etOutput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/currInputHint"
-        android:inputType="numberDecimal"
-        android:background="@null"
-        android:textSize="45sp"
-        android:layout_marginStart="50sp"
-        android:layout_marginEnd="10sp"
-        android:layout_marginTop="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tilOutput"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintVertical_chainStyle="packed" />
-
+    <!-- Tabs -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -135,37 +170,27 @@
             android:id="@+id/tabItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Currency" />
+            android:text="@string/currTabName" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fuel" />
+            android:text="@string/fuelTabName" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Temperature" />
+            android:text="@string/tempTabName" />
 
     </com.google.android.material.tabs.TabLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="1sp"
-        android:background="?android:attr/listDivider"
-        android:layout_marginStart="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/etOutput"
-        app:layout_constraintEnd_toStartOf="@id/tvConvertWord"
-        app:layout_constraintTop_toBottomOf="@id/etInput" />
-
+    <!-- Clear button -->
     <Button
         android:id="@+id/btnClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clear"
-        app:layout_constraintVertical_bias="0.25"
+        android:text="@string/clearButtonTitle"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

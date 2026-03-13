@@ -3,6 +3,15 @@
     <style name="Base.Theme.TravelCompanion" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textColorHint">?attr/colorOutlineVariant</item>
+    </style>
+
+    <style name="DropDown">
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="PrefixSuffix" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:textColor">?attr/colorOutline</item>
     </style>
 
     <style name="Theme.TravelCompanion" parent="Base.Theme.TravelCompanion" />
