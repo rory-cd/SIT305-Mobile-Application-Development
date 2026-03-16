@@ -250,11 +250,11 @@ public class MainActivity extends AppCompatActivity {
                 // Extract input value
                 double inputNumber = parseStringToDouble(s);
                 // Format input
-                if (inputNumber == 0) editText.setText("");
-                else {
                     String prettyNumber = formatDoubleAsString(inputNumber, 0, 50);
                     editText.setText(prettyNumber);
-                }
+//                if (inputNumber == 0) editText.setText("");
+//                else {
+//                }
 
                 isUpdating = false;
             }
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
         df.setMaximumFractionDigits(maxFractionDigits);
         // Format number as string
         String formatted = df.format(number);
-        if (formatted.equals("0")) formatted = "";
+        if (formatted.equals("0") && !currentTab.equals("temperature")) formatted = "";
         return formatted;
     }
 
@@ -298,27 +298,31 @@ public class MainActivity extends AppCompatActivity {
         double input = parseStringToDouble(strInput);
 
         // Convert
-        double converted = 0;
+        double result;
         switch (currentTab) {
             case "currency":
-                converted = convertCurrency(input, fromUnit, toUnit);
+                result = convertCurrency(input, fromUnit, toUnit);
                 break;
             case "temperature":
-                converted = convertTemperature(input, fromUnit, toUnit);
+                result = convertTemperature(input, fromUnit, toUnit);
                 break;
             default:
-                converted = convertFuel(input, fromUnit, toUnit);
+                result = convertFuel(input, fromUnit, toUnit);
                 break;
         }
 
         isUpdating = true;
-        target.setText(formatDoubleAsString(converted, 0, 2));
+
+        // Format converted value as string
+        String strResult = strInput.isEmpty() ? "" : formatDoubleAsString(result, 0, 2);
+        // Wipe zero values unless they're temperatures
+        if (strResult.equals("0.0") && !currentTab.equals("temperature")) strResult = "";
+
+        target.setText(strResult);
         isUpdating = false;
     }
 
     private double convertCurrency(double value, String fromCurrency, String toCurrency) {
-        if (value == 0) return value;
-
         // Get USD -> target rate
         HashMap<String, Double> rates = new HashMap<>();
         rates.put("AUD", 1.55);
@@ -328,12 +332,12 @@ public class MainActivity extends AppCompatActivity {
         rates.put("JPY", 148.50);
 
         // Convert to USD
-        Double rate = rates.get(inputUnit);
+        Double rate = rates.get(fromCurrency);
         if (rate == null) return 0;
         double valueUSD = value / rate;
 
         // Convert to target currency
-        rate = rates.get(outputUnit);
+        rate = rates.get(toCurrency);
         if (rate == null) return 0;
         return valueUSD * rate;
     }
