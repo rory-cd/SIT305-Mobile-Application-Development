@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -252,9 +251,6 @@ public class MainActivity extends AppCompatActivity {
                 // Format input
                     String prettyNumber = formatDoubleAsString(inputNumber, 0, 50);
                     editText.setText(prettyNumber);
-//                if (inputNumber == 0) editText.setText("");
-//                else {
-//                }
 
                 isUpdating = false;
             }
