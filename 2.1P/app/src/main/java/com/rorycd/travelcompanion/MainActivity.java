@@ -28,16 +28,18 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     // UI Elements
+    TabLayout tabLayout;
+    TextView tvInputPrefix, tvOutputPrefix;
     EditText etInput, etOutput;
     MaterialAutoCompleteTextView dropdownInput, dropdownOutput;
-    TextView tvInputPrefix, tvOutputPrefix;
     Button btnClear;
-    TabLayout tabLayout;
-    String currentTab;
-    Boolean isUpdating;
 
     // State
-    String inputUnit, outputUnit;
+    String currentTab;
+    public class Unit { public String value; }
+    Unit inputUnit = new Unit();
+    Unit outputUnit = new Unit();
+    Boolean isUpdating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Set initial state
         applyTab();
-        resetConverterState();
 
         // Set listeners
         tabLayout.addOnTabSelectedListener(tabListener);
@@ -70,12 +71,10 @@ public class MainActivity extends AppCompatActivity {
         etOutput.addTextChangedListener(outputWatcher);
         etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput));
         etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput));
-        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(c -> inputUnit = c));
-        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(c -> outputUnit = c));
+        dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(inputUnit));
+        dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(outputUnit));
         btnClear.setOnClickListener(v -> clearInput());
     }
-
-    private interface UnitSelector { void selectUnit(String unit); }
 
     private void resetConverterState() {
         // Set field input types
@@ -126,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Set initial state
         clearInput();
-        inputUnit = units[0];
-        outputUnit = units[1];
+        inputUnit.value = units[0];
+        outputUnit.value = units[1];
         setPrefixes();
     }
 
@@ -148,19 +147,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String getSymbolFor(String unit) {
+    private String getSymbolFor(Unit unit) {
         // Get matching symbol prefix
         String result = "";
 
         switch (currentTab) {
             case "currency":
-                Currency c = Currency.getInstance(unit);
+                Currency c = Currency.getInstance(unit.value);
                 String symbol = c.getSymbol(Locale.US);     // US uses symbol only
                 if (symbol.contains("$")) symbol = "$";     // Ignore "A$" etc.
                 result = symbol;
                 break;
             case "temperature":
-                result = unit.equals("Celsius") ? "°C" : unit.equals("Fahrenheit") ? "°F" : " K";
+                result = unit.value.equals("Celsius") ? "°C" : unit.value.equals("Fahrenheit") ? "°F" : " K";
                 break;
             default:
                 break;
@@ -182,18 +181,16 @@ public class MainActivity extends AppCompatActivity {
 
     // LISTENERS
     private class OnDropdownSelectedListener implements AdapterView.OnItemClickListener {
-        UnitSelector selector;
+        Unit unit;
 
-        OnDropdownSelectedListener(UnitSelector selector) {
-            this.selector = selector;
+        OnDropdownSelectedListener(Unit unit) {
+            this.unit = unit;
         }
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-            // Get newly selected unit
-            String unit = parent.getItemAtPosition(pos).toString();
-            // Select it (Apply it to either input or output)
-            selector.selectUnit(unit);
+            // Select new unit (Apply it to either input or output)
+            unit.value = parent.getItemAtPosition(pos).toString();
             setPrefixes();
             // Update output
             isUpdating = true;
@@ -289,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
         return formatted;
     }
 
-    protected void applyConversion(String fromUnit, EditText origin, String toUnit, EditText target) {
+    protected void applyConversion(Unit fromUnit, EditText origin, Unit toUnit, EditText target) {
         String strInput = origin.getText().toString().replaceAll(",", "");
         double input = parseStringToDouble(strInput);
 
@@ -297,13 +294,13 @@ public class MainActivity extends AppCompatActivity {
         double result;
         switch (currentTab) {
             case "currency":
-                result = convertCurrency(input, fromUnit, toUnit);
+                result = convertCurrency(input, fromUnit.value, toUnit.value);
                 break;
             case "temperature":
-                result = convertTemperature(input, fromUnit, toUnit);
+                result = convertTemperature(input, fromUnit.value, toUnit.value);
                 break;
             default:
-                result = convertFuel(input, fromUnit, toUnit);
+                result = convertFuel(input, fromUnit.value, toUnit.value);
                 break;
         }
 
