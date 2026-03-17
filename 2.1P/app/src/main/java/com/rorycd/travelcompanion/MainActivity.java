@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(tabListener);
         etInput.addTextChangedListener(inputWatcher);
         etOutput.addTextChangedListener(outputWatcher);
-        etInput.setOnFocusChangeListener(new EditTextFocusChangeListener(etInput));
-        etOutput.setOnFocusChangeListener(new EditTextFocusChangeListener(etOutput));
+        etInput.setOnFocusChangeListener(editTextFocusChangeListener);
+        etOutput.setOnFocusChangeListener(editTextFocusChangeListener);
         dropdownInput.setOnItemClickListener(new OnDropdownSelectedListener(inputUnit));
         dropdownOutput.setOnItemClickListener(new OnDropdownSelectedListener(outputUnit));
         btnClear.setOnClickListener(v -> clearInput());
@@ -227,17 +227,11 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // Cleans up input fields on unfocus
-    private class EditTextFocusChangeListener implements View.OnFocusChangeListener {
-
-        private EditText editText;
-
-        EditTextFocusChangeListener(EditText editText) {
-            this.editText = editText;
-        }
-
+    View.OnFocusChangeListener editTextFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             if (!hasFocus) {
+                EditText editText = (EditText) v;
                 String s = editText.getText().toString();
                 if (s.isEmpty()) return;
 
@@ -246,13 +240,13 @@ public class MainActivity extends AppCompatActivity {
                 // Extract input value
                 double inputNumber = parseStringToDouble(s);
                 // Format input
-                    String prettyNumber = formatDoubleAsString(inputNumber, 0, 50);
-                    editText.setText(prettyNumber);
+                String prettyNumber = formatDoubleAsString(inputNumber, 0, 50);
+                editText.setText(prettyNumber);
 
                 isUpdating = false;
             }
         }
-    }
+    };
 
     protected double parseStringToDouble(String s) {
         // Clean input
