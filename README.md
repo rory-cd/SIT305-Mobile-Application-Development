@@ -6,3 +6,4 @@ This repository serves as a hub for all projects completed as part of Deakin uni
 | Task | Description | Key tech | Status |
 | :--- | :--- | :--- | :--- |
 | **2.1P** | _Travel Companion_ unit conversion app | Android Studio, Java (Views), XML | ✅ Complete |
+| **4.0HD** | _Bowerbird_ app proposal document | N/A | ✅ Complete |
