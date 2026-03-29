@@ -147,6 +147,7 @@ public class QuizActivity extends AppCompatActivity {
                 intent.putExtra("score", score);
                 intent.putExtra("total", questionMgr.questions.length);
                 startActivity(intent);
+                finish();
             }
         }
 
