@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Quiz</string>
+    <string name="app_title">SIT305 Quiz App</string>
+    <string name="name_prompt">Enter your name:</string>
+    <string name="name_hint">Jane Doe</string>
+    <string name="start_button_text">START</string>
 </resources>
