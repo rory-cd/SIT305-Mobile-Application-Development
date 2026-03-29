@@ -24,7 +24,8 @@ public class QuizActivity extends AppCompatActivity {
     State state;
     QuestionManager questionMgr;
     int selectedIdx;
-    int correctCount;
+    int score;
+    String name;
 
     // UI Elements
     TextView tvCounter;
@@ -46,15 +47,15 @@ public class QuizActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        correctCount = 0;
+        name = intent.getStringExtra("name");
+        score = 0;
 
         questionMgr = new QuestionManager();
         tvCounter = findViewById(R.id.tvCounter);
         tvTitle = findViewById(R.id.tvTitle);
         tvDescription = findViewById(R.id.tvDescription);
         btnNext = findViewById(R.id.btnNext);
-        btnNext.setOnClickListener(v -> OnSubmit());
+        btnNext.setOnClickListener(v -> OnNext());
         llAnswers = findViewById(R.id.llAnswers);
 
         LoadNextQuestion();
@@ -66,25 +67,28 @@ public class QuizActivity extends AppCompatActivity {
         llAnswers.removeAllViews();
 
         // Counter
-        tvCounter.setText(questionMgr.GetQuestionNumber() + "/" + questionMgr.QuestionCount());
+        String counterText = getString(R.string.counter_text, questionMgr.GetQuestionNumber(), questionMgr.QuestionCount());
+        tvCounter.setText(counterText);
 
         // Set title and description
         Question question = questionMgr.GetQuestion();
         tvTitle.setText(question.title);
         tvDescription.setText(question.description);
 
+        // Add a button for each answer
         Answer[] answers = question.answers;
         buttons = new Button[answers.length];
-
-        // Add a button for each answer
         for (int i = 0; i < answers.length; i++) {
+            // Create button and set attributes
             Button btn = new Button(this);
             btn.setText(answers[i].text);
             btn.setBackgroundColor(getColor(R.color.potential_answer));
             final int idx = i;
             btn.setOnClickListener(v -> OnAnswerSelected(idx));
-            buttons[i] = btn;
+            // Add to layout
             llAnswers.addView(btn);
+            // Add to buttons array for reference
+            buttons[i] = btn;
         }
     }
 
@@ -105,17 +109,20 @@ public class QuizActivity extends AppCompatActivity {
                 }
             }
 
-            btnNext.setText("Submit");
+            btnNext.setText(R.string.submit_button_text);
             state = State.SELECTED;
         }
     }
 
-    protected void OnSubmit() {
+    protected void OnNext() {
 
+        // If an answer has been selected, submit
         if (state == State.SELECTED) {
 
-            if (questionMgr.IsCorrectAnswer(selectedIdx)) correctCount++;
+            if (questionMgr.IsCorrectAnswer(selectedIdx))
+                score++;
 
+            // Apply correct/incorrect colours
             for (int i = 0; i < buttons.length; i++) {
                 if (questionMgr.IsCorrectAnswer(i)) {
                     ApplyCorrectButtonStyle(buttons[i]);
@@ -125,14 +132,21 @@ public class QuizActivity extends AppCompatActivity {
                 }
             }
             state = State.SUBMITTED;
-            btnNext.setText("Next");
+            btnNext.setText(R.string.next_button_text);
         }
+        // If the answer has already been submitted
         else if (state == State.SUBMITTED) {
+            // Load the next question
             if (questionMgr.HasQuestionsRemaining()) {
                 questionMgr.NextQuestion();
                 LoadNextQuestion();
+            // Show results
             } else {
-                Toast.makeText(this, "Next screen", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, ResultsActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("score", score);
+                intent.putExtra("total", questionMgr.questions.length);
+                startActivity(intent);
             }
         }
 
