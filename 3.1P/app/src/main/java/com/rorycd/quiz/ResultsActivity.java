@@ -48,5 +48,20 @@ public class ResultsActivity extends AppCompatActivity {
         int total = intent.getIntExtra("total", 0);
         String scoreText = getString(R.string.score_text, score, total);
         tvScore.setText(scoreText);
+
+        // Set button functionality
+        btnNewQuiz.setOnClickListener(v -> startNewQuiz(name));
+        btnFinish.setOnClickListener(v -> backToStart());
+    }
+
+    protected void startNewQuiz(String name) {
+        Intent intent = new Intent(this, QuizActivity.class);
+        intent.putExtra("name", name);
+        startActivity(intent);
+    }
+
+    protected void backToStart() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
