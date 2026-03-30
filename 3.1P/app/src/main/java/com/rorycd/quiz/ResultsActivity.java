@@ -58,10 +58,12 @@ public class ResultsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, QuizActivity.class);
         intent.putExtra("name", name);
         startActivity(intent);
+        finish();
     }
 
     protected void backToStart() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }
