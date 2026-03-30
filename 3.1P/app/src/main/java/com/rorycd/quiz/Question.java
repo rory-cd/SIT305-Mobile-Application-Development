@@ -1,5 +1,6 @@
 package com.rorycd.quiz;
 
+// Defines a question as a title, description, and set of potential answers
 public class Question {
     String title;
     String description;

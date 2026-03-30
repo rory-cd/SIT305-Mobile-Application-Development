@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".QuizActivity">
 
+    <!--  Progress  -->
     <TextView
         android:id="@+id/tvCounter"
         android:layout_width="wrap_content"
@@ -29,6 +30,7 @@
         app:layout_constraintTop_toTopOf="@id/tvCounter"
         app:trackThickness="12dp" />
 
+    <!--  Question  -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -50,6 +52,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
+    <!--  Answers  -->
     <ScrollView
         android:id="@+id/svAnswers"
         android:layout_width="match_parent"

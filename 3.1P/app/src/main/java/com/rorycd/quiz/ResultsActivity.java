@@ -30,6 +30,7 @@ public class ResultsActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Get UI elements
         tvCongrats = findViewById(R.id.tvCongrats);
         tvScoreTitle = findViewById(R.id.tvScoreTitle);
         tvScore = findViewById(R.id.tvScore);

@@ -1,28 +1,64 @@
 package com.rorycd.quiz;
 
+// Provides a readable interface for question management
 public class QuestionManager {
 
     private int currentIdx = 0;
 
     Question[] questions = new Question[]{
         new Question(
-                "Geography",
-                "What is the capital of Iceland?",
-                new Answer[]{
-                        new Answer("Warnambool", false),
-                        new Answer("Timbuktu", true),
-                        new Answer("Florence", false)
-                }),
-                new Question(
-                        "History",
-                        "What is a battle?",
-                        new Answer[]{
-                                new Answer("What's a battle?", true),
-                                new Answer("A stick", false),
-                                new Answer("Pikachu", false)
-                        })
+            "Geography",
+            "Which ocean is the largest?",
+            new Answer[]{
+                new Answer("Atlantic", false),
+                new Answer("Indian", false),
+                new Answer("Arctic", false),
+                new Answer("Pacific", true)
+            }
+        ),
+        new Question(
+            "Food",
+            "What’s the main ingredient in guacamole?",
+            new Answer[]{
+                new Answer("Cucumber", false),
+                new Answer("Tomato", false),
+                new Answer("Courgette", false),
+                new Answer("Avocado", true),
+                new Answer("Egg", false),
+                new Answer("Pickle", false),
+                new Answer("Cheese", false),
+                new Answer("Macaroni", false),
+                new Answer("Milk", false),
+            }
+        ),
+        new Question(
+            "Mathematics",
+            "What’s the smallest prime number?",
+            new Answer[]{
+                new Answer("1", false),
+                new Answer("2", true),
+                new Answer("3", false)
+            }
+        ),
+        new Question(
+            "Mythology",
+            "A centaur is based on which creature?",
+            new Answer[]{
+                new Answer("Donkey", false),
+                new Answer("Horse", true),
+                new Answer("Human", true)
+            }
+        ),
+        new Question(
+            "Cosmology",
+            "Which planet has the most moons?",
+            new Answer[]{
+                new Answer("Jupiter", false),
+                new Answer("Saturn", true),
+                new Answer("Neptune", false)
+            }
+        )
     };
-
 
     protected Question GetQuestion() {
         return questions[currentIdx];

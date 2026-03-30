@@ -4,7 +4,8 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-    
+
+    <!--  General navigation buttons  -->
     <style name="QuizButton" parent="Widget.Material3.Button">
         <item name="cornerRadius">5dp</item>
         <item name="android:textSize">20sp</item>
@@ -17,6 +18,7 @@
         <item name="android:minWidth">200dp</item>
     </style>
 
+    <!--  Answer buttons  -->
     <style name="AnswerButton" parent="Widget.Material3.Button.OutlinedButton">
         <item name="cornerRadius">5dp</item>
         <item name="android:letterSpacing">0</item>

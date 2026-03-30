@@ -30,10 +30,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Get UI elements
         etName = findViewById(R.id.etName);
         btnStart = findViewById(R.id.btnStart);
         btnStart.setOnClickListener(this::startQuiz);
 
+        // Hide start button until name is entered
         etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
