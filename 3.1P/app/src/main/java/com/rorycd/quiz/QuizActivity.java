@@ -13,6 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
+
 public class QuizActivity extends AppCompatActivity {
 
     // State
@@ -31,7 +33,7 @@ public class QuizActivity extends AppCompatActivity {
     TextView tvCounter;
     TextView tvTitle;
     TextView tvDescription;
-    LinearLayout llAnswers;
+    MaterialButtonToggleGroup btgAnswers;
     Button[] buttons;
     Button btnNext;
 
@@ -56,7 +58,7 @@ public class QuizActivity extends AppCompatActivity {
         tvDescription = findViewById(R.id.tvDescription);
         btnNext = findViewById(R.id.btnNext);
         btnNext.setOnClickListener(v -> OnNext());
-        llAnswers = findViewById(R.id.llAnswers);
+        btgAnswers = findViewById(R.id.btgAnswers);
 
         LoadNextQuestion();
     }
@@ -64,7 +66,7 @@ public class QuizActivity extends AppCompatActivity {
     protected void LoadNextQuestion() {
         // Reset
         state = State.PENDING;
-        llAnswers.removeAllViews();
+        btgAnswers.removeAllViews();
 
         // Counter
         String counterText = getString(R.string.counter_text, questionMgr.GetQuestionNumber(), questionMgr.QuestionCount());
@@ -80,13 +82,12 @@ public class QuizActivity extends AppCompatActivity {
         buttons = new Button[answers.length];
         for (int i = 0; i < answers.length; i++) {
             // Create button and set attributes
-            Button btn = new Button(this);
+            Button btn = (Button) getLayoutInflater().inflate(R.layout.button_answer, btgAnswers, false);
             btn.setText(answers[i].text);
-            btn.setBackgroundColor(getColor(R.color.potential_answer));
             final int idx = i;
             btn.setOnClickListener(v -> OnAnswerSelected(idx));
             // Add to layout
-            llAnswers.addView(btn);
+            btgAnswers.addView(btn);
             // Add to buttons array for reference
             buttons[i] = btn;
         }
@@ -96,19 +97,7 @@ public class QuizActivity extends AppCompatActivity {
 
         // If there hasn't been an answer submitted yet
         if (state != State.SUBMITTED) {
-
             selectedIdx = idx;
-
-            // Style the buttons
-            for (int i = 0; i < buttons.length; i++) {
-                if (i == selectedIdx) {
-                    ApplySelectButtonStyle(buttons[i]);
-                }
-                else {
-                    ResetButtonStyle(buttons[i]);
-                }
-            }
-
             btnNext.setText(R.string.submit_button_text);
             state = State.SELECTED;
         }
@@ -130,6 +119,9 @@ public class QuizActivity extends AppCompatActivity {
                 else if (i == selectedIdx && !questionMgr.IsCorrectAnswer(i)) {
                     ApplyIncorrectButtonStyle(buttons[i]);
                 }
+
+                // Prevent clicks
+                buttons[i].setClickable(false);
             }
             state = State.SUBMITTED;
             btnNext.setText(R.string.next_button_text);
@@ -153,11 +145,6 @@ public class QuizActivity extends AppCompatActivity {
 
     }
 
-    protected void ApplySelectButtonStyle(Button btn) {
-        btn.setBackgroundColor(getColor(R.color.selected_answer));
-        btn.setTextColor(getColor(R.color.black));
-    }
-
     protected void ApplyCorrectButtonStyle(Button btn) {
         btn.setBackgroundColor(getColor(R.color.correct_answer));
         btn.setTextColor(getColor(R.color.white));
@@ -166,10 +153,5 @@ public class QuizActivity extends AppCompatActivity {
     protected void ApplyIncorrectButtonStyle(Button btn) {
         btn.setBackgroundColor(getColor(R.color.incorrect_answer));
         btn.setTextColor(getColor(R.color.white));
-    }
-
-    protected void ResetButtonStyle(Button btn) {
-        btn.setBackgroundColor(getColor(R.color.potential_answer));
-        btn.setTextColor(getColor(R.color.black));
     }
 }

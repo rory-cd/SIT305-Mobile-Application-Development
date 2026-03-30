@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.isEmpty()) {
+                if (s.toString().isEmpty()) {
                     btnStart.setVisibility(View.INVISIBLE);
                 } else {
                     btnStart.setVisibility(View.VISIBLE);
