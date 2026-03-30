@@ -51,20 +51,7 @@ public class ResultsActivity extends AppCompatActivity {
         tvScore.setText(scoreText);
 
         // Set button functionality
-        btnNewQuiz.setOnClickListener(v -> startNewQuiz(name));
-        btnFinish.setOnClickListener(v -> backToStart());
-    }
-
-    protected void startNewQuiz(String name) {
-        Intent intent = new Intent(this, QuizActivity.class);
-        intent.putExtra("name", name);
-        startActivity(intent);
-        finish();
-    }
-
-    protected void backToStart() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        btnNewQuiz.setOnClickListener(v -> finish());
+        btnFinish.setOnClickListener(v -> finishAffinity());
     }
 }

@@ -54,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        etName.clearFocus();
+    }
+
     protected void startQuiz(View view) {
         Intent intent = new Intent(this, QuizActivity.class);
         intent.putExtra("name", etName.getText().toString());
