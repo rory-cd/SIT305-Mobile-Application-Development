@@ -2,7 +2,7 @@ package com.rorycd.quiz;
 
 public class QuestionManager {
 
-    int currentIdx = 0;
+    private int currentIdx = 0;
 
     Question[] questions = new Question[]{
         new Question(

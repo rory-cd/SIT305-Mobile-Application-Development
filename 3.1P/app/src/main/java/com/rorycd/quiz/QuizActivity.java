@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class QuizActivity extends AppCompatActivity {
     MaterialButtonToggleGroup btgAnswers;
     Button[] buttons;
     Button btnNext;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,9 @@ public class QuizActivity extends AppCompatActivity {
         btnNext = findViewById(R.id.btnNext);
         btnNext.setOnClickListener(v -> OnNext());
         btgAnswers = findViewById(R.id.btgAnswers);
+        progressBar = findViewById(R.id.progressBar);
+
+        progressBar.setMax(questionMgr.QuestionCount());
 
         LoadNextQuestion();
     }
@@ -71,6 +76,7 @@ public class QuizActivity extends AppCompatActivity {
         // Counter
         String counterText = getString(R.string.counter_text, questionMgr.GetQuestionNumber(), questionMgr.QuestionCount());
         tvCounter.setText(counterText);
+        progressBar.setProgress(questionMgr.GetQuestionNumber());
 
         // Set title and description
         Question question = questionMgr.GetQuestion();

@@ -2,7 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="potential_answer">#9D9D9D</color>
     <color name="selected_answer">#BFBFBF</color>
     <color name="correct_answer">#4CAF50</color>
     <color name="incorrect_answer">#941515</color>
