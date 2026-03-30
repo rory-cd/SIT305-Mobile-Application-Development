@@ -2,11 +2,10 @@ package com.rorycd.quiz;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,6 +71,7 @@ public class QuizActivity extends AppCompatActivity {
         // Reset
         state = State.PENDING;
         btgAnswers.removeAllViews();
+        btnNext.setVisibility(View.INVISIBLE);
 
         // Counter
         String counterText = getString(R.string.counter_text, questionMgr.GetQuestionNumber(), questionMgr.QuestionCount());
@@ -106,6 +106,7 @@ public class QuizActivity extends AppCompatActivity {
             selectedIdx = idx;
             btnNext.setText(R.string.submit_button_text);
             state = State.SELECTED;
+            btnNext.setVisibility(View.VISIBLE);
         }
     }
 
