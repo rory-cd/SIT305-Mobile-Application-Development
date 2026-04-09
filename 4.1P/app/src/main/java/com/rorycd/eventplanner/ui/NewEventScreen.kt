@@ -19,6 +19,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,36 +28,42 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun NewEventScreen(modifier: Modifier = Modifier) {
-    var title by remember { mutableStateOf("") }
-    var location by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
+fun NewEventScreen(
+    viewModel: EventViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
+    // Collect state flow
+    val state by viewModel.uiState.collectAsState()
 
     Column(modifier = modifier) {
         OutlinedTextField(
-            value = title,
-            onValueChange = { title = it },
+            value = state.currentTitle,
+            onValueChange = { viewModel.onTitleChanged(it) },
             label = { Text(stringResource(R.string.event_title_label)) }
         )
-        DatePickerDocked()
+        DatePickerDocked(
+            dateValue = state.currentDate,
+            onDateSelected = { millis -> viewModel.onDateChanged(millis) }
+        )
         OutlinedTextField(
-            value = location,
-            onValueChange = { location = it },
+            value = state.currentLocation,
+            onValueChange = { viewModel.onLocationChanged(it) },
             label = { Text(stringResource(R.string.event_location_label)) }
         )
         OutlinedTextField(
-            value = category,
-            onValueChange = { category = it },
+            value = state.currentCategory,
+            onValueChange = { viewModel.onCategoryChanged(it) },
             label = { Text(stringResource(R.string.event_category_label)) }
         )
     }
@@ -63,23 +71,31 @@ fun NewEventScreen(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDocked() {
+fun DatePickerDocked(
+    dateValue: String,
+    onDateSelected: (Long?) -> Unit
+) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        convertMillisToDate(it)
-    } ?: ""
+
+    // Observe the selected date and call onDateSelected when it changes
+    LaunchedEffect(datePickerState.selectedDateMillis) {
+        datePickerState.selectedDateMillis?.let {
+            onDateSelected(it)
+            showDatePicker = false
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         OutlinedTextField(
-            value = selectedDate,
+            value = dateValue,
             onValueChange = { },
             label = { Text(stringResource(R.string.event_date_label)) },
             readOnly = true,
             trailingIcon = {
-                IconButton(onClick = { showDatePicker = !showDatePicker }) {
+                IconButton(onClick = { showDatePicker = true }) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Select date"
@@ -89,6 +105,7 @@ fun DatePickerDocked() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp)
+                .onFocusChanged { if (it.isFocused) showDatePicker = true }
         )
 
         if (showDatePicker) {
@@ -112,11 +129,6 @@ fun DatePickerDocked() {
             }
         }
     }
-}
-
-fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-    return formatter.format(Date(millis))
 }
 
 @Preview
