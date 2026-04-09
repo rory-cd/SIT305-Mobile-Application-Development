@@ -53,6 +53,9 @@ enum class NavBarDestination(
     NewEvent(PlannerScreen.AddEvent, Icons.Default.Add, "Add Event", "Add event screen")
 }
 
+// Tracks the screens used in the navbar
+val topLevelScreens = NavBarDestination.entries.map { it.screen }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventPlannerAppBar(
@@ -118,7 +121,7 @@ fun EventPlannerApp(
         topBar = {
             EventPlannerAppBar(
                 currentScreen = currentScreen,
-                canGoBack = navController.previousBackStackEntry != null,
+                canGoBack = currentScreen !in topLevelScreens,
                 navigateUp = { navController.navigateUp() }
             )
         },
