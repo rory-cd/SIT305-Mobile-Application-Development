@@ -1,6 +1,7 @@
 package com.rorycd.eventplanner.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import com.rorycd.eventplanner.R
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,19 +40,23 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun NewEventScreen(
-    viewModel: EventViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: EventViewModel = viewModel()
 ) {
     // Collect state flow
     val state by viewModel.uiState.collectAsState()
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = Modifier.padding(all = dimensionResource(R.dimen.padding_small)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
+    ) {
         OutlinedTextField(
             value = state.currentTitle,
             onValueChange = { viewModel.onTitleChanged(it) },
             label = { Text(stringResource(R.string.event_title_label)) },
             singleLine = true,
-            maxLines = 1
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth()
         )
         DatePickerDocked(
             dateValue = state.currentDate,
@@ -60,14 +67,16 @@ fun NewEventScreen(
             onValueChange = { viewModel.onLocationChanged(it) },
             label = { Text(stringResource(R.string.event_location_label)) },
             singleLine = true,
-            maxLines = 1
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
             value = state.currentCategory,
             onValueChange = { viewModel.onCategoryChanged(it) },
             label = { Text(stringResource(R.string.event_category_label)) },
             singleLine = true,
-            maxLines = 1
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
