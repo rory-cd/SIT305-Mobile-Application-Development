@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Event Planner</string>
+    <string name="add_event">Add New Event</string>
+    <string name="edit_event">Edit Event</string>
+    <string name="back_button">Back</string>
+    <string name="event_title_label">Title</string>
+    <string name="event_location_label">Location</string>
+    <string name="event_category_label">Category</string>
+    <string name="event_date_label">Date</string>
+</resources>
