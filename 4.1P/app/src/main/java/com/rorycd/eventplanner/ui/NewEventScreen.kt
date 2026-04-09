@@ -34,9 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.viewmodel.compose.viewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun NewEventScreen(
@@ -50,7 +47,9 @@ fun NewEventScreen(
         OutlinedTextField(
             value = state.currentTitle,
             onValueChange = { viewModel.onTitleChanged(it) },
-            label = { Text(stringResource(R.string.event_title_label)) }
+            label = { Text(stringResource(R.string.event_title_label)) },
+            singleLine = true,
+            maxLines = 1
         )
         DatePickerDocked(
             dateValue = state.currentDate,
@@ -59,12 +58,16 @@ fun NewEventScreen(
         OutlinedTextField(
             value = state.currentLocation,
             onValueChange = { viewModel.onLocationChanged(it) },
-            label = { Text(stringResource(R.string.event_location_label)) }
+            label = { Text(stringResource(R.string.event_location_label)) },
+            singleLine = true,
+            maxLines = 1
         )
         OutlinedTextField(
             value = state.currentCategory,
             onValueChange = { viewModel.onCategoryChanged(it) },
-            label = { Text(stringResource(R.string.event_category_label)) }
+            label = { Text(stringResource(R.string.event_category_label)) },
+            singleLine = true,
+            maxLines = 1
         )
     }
 }
@@ -94,6 +97,8 @@ fun DatePickerDocked(
             onValueChange = { },
             label = { Text(stringResource(R.string.event_date_label)) },
             readOnly = true,
+            singleLine = true,
+            maxLines = 1,
             trailingIcon = {
                 IconButton(onClick = { showDatePicker = true }) {
                     Icon(

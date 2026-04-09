@@ -14,15 +14,15 @@ class EventViewModel : ViewModel() {
     val uiState: StateFlow<EventUiState> = _uiState.asStateFlow()
 
     fun onTitleChanged(newTitle: String) {
-        _uiState.update { it.copy(currentTitle = newTitle.trim()) }
+        _uiState.update { it.copy(currentTitle = newTitle) }
     }
 
     fun onLocationChanged(newLocation: String) {
-        _uiState.update { it.copy(currentLocation = newLocation.trim()) }
+        _uiState.update { it.copy(currentLocation = newLocation) }
     }
 
     fun onCategoryChanged(newCategory: String) {
-        _uiState.update { it.copy(currentCategory = newCategory.trim()) }
+        _uiState.update { it.copy(currentCategory = newCategory) }
     }
 
     fun onDateChanged(millis: Long?) {
