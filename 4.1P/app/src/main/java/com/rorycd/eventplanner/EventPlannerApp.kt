@@ -150,7 +150,6 @@ fun EventPlannerApp(
         ) {
             composable(route = Screen.EventList.name) {
                 EventListScreen(
-                    events = eventsTest,
                     modifier = Modifier.fillMaxHeight()
                 )
             }

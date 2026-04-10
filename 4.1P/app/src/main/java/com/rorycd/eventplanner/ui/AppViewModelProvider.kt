@@ -12,6 +12,12 @@ import com.rorycd.eventplanner.EventApplication
  */
 object AppViewModelProvider {
     val factory = viewModelFactory {
+        // Initializer for EventListViewModel
+        initializer {
+            EventListViewModel(
+                eventApplication().container.eventsRepository
+            )
+        }
         // Initializer for NewEventViewModel
         initializer {
             NewEventViewModel(
