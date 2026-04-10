@@ -1,5 +1,6 @@
 package com.rorycd.eventplanner
 
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -26,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -37,20 +39,20 @@ import com.rorycd.eventplanner.ui.EventListScreen
 import com.rorycd.eventplanner.ui.NewEventScreen
 import com.rorycd.eventplanner.ui.eventsTest
 
-enum class PlannerScreen(@StringRes val title: Int) {
+enum class Screen(@StringRes val title: Int) {
     EventList(title = R.string.app_name),
     AddEvent(title = R.string.add_event),
     EditEvent(title = R.string.edit_event)
 }
 
 enum class NavBarDestination(
-    val screen: PlannerScreen,
+    val screen: Screen,
     val icon: ImageVector,
     val label: String,
     val contentDescription: String
 ) {
-    Events(PlannerScreen.EventList, Icons.AutoMirrored.Default.List, "Events", "Event list screen"),
-    NewEvent(PlannerScreen.AddEvent, Icons.Default.Add, "Add Event", "Add event screen")
+    Events(Screen.EventList, Icons.AutoMirrored.Default.List, "Events", "Event list screen"),
+    NewEvent(Screen.AddEvent, Icons.Default.Add, "Add Event", "Add event screen")
 }
 
 // Tracks the screens used in the navbar
@@ -59,7 +61,7 @@ val topLevelScreens = NavBarDestination.entries.map { it.screen }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventPlannerAppBar(
-    currentScreen: PlannerScreen,
+    currentScreen: Screen,
     canGoBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -82,23 +84,18 @@ fun EventPlannerAppBar(
 
 @Composable
 fun EventPlannerNavBar(
-    navController: NavHostController,
+    onSelectNavOption: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedDestination by rememberSaveable {
-        mutableIntStateOf(PlannerScreen.EventList.ordinal)
+        mutableIntStateOf(Screen.EventList.ordinal)
     }
     NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
         NavBarDestination.entries.forEachIndexed { index, destination ->
             NavigationBarItem(
                 selected = selectedDestination == index,
                 onClick = {
-                    navController.navigate(route = destination.screen.name) {
-                        popUpTo(PlannerScreen.EventList.name) {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
+                    onSelectNavOption(destination.screen.name)
                     selectedDestination = index
                 },
                 icon = {
@@ -118,8 +115,8 @@ fun EventPlannerApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = PlannerScreen.valueOf(
-        backStackEntry?.destination?.route ?: PlannerScreen.EventList.name
+    val currentScreen = Screen.valueOf(
+        backStackEntry?.destination?.route ?: Screen.EventList.name
     )
 
     Scaffold(
@@ -132,25 +129,45 @@ fun EventPlannerApp(
             )
         },
         bottomBar = {
-            EventPlannerNavBar(navController)
+            EventPlannerNavBar(
+                onSelectNavOption = {
+                    navController.navigate(route = it) {
+                        popUpTo(Screen.EventList.name) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = PlannerScreen.EventList.name,
+            startDestination = Screen.EventList.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            composable(route = PlannerScreen.EventList.name) {
+            composable(route = Screen.EventList.name) {
                 EventListScreen(
                     events = eventsTest,
                     modifier = Modifier.fillMaxHeight()
                 )
             }
-            composable(route = PlannerScreen.AddEvent.name) {
+            composable(route = Screen.AddEvent.name) {
+                val context = LocalContext.current
                 NewEventScreen(
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier.fillMaxHeight(),
+                    onAddEvent = {
+                        Toast.makeText(context, "Added event \"$it\"", Toast.LENGTH_SHORT).show()
+
+                        navController.navigate(route = Screen.EventList.name) {
+                            popUpTo(Screen.EventList.name) {
+                                inclusive = false
+                            }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
         }

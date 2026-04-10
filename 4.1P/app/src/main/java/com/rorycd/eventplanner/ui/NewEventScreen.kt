@@ -45,6 +45,7 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewEventScreen(
+    onAddEvent: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NewEventViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
@@ -105,7 +106,10 @@ fun NewEventScreen(
         )
         // Add button
         Button(
-            onClick = { viewModel.saveEvent() },
+            onClick = {
+                viewModel.saveEvent()
+                onAddEvent(state.currentTitle)
+            },
             enabled = state.isValid
         ) {
             Text(stringResource(R.string.new_event_confirm_button))
@@ -222,10 +226,4 @@ fun TimePickerText(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun NewEventScreenPreview () {
-    NewEventScreen()
 }
