@@ -15,9 +15,9 @@ abstract class EventDatabase : RoomDatabase() {
         private var Instance: EventDatabase? = null
 
         fun getDatabase(context: Context): EventDatabase {
-            // if the Instance is not null, return it, otherwise create a new database instance
+            // If the Instance is not null, return it, otherwise create a new database instance and save a reference to it
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, EventDatabase::class.java, "item_database")
+                Room.databaseBuilder(context, EventDatabase::class.java, "event_database")
                     .build().also { Instance = it }
             }
         }

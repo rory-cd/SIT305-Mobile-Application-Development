@@ -5,5 +5,5 @@ data class EventUiState(
     val currentLocation: String = "",
     val currentCategory: String = "",
     val currentDate: String = "",
-    val currentTime: String = ""
+    val isValid: Boolean = false
 )
