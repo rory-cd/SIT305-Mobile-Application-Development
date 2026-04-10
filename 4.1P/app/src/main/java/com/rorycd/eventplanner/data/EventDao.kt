@@ -22,6 +22,6 @@ interface EventDao {
     @Query("SELECT * from events WHERE id = :id")
     fun getEvent(id: Int): Flow<Event>
 
-    @Query("SELECT * from events ORDER BY date DESC")
+    @Query("SELECT * from events ORDER BY timeStamp DESC")
     fun getAllEvents(): Flow<List<Event>>
 }

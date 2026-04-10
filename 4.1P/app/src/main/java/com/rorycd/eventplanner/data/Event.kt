@@ -10,5 +10,5 @@ data class Event (
     val title: String,
     val location: String?,
     val category: String?,
-    val date: Long
+    val timeStamp: Long
 )

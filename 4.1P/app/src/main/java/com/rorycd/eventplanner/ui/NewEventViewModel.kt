@@ -1,6 +1,5 @@
 package com.rorycd.eventplanner.ui
 
-import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.eventplanner.data.Event
@@ -10,9 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(EventUiState())
@@ -37,20 +37,34 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
     fun onDateChanged(millis: Long?) {
         if (millis == null) return
         _uiState.update {
-            val updated = it.copy(currentDate = millis)
+            val localMillis = Instant.ofEpochMilli(millis)
+                .atZone(ZoneOffset.UTC)
+                .toLocalDate()
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+            val updated = it.copy(currentDate = localMillis)
+            updated.copy(isValid = isValid(updated))
+        }
+    }
+
+    fun onTimeChanged(hour: Int, minute: Int) {
+        _uiState.update {
+            val timeMins = (hour * 60) + minute
+            val updated = it.copy(currentTimeMins = timeMins)
             updated.copy(isValid = isValid(updated))
         }
     }
 
     fun saveEvent() {
         viewModelScope.launch {
-            val currentState = uiState.value
+            val state = uiState.value
 
             val newEvent = Event(
-                title = currentState.currentTitle,
-                location = currentState.currentLocation,
-                date = currentState.currentDate,
-                category = currentState.currentCategory
+                title = state.currentTitle,
+                location = state.currentLocation,
+                timeStamp = state.currentDate + state.currentTimeMins,
+                category = state.currentCategory
             )
             eventsRepository.insertEvent(newEvent)
         }
@@ -59,17 +73,16 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
     fun isValid(state: EventUiState): Boolean {
         return with(state) {
             currentTitle.isNotBlank() &&
-            isDateTodayOrLater(currentDate)
+            isInFuture(currentDate, currentTimeMins)
         }
     }
 
-    fun isDateTodayOrLater(dateMillis: Long): Boolean {
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        return dateMillis >= calendar.timeInMillis
+    fun isInFuture(dateMillis: Long, timeMins: Int): Boolean {
+        val timeMillis = (timeMins * 60 * 1000L)
+        val dateTimeMillis = dateMillis + timeMillis
+        val localDateTime = Instant.ofEpochMilli(dateTimeMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+        return !localDateTime.isBefore(LocalDateTime.now())
     }
 }
