@@ -1,6 +1,7 @@
 package com.rorycd.eventplanner.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import com.rorycd.eventplanner.R
@@ -18,12 +19,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,8 +69,12 @@ fun NewEventScreen(
             maxLines = 1,
             modifier = Modifier.fillMaxWidth()
         )
-        DatePickerDocked(
-            dateValue = state.currentDate,
+//        DatePickerDocked(
+//            dateValue = state.currentDate,
+//            onDateSelected = { millis -> viewModel.onDateChanged(millis) }
+//        )
+        DatePickerText(
+            value = state.currentDate,
             onDateSelected = { millis -> viewModel.onDateChanged(millis) }
         )
         OutlinedTextField(
@@ -97,67 +104,105 @@ fun NewEventScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDocked(
-    dateValue: String,
-    onDateSelected: (Long?) -> Unit
+fun DatePickerText(
+    value: String,
+    onDateSelected: (Long?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
+    val onDismiss = { showDatePicker = false }
     val datePickerState = rememberDatePickerState()
 
-    // Observe the selected date and call onDateSelected when it changes
-    LaunchedEffect(datePickerState.selectedDateMillis) {
-        datePickerState.selectedDateMillis?.let {
-            onDateSelected(it)
-            showDatePicker = false
-        }
-    }
+    Text(
+        text = value,
+        modifier = modifier.clickable { showDatePicker = true }
+    )
 
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = dateValue,
-            onValueChange = { },
-            label = { Text(stringResource(R.string.event_date_label)) },
-            readOnly = true,
-            singleLine = true,
-            maxLines = 1,
-            trailingIcon = {
-                IconButton(onClick = { showDatePicker = true }) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Select date"
-                    )
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                TextButton(onClick = {
+                    onDateSelected(datePickerState.selectedDateMillis)
+                    onDismiss()
+                }) {
+                    Text("OK")
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-                .onFocusChanged { if (it.isFocused) showDatePicker = true }
-        )
-
-        if (showDatePicker) {
-            Popup(
-                onDismissRequest = { showDatePicker = false },
-                alignment = Alignment.TopStart
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = 64.dp)
-                        .shadow(elevation = 4.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(16.dp)
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = false
-                    )
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text("Cancel")
                 }
             }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 }
+
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun DatePickerDocked(
+//    dateValue: String,
+//    onDateSelected: (Long?) -> Unit
+//) {
+//    var showDatePicker by remember { mutableStateOf(false) }
+//    val datePickerState = rememberDatePickerState()
+//
+//    // Observe the selected date and call onDateSelected when it changes
+//    LaunchedEffect(datePickerState.selectedDateMillis) {
+//        datePickerState.selectedDateMillis?.let {
+//            onDateSelected(it)
+//            showDatePicker = false
+//        }
+//    }
+//
+//    Box(
+//        modifier = Modifier.fillMaxWidth()
+//    ) {
+//        OutlinedTextField(
+//            value = dateValue,
+//            onValueChange = { },
+//            label = { Text(stringResource(R.string.event_date_label)) },
+//            readOnly = true,
+//            singleLine = true,
+//            maxLines = 1,
+//            trailingIcon = {
+//                IconButton(onClick = { showDatePicker = true }) {
+//                    Icon(
+//                        imageVector = Icons.Default.DateRange,
+//                        contentDescription = "Select date"
+//                    )
+//                }
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(64.dp)
+//                .onFocusChanged { if (it.isFocused) showDatePicker = true }
+//        )
+//
+//        if (showDatePicker) {
+//            Popup(
+//                onDismissRequest = { showDatePicker = false },
+//                alignment = Alignment.TopStart
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .offset(y = 64.dp)
+//                        .shadow(elevation = 4.dp)
+//                        .background(MaterialTheme.colorScheme.surface)
+//                        .padding(16.dp)
+//                ) {
+//                    DatePicker(
+//                        state = datePickerState,
+//                        showModeToggle = false
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Preview
 @Composable
