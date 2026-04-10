@@ -1,5 +1,6 @@
 package com.rorycd.eventplanner.ui
 
+import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.eventplanner.data.Event
@@ -34,16 +35,11 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
     }
 
     fun onDateChanged(millis: Long?) {
-        val dateString = millis?.let { convertMillisToDate(it) } ?: ""
+        if (millis == null) return
         _uiState.update {
-            val updated = it.copy(currentDate = dateString)
+            val updated = it.copy(currentDate = millis)
             updated.copy(isValid = isValid(updated))
         }
-    }
-
-    fun convertMillisToDate(millis: Long): String {
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        return formatter.format(Date(millis))
     }
 
     fun saveEvent() {
@@ -63,7 +59,17 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
     fun isValid(state: EventUiState): Boolean {
         return with(state) {
             currentTitle.isNotBlank() &&
-            currentDate.isNotBlank()
+            isDateTodayOrLater(currentDate)
         }
+    }
+
+    fun isDateTodayOrLater(dateMillis: Long): Boolean {
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        return dateMillis >= calendar.timeInMillis
     }
 }

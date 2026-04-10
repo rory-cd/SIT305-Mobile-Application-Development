@@ -46,6 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun NewEventScreen(
@@ -74,7 +77,7 @@ fun NewEventScreen(
 //            onDateSelected = { millis -> viewModel.onDateChanged(millis) }
 //        )
         DatePickerText(
-            value = state.currentDate,
+            value = convertMillisToDate(state.currentDate),
             onDateSelected = { millis -> viewModel.onDateChanged(millis) }
         )
         OutlinedTextField(
@@ -100,6 +103,11 @@ fun NewEventScreen(
             Text(stringResource(R.string.new_event_confirm_button))
         }
     }
+}
+
+fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return formatter.format(Date(millis))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
