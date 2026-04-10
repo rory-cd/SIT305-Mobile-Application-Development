@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.time.Instant
@@ -77,7 +76,7 @@ fun NewEventScreen(
         ) {
             // Date
             DatePickerText(
-                value = convertMillisToDate(state.currentDate),
+                value = formatDate(state.currentDate),
                 onDateSelected = { millis -> viewModel.onDateChanged(millis) }
             )
             // Time
@@ -117,8 +116,15 @@ fun NewEventScreen(
     }
 }
 
-fun convertMillisToDate(millis: Long): String {
+fun formatDate(millis: Long): String {
     val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+    return Instant.ofEpochMilli(millis)
+        .atZone(ZoneId.systemDefault())
+        .format(formatter)
+}
+
+fun formatTime(millis: Long): String {
+    val formatter = DateTimeFormatter.ofPattern("h:mm a")
     return Instant.ofEpochMilli(millis)
         .atZone(ZoneId.systemDefault())
         .format(formatter)

@@ -37,7 +37,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.rorycd.eventplanner.ui.EventListScreen
 import com.rorycd.eventplanner.ui.NewEventScreen
-import com.rorycd.eventplanner.ui.eventsTest
 
 enum class Screen(@StringRes val title: Int) {
     EventList(title = R.string.app_name),
@@ -150,7 +149,15 @@ fun EventPlannerApp(
         ) {
             composable(route = Screen.EventList.name) {
                 EventListScreen(
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier.fillMaxHeight(),
+                    onSelectEvent = {
+                        navController.navigate(route = Screen.EditEvent.name) {
+                            popUpTo(Screen.EventList.name) {
+                                inclusive = false
+                            }
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
             composable(route = Screen.AddEvent.name) {
