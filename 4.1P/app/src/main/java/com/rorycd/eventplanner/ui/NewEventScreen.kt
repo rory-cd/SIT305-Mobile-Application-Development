@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -54,7 +55,8 @@ fun NewEventScreen(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
+        horizontalAlignment = Alignment.End
     ) {
         // Title
         OutlinedTextField(
@@ -65,16 +67,24 @@ fun NewEventScreen(
             maxLines = 1,
             modifier = Modifier.fillMaxWidth()
         )
-        // Date
-        DatePickerText(
-            value = convertMillisToDate(state.currentDate),
-            onDateSelected = { millis -> viewModel.onDateChanged(millis) }
-        )
-        // Time
-        TimePickerText(
-            value = formatMinutes(state.currentTimeMins),
-            onConfirm = { hour, minutes -> viewModel.onTimeChanged(hour, minutes) }
-        )
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = dimensionResource(R.dimen.padding_medium))
+        ) {
+            // Date
+            DatePickerText(
+                value = convertMillisToDate(state.currentDate),
+                onDateSelected = { millis -> viewModel.onDateChanged(millis) }
+            )
+            // Time
+            TimePickerText(
+                value = formatMinutes(state.currentTimeMins),
+                onConfirm = { hour, minutes -> viewModel.onTimeChanged(hour, minutes) }
+            )
+        }
         // Location
         OutlinedTextField(
             value = state.currentLocation,
@@ -141,7 +151,7 @@ fun DatePickerText(
                     onDateSelected(datePickerState.selectedDateMillis)
                     onDismiss()
                 }) {
-                    Text("OK")
+                    Text("Ok")
                 }
             },
             dismissButton = {
@@ -186,23 +196,27 @@ fun TimePickerText(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(28.dp)
                 )
-                .padding(24.dp)
         ) {
-            Column {
+            Column (
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+            ) {
                 TimePicker(
                     state = timePickerState,
                 )
-                Row {
-                    Button(onClick = onDismiss) {
+                Row (
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(onClick = onDismiss) {
                         Text("Cancel")
                     }
-                    Button(
+                    TextButton(
                         onClick = {
                             onConfirm(timePickerState.hour, timePickerState.minute)
                             onDismiss()
                         }
                     ) {
-                        Text("Confirm")
+                        Text("Ok")
                     }
                 }
             }
