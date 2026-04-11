@@ -15,16 +15,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.rorycd.eventplanner.navigation.Screen
+import com.rorycd.eventplanner.navigation.NavigationDestination
+import com.rorycd.eventplanner.ui.eventlist.EventListDestination
+import com.rorycd.eventplanner.ui.newevent.NewEventDestination
 
-enum class NavBarDestination(
-    val screen: Screen,
+enum class NavBarOption(
+    val destination: NavigationDestination,
     val icon: ImageVector,
     val label: String,
     val contentDescription: String
 ) {
-    Events(Screen.EventList, Icons.AutoMirrored.Default.List, "Events", "Event list screen"),
-    NewEvent(Screen.AddEvent, Icons.Default.Add, "Add Event", "Add event screen")
+    Events(EventListDestination, Icons.AutoMirrored.Default.List, "Events", "Event list screen"),
+    NewEvent(NewEventDestination, Icons.Default.Add, "Add Event", "Add event screen")
 }
 
 @Composable
@@ -33,27 +35,27 @@ fun EventPlannerNavBar(
     modifier: Modifier = Modifier
 ) {
     var selectedDestination by rememberSaveable {
-        mutableIntStateOf(Screen.EventList.ordinal)
+        mutableIntStateOf(0)
     }
 
     NavigationBar(
         windowInsets = NavigationBarDefaults.windowInsets,
         modifier = modifier
     ) {
-        NavBarDestination.entries.forEachIndexed { index, destination ->
+        NavBarOption.entries.forEachIndexed { index, navOption ->
             NavigationBarItem(
                 selected = selectedDestination == index,
                 onClick = {
-                    onSelectNavOption(destination.screen.name)
+                    onSelectNavOption(navOption.destination.route)
                     selectedDestination = index
                 },
                 icon = {
                     Icon(
-                        destination.icon,
-                        contentDescription = destination.contentDescription
+                        navOption.icon,
+                        contentDescription = navOption.contentDescription
                     )
                 },
-                label = { Text(destination.label) }
+                label = { Text(navOption.label) }
             )
         }
     }

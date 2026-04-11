@@ -17,9 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rorycd.eventplanner.navigation.NavigationDestination
 import com.rorycd.eventplanner.ui.AppViewModelProvider
 import com.rorycd.eventplanner.ui.components.EventDetailsForm
+
+object NewEventDestination : NavigationDestination {
+    override val route = "new_event"
+    override val titleRes = R.string.add_event
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +35,7 @@ fun NewEventScreen(
     viewModel: NewEventViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     // Collect state flow
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),

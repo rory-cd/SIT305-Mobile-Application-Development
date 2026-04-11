@@ -1,11 +1,14 @@
 package com.rorycd.eventplanner.ui
 
 import android.app.Application
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.rorycd.eventplanner.EventApplication
+import com.rorycd.eventplanner.ui.editevent.EditEventViewModel
 import com.rorycd.eventplanner.ui.eventlist.EventListViewModel
 import com.rorycd.eventplanner.ui.newevent.NewEventViewModel
 
@@ -24,6 +27,13 @@ object AppViewModelProvider {
         initializer {
             NewEventViewModel(
                 eventApplication().container.eventsRepository
+            )
+        }
+        // Initializer for EditEventViewModel
+        initializer {
+            EditEventViewModel(
+                eventsRepository = eventApplication().container.eventsRepository,
+                savedStateHandle = createSavedStateHandle()
             )
         }
     }

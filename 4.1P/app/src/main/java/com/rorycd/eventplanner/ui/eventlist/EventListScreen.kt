@@ -25,8 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.eventplanner.R
+import com.rorycd.eventplanner.navigation.NavigationDestination
 import com.rorycd.eventplanner.ui.AppViewModelProvider
 import com.rorycd.eventplanner.ui.components.EventCard
+
+object EventListDestination : NavigationDestination {
+    override val route = "event_list"
+    override val titleRes = R.string.app_name
+}
 
 @Composable
 fun EventListScreen(

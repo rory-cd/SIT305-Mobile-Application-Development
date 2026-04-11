@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.rorycd.eventplanner.R
-import com.rorycd.eventplanner.utils.formatDate
-import com.rorycd.eventplanner.utils.formatMinutes
+import com.rorycd.eventplanner.utils.formatDateAsString
+import com.rorycd.eventplanner.utils.formatMinutesAsTime
 
 @Composable
 fun EventDetailsForm(
@@ -53,12 +53,12 @@ fun EventDetailsForm(
         ) {
             // Date
             DatePickerText(
-                value = formatDate(date),
+                value = formatDateAsString(date),
                 onDateSelected = onDateChanged
             )
             // Time
             TimePickerText(
-                value = formatMinutes(time),
+                value = formatMinutesAsTime(time),
                 onConfirm = onTimeChanged
             )
         }

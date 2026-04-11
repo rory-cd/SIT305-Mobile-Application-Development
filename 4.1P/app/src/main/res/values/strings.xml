@@ -9,4 +9,5 @@
     <string name="event_date_label">Date*</string>
     <string name="new_event_confirm_button">Add event</string>
     <string name="no_events_message">Add some events to see them displayed here</string>
+    <string name="edit_event_confirm_button">Ok</string>
 </resources>

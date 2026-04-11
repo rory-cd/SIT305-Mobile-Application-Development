@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.eventplanner.data.Event
 import com.rorycd.eventplanner.data.EventsRepository
-import com.rorycd.eventplanner.utils.formatDate
-import com.rorycd.eventplanner.utils.formatTime
+import com.rorycd.eventplanner.utils.formatDateAsString
+import com.rorycd.eventplanner.utils.formatTimeAsString
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -27,6 +27,6 @@ private fun Event.toUiModel() = EventUiModel(
     title = title,
     location = location,
     category = category,
-    dateFormatted = formatDate(timeStamp),
-    timeFormatted = formatTime(timeStamp)
+    dateFormatted = formatDateAsString(timeStamp),
+    timeFormatted = formatTimeAsString(timeStamp)
 )

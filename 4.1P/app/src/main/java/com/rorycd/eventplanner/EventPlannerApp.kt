@@ -12,29 +12,27 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.rorycd.eventplanner.navigation.EventPlannerNavHost
-import com.rorycd.eventplanner.navigation.Screen
 import com.rorycd.eventplanner.ui.components.EventPlannerAppBar
 import com.rorycd.eventplanner.ui.components.EventPlannerNavBar
-import com.rorycd.eventplanner.ui.components.NavBarDestination
+import com.rorycd.eventplanner.ui.components.NavBarOption
+import com.rorycd.eventplanner.ui.eventlist.EventListDestination
 
-// Tracks the screens used in the navbar
-val topLevelScreens = NavBarDestination.entries.map { it.screen }
+// Tracks the destinations used in the navbar
+val topLevelDestinations = NavBarOption.entries.map { it.destination.route }
 
 @Composable
 fun EventPlannerApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = Screen.valueOf(
-        backStackEntry?.destination?.route ?: Screen.EventList.name
-    )
+    val currentDestination = backStackEntry?.destination?.route
 
     Scaffold(
         contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
             EventPlannerAppBar(
-                currentScreen = currentScreen,
-                canGoBack = currentScreen !in topLevelScreens,
+//                currentDestination = currentDestination,
+                canGoBack = currentDestination !in topLevelDestinations,
                 navigateUp = { navController.navigateUp() }
             )
         },
@@ -42,7 +40,7 @@ fun EventPlannerApp(
             EventPlannerNavBar(
                 onSelectNavOption = {
                     navController.navigate(route = it) {
-                        popUpTo(Screen.EventList.name) {
+                        popUpTo(EventListDestination.route) {
                             inclusive = false
                         }
                         launchSingleTop = true
