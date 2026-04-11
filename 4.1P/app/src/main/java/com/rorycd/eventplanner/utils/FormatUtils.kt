@@ -6,7 +6,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 fun formatDate(millis: Long): String {
-    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+    val formatter = DateTimeFormatter.ofPattern("E d MMMM")
     return Instant.ofEpochMilli(millis)
         .atZone(ZoneId.systemDefault())
         .format(formatter)

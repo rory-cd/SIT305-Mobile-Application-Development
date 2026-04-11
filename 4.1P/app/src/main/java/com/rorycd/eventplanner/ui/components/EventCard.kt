@@ -11,12 +11,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rorycd.eventplanner.R
 
@@ -34,23 +37,32 @@ fun EventCard(
         onClick = onSelectCard,
         modifier = modifier
     ) {
-        Column (
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .padding(all = dimensionResource(R.dimen.padding_medium))
+                .fillMaxWidth()
         ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 16.dp)
             ) {
-                Text(title)
-                Text(date)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+                // Title
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                // Divider
+                if (location != null || category != null) {
+                    HorizontalDivider(modifier = Modifier.padding(all = 4.dp))
+                }
+
                 // Location
                 if (location != null) {
-                    Row (verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Filled.LocationOn,
                             contentDescription = null,
@@ -61,16 +73,22 @@ fun EventCard(
                         Text(location ?: "")
                     }
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                Text(time)
+
+                // Category
+                if (category != null) {
+                    FilterChip(
+                        selected = false,
+                        onClick = { },
+                        label = { Text(category) }
+                    )
+                }
             }
-            // Category
-            if (category != null) {
-                FilterChip(
-                    selected = false,
-                    onClick = { },
-                    label = { Text(category) }
-                )
+            Column(horizontalAlignment = Alignment.End) {
+                // Date
+                Text(date)
+
+                // Time
+                Text(time)
             }
         }
     }
