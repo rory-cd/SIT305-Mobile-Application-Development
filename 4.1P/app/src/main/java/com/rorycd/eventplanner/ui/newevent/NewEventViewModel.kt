@@ -63,7 +63,7 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
             val newEvent = Event(
                 title = state.currentTitle,
                 location = state.currentLocation.takeIf { it.isNotBlank() },
-                timeStamp = state.currentDate + state.currentTimeMins,
+                timeStamp = state.currentDate + (state.currentTimeMins * 60 * 1000L),
                 category = state.currentCategory.takeIf { it.isNotBlank() }
             )
             eventsRepository.insertEvent(newEvent)
