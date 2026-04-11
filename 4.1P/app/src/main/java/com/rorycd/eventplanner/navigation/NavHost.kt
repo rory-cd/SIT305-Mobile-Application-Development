@@ -33,12 +33,7 @@ fun EventPlannerNavHost (
         composable(route = EventListDestination.route) {
             EventListScreen(
                 onSelectEvent = {
-                    navController.navigate(route = "${EditEventDestination.route}/$it") {
-                        popUpTo(EventListDestination.route) {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
+                    navController.navigate(route = "${EditEventDestination.route}/$it")
                 }
             )
         }
