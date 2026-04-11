@@ -1,4 +1,4 @@
-package com.rorycd.eventplanner.ui
+package com.rorycd.eventplanner.ui.eventlist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.eventplanner.R
+import com.rorycd.eventplanner.ui.AppViewModelProvider
+import com.rorycd.eventplanner.ui.components.EventCard
 
 @Composable
 fun EventListScreen(
     onSelectEvent: (Int) -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: EventListViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     val events by viewModel.events.collectAsStateWithLifecycle()
@@ -51,64 +52,7 @@ fun EventListScreen(
                     category = it.category,
                     date = it.dateFormatted,
                     time = it.timeFormatted,
-                    onSelectCard = { onSelectEvent(it.id) },
-                    modifier = modifier
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun EventCard(
-    title: String,
-    location: String?,
-    category: String?,
-    date: String,
-    time: String,
-    onSelectCard: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        onClick = onSelectCard,
-        modifier = modifier
-    ) {
-        Column (
-            modifier = Modifier
-                .padding(all = dimensionResource(R.dimen.padding_medium))
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(title)
-                Text(date)
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Location
-                if (location != null) {
-                    Row (verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Filled.LocationOn,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(end = 4.dp)
-                                .size(16.dp)
-                        )
-                        Text(location ?: "")
-                    }
-                }
-                Spacer(modifier = Modifier.weight(1f))
-                Text(time)
-            }
-            // Category
-            if (category != null) {
-                FilterChip(
-                    selected = false,
-                    onClick = { },
-                    label = { Text(category) }
+                    onSelectCard = { onSelectEvent(it.id) }
                 )
             }
         }

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.rorycd.eventplanner.EventApplication
+import com.rorycd.eventplanner.ui.eventlist.EventListViewModel
+import com.rorycd.eventplanner.ui.newevent.NewEventViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire Planner app

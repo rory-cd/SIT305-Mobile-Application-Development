@@ -1,4 +1,4 @@
-package com.rorycd.eventplanner.ui
+package com.rorycd.eventplanner.ui.eventlist
 
 data class EventUiModel(
     val id: Int,

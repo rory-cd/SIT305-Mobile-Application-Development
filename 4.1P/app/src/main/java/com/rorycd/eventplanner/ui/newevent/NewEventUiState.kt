@@ -1,10 +1,10 @@
-package com.rorycd.eventplanner.ui
+package com.rorycd.eventplanner.ui.newevent
 
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
-data class EventUiState(
+data class NewEventUiState(
     val currentTitle: String = "",
     val currentLocation: String = "",
     val currentCategory: String = "",

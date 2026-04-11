@@ -1,0 +1,101 @@
+package com.rorycd.eventplanner.ui.newevent
+
+import androidx.compose.foundation.layout.Arrangement
+import com.rorycd.eventplanner.R
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rorycd.eventplanner.ui.AppViewModelProvider
+import com.rorycd.eventplanner.ui.components.DatePickerText
+import com.rorycd.eventplanner.ui.components.TimePickerText
+import com.rorycd.eventplanner.utils.formatDate
+import com.rorycd.eventplanner.utils.formatMinutes
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NewEventScreen(
+    onAddEvent: (String) -> Unit,
+    viewModel: NewEventViewModel = viewModel(factory = AppViewModelProvider.factory)
+) {
+    // Collect state flow
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = dimensionResource(R.dimen.padding_medium)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
+        horizontalAlignment = Alignment.End
+    ) {
+        // Title
+        OutlinedTextField(
+            value = state.currentTitle,
+            onValueChange = { viewModel.onTitleChanged(it) },
+            label = { Text(stringResource(R.string.event_title_label)) },
+            singleLine = true,
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = dimensionResource(R.dimen.padding_medium))
+        ) {
+            // Date
+            DatePickerText(
+                value = formatDate(state.currentDate),
+                onDateSelected = { millis -> viewModel.onDateChanged(millis) }
+            )
+            // Time
+            TimePickerText(
+                value = formatMinutes(state.currentTimeMins),
+                onConfirm = { hour, minutes -> viewModel.onTimeChanged(hour, minutes) }
+            )
+        }
+        // Location
+        OutlinedTextField(
+            value = state.currentLocation,
+            onValueChange = { viewModel.onLocationChanged(it) },
+            label = { Text(stringResource(R.string.event_location_label)) },
+            singleLine = true,
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth()
+        )
+        // Category
+        OutlinedTextField(
+            value = state.currentCategory,
+            onValueChange = { viewModel.onCategoryChanged(it) },
+            label = { Text(stringResource(R.string.event_category_label)) },
+            singleLine = true,
+            maxLines = 1,
+            modifier = Modifier.fillMaxWidth()
+        )
+        // Add button
+        Button(
+            onClick = {
+                viewModel.saveEvent()
+                onAddEvent(state.currentTitle)
+            },
+            enabled = state.isValid
+        ) {
+            Text(stringResource(R.string.new_event_confirm_button))
+        }
+    }
+}

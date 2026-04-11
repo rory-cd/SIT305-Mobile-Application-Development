@@ -1,9 +1,11 @@
-package com.rorycd.eventplanner.ui
+package com.rorycd.eventplanner.ui.eventlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.eventplanner.data.Event
 import com.rorycd.eventplanner.data.EventsRepository
+import com.rorycd.eventplanner.utils.formatDate
+import com.rorycd.eventplanner.utils.formatTime
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

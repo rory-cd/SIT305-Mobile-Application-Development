@@ -1,4 +1,4 @@
-package com.rorycd.eventplanner.ui
+package com.rorycd.eventplanner.ui.newevent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,8 +15,8 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 
 class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow(EventUiState())
-    val uiState: StateFlow<EventUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(NewEventUiState())
+    val uiState: StateFlow<NewEventUiState> = _uiState.asStateFlow()
 
     // UI Logic
     fun onTitleChanged(newTitle: String) {
@@ -70,7 +70,7 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
         }
     }
 
-    fun isValid(state: EventUiState): Boolean {
+    fun isValid(state: NewEventUiState): Boolean {
         return with(state) {
             currentTitle.isNotBlank() &&
             isInFuture(currentDate, currentTimeMins)
