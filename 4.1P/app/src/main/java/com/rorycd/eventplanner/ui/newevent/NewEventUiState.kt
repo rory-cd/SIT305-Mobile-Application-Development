@@ -4,6 +4,9 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
+/**
+ * Represents the current state of the [NewEventScreen] UI
+ */
 data class NewEventUiState(
     val currentTitle: String = "",
     val currentLocation: String = "",

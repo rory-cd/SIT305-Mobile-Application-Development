@@ -1,27 +1,15 @@
 package com.rorycd.eventplanner.ui.eventlist
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.FilterChip
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.eventplanner.R
@@ -29,16 +17,23 @@ import com.rorycd.eventplanner.navigation.NavigationDestination
 import com.rorycd.eventplanner.ui.AppViewModelProvider
 import com.rorycd.eventplanner.ui.components.EventCard
 
+/**
+ * Destination for [EventListScreen]. Implements [NavigationDestination]
+ */
 object EventListDestination : NavigationDestination {
     override val route = "event_list"
     override val titleRes = R.string.app_name
 }
 
+/**
+ * Composable for event list screen
+ */
 @Composable
 fun EventListScreen(
     onSelectEvent: (Int) -> Unit,
     viewModel: EventListViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
+    // Retrieve all events sorted by date
     val events by viewModel.events.collectAsStateWithLifecycle()
 
     if (events.isEmpty()) {

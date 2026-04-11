@@ -14,6 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 
+/**
+ * Date picker with a static text field to display the selected date.
+ * Text acts as a button to launch the picker.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerText(
@@ -25,6 +29,7 @@ fun DatePickerText(
     val onDismiss = { showDatePicker = false }
     val datePickerState = rememberDatePickerState()
 
+    // Text field to display selected date and launch picker
     Text(
         text = value,
         modifier = modifier.clickable { showDatePicker = true }

@@ -3,6 +3,9 @@ package com.rorycd.eventplanner.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Room entity, models data for an event
+ */
 @Entity(tableName = "events")
 data class Event (
     @PrimaryKey(autoGenerate = true)

@@ -22,6 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rorycd.eventplanner.R
 
+/**
+ * Card used to display event details
+ */
 @Composable
 fun EventCard(
     title: String,

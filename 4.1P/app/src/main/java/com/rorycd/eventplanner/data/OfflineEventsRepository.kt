@@ -2,6 +2,9 @@ package com.rorycd.eventplanner.data
 
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Implementation of [EventsRepository] for offline usage, utilising [EventDao]
+ */
 class OfflineEventsRepository(private val eventDao: EventDao) : EventsRepository {
     override fun getAllEventsStream(): Flow<List<Event>> = eventDao.getAllEvents()
 

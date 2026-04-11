@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * View model for [EventListScreen]. Supplies a list of all events sorted by date
+ */
 class EventListViewModel(private val eventsRepository: EventsRepository) : ViewModel() {
     val events: StateFlow<List<EventUiModel>> = eventsRepository.getAllEventsStream()
         // For each event, map it to a ui model
@@ -22,6 +25,9 @@ class EventListViewModel(private val eventsRepository: EventsRepository) : ViewM
         )
 }
 
+/**
+ * Extension function for Event, used to create an [EventUiModel] from an [Event]
+ */
 private fun Event.toUiModel() = EventUiModel(
     id = id,
     title = title,

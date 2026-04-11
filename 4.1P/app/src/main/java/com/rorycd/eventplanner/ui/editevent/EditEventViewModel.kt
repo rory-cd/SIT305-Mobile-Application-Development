@@ -18,16 +18,21 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
+/**
+ * View model for [EditEventScreen]. Initialises UI and updates values for selected event
+ */
 class EditEventViewModel(
     private val eventsRepository: EventsRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    // Retrieve navigation parameter (event ID) from the nav host
     private val eventId: Int = checkNotNull(savedStateHandle[EditEventDestination.eventIdArg])
 
     private val _uiState: MutableStateFlow<EditEventUiState?> = MutableStateFlow(null)
     val uiState: StateFlow<EditEventUiState?> = _uiState.asStateFlow()
 
+    // Initialise the UI state based on the selected event
     init {
         viewModelScope.launch {
             val event = eventsRepository.getEventStream(eventId).first()
@@ -83,6 +88,7 @@ class EditEventViewModel(
         }
     }
 
+    // Database interaction
     fun updateEvent() {
         viewModelScope.launch {
             val state = uiState.value ?: return@launch
@@ -98,6 +104,7 @@ class EditEventViewModel(
         }
     }
 
+    // Helpers
     fun isValid(state: EditEventUiState): Boolean {
         return with(state) {
             currentTitle.isNotBlank() &&

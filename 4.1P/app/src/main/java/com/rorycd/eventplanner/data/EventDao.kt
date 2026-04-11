@@ -8,6 +8,9 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Data Access Object for Room [Event] database access
+ */
 @Dao
 interface EventDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)

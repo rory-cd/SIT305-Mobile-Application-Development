@@ -14,6 +14,9 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 
+/**
+ * View model for [NewEventScreen]. Manages UI and adds new events to database
+ */
 class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(NewEventUiState())
     val uiState: StateFlow<NewEventUiState> = _uiState.asStateFlow()
@@ -56,6 +59,7 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
         }
     }
 
+    // Database interaction
     fun saveEvent() {
         viewModelScope.launch {
             val state = uiState.value
@@ -70,6 +74,7 @@ class NewEventViewModel(private val eventsRepository: EventsRepository) : ViewMo
         }
     }
 
+    // Helpers
     fun isValid(state: NewEventUiState): Boolean {
         return with(state) {
             currentTitle.isNotBlank() &&

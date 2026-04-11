@@ -26,6 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.rorycd.eventplanner.R
 import java.util.Calendar
 
+/**
+ * Time picker with a static text field to display the selected time.
+ * Text acts as a button to launch the picker.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerText(
@@ -37,12 +41,14 @@ fun TimePickerText(
     val onDismiss = { showTimePicker = false }
     val currentTime = Calendar.getInstance()
 
+    // Initial time is the current time
     val timePickerState = rememberTimePickerState(
         initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
         initialMinute = currentTime.get(Calendar.MINUTE),
         is24Hour = false
     )
 
+    // Text field to display selected time and launch picker
     Text(
         text = value,
         modifier = modifier.clickable { showTimePicker = true }

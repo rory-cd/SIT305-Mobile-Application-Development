@@ -19,16 +19,32 @@ import com.rorycd.eventplanner.navigation.NavigationDestination
 import com.rorycd.eventplanner.ui.eventlist.EventListDestination
 import com.rorycd.eventplanner.ui.newevent.NewEventDestination
 
+/**
+ * Defines the options used by [EventPlannerNavBar]
+ */
 enum class NavBarOption(
     val destination: NavigationDestination,
     val icon: ImageVector,
     val label: String,
     val contentDescription: String
 ) {
-    Events(EventListDestination, Icons.AutoMirrored.Default.List, "Events", "Event list screen"),
-    NewEvent(NewEventDestination, Icons.Default.Add, "Add Event", "Add event screen")
+    Events(
+        EventListDestination,
+        Icons.AutoMirrored.Default.List,
+        "Events",
+        "Event list screen"
+    ),
+    NewEvent(
+        NewEventDestination,
+        Icons.Default.Add,
+        "Add Event",
+        "Add event screen"
+    )
 }
 
+/**
+ * Bottom nav bar used across entire app
+ */
 @Composable
 fun EventPlannerNavBar(
     onSelectNavOption: (String) -> Unit,

@@ -16,6 +16,9 @@ import com.rorycd.eventplanner.ui.eventlist.EventListScreen
 import com.rorycd.eventplanner.ui.newevent.NewEventDestination
 import com.rorycd.eventplanner.ui.newevent.NewEventScreen
 
+/**
+ * Composable defining navigation routes for the main app content
+ */
 @Composable
 fun EventPlannerNavHost (
     navController: NavHostController,
@@ -26,6 +29,7 @@ fun EventPlannerNavHost (
         startDestination = EventListDestination.route,
         modifier = modifier
     ) {
+        // Event list screen
         composable(route = EventListDestination.route) {
             EventListScreen(
                 onSelectEvent = {
@@ -38,6 +42,7 @@ fun EventPlannerNavHost (
                 }
             )
         }
+        // New event screen
         composable(route = NewEventDestination.route) {
             val context = LocalContext.current
             NewEventScreen(
@@ -47,6 +52,7 @@ fun EventPlannerNavHost (
                 }
             )
         }
+        // Edit event screen
         composable(
             route = EditEventDestination.routeWithArgs,
             arguments = listOf(navArgument(EditEventDestination.eventIdArg) {

@@ -23,13 +23,19 @@ import com.rorycd.eventplanner.navigation.NavigationDestination
 import com.rorycd.eventplanner.ui.AppViewModelProvider
 import com.rorycd.eventplanner.ui.components.EventDetailsForm
 
+/**
+ * Destination for [EditEventScreen]. Implements [NavigationDestination]
+ */
 object EditEventDestination : NavigationDestination {
     override val route = "edit_event"
     override val titleRes = R.string.edit_event
-    const val eventIdArg = "eventId"
-    val routeWithArgs = "$route/{$eventIdArg}"
+    const val eventIdArg = "eventId"            // Used for referencing the route parameter
+    val routeWithArgs = "$route/{$eventIdArg}"  // Dynamic route based on selected event
 }
 
+/**
+ * Composable for edit event screen
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditEventScreen(
@@ -37,8 +43,8 @@ fun EditEventScreen(
     viewModel: EditEventViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     // Collect state flow
-    val firstState by viewModel.uiState.collectAsState()
-    val state = firstState
+    val collectedState by viewModel.uiState.collectAsState()
+    val state = collectedState
 
     if (state == null) {
         CircularProgressIndicator()

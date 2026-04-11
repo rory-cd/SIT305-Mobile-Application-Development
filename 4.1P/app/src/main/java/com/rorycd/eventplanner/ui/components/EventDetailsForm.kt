@@ -16,6 +16,9 @@ import com.rorycd.eventplanner.R
 import com.rorycd.eventplanner.utils.formatDateAsString
 import com.rorycd.eventplanner.utils.formatMinutesAsTime
 
+/**
+ * Form for editing event details
+ */
 @Composable
 fun EventDetailsForm(
     title: String,

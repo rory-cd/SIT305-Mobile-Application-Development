@@ -11,19 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.rorycd.eventplanner.R
-import com.rorycd.eventplanner.navigation.NavigationDestination
 
+/**
+ * Top app bar to display screen title and back icon
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventPlannerAppBar(
-//    currentDestination: NavigationDestination,
+    title: String,
     canGoBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
-//        title = { Text(stringResource(currentDestination.titleRes)) },
-        title = { Text("Blah") },
+        title = { Text(title) },
         modifier = modifier,
         navigationIcon = {
             if (canGoBack) {
