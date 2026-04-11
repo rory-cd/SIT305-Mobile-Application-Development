@@ -104,6 +104,15 @@ class EditEventViewModel(
         }
     }
 
+    fun deleteEvent() {
+        viewModelScope.launch {
+            val event = eventsRepository.getEventStream(eventId).first()
+            if (event != null) {
+                eventsRepository.deleteEvent(event)
+            }
+        }
+    }
+
     // Helpers
     fun isValid(state: EditEventUiState): Boolean {
         return with(state) {

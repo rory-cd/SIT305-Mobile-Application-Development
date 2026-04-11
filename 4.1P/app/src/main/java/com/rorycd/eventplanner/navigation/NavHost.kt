@@ -59,6 +59,10 @@ fun EventPlannerNavHost (
                 onEditEvent = {
                     Toast.makeText(context, "Edited event \"$it\"", Toast.LENGTH_SHORT).show()
                     navController.navigateUp()
+                },
+                onDeleteEvent = {
+                    Toast.makeText(context, "Deleted event \"$it\"", Toast.LENGTH_SHORT).show()
+                    navController.navigateUp()
                 }
             )
         }
