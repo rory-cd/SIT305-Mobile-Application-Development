@@ -27,7 +27,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
     public NewsViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.item_news, parent, false);
 
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView, articleList);
     }
 
     @Override
@@ -51,11 +51,31 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
         ImageView ivNewsItem;
         TextView tvNewsItemTitle, tvNewsItemContent;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, List<Article> articleList) {
             super(itemView);
             ivNewsItem = itemView.findViewById(R.id.ivNewsItem);
             tvNewsItemTitle = itemView.findViewById(R.id.tvNewsItemTitle);
             tvNewsItemContent = itemView.findViewById(R.id.tvNewsItemContent);
+
+            // Set onclick for item
+            itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+
+                // If it's a valid position
+                if (position != RecyclerView.NO_POSITION) {
+                    Article article = articleList.get(position);
+
+                    // Create the new detail fragment based on the current item
+                    DetailFragment fragment = DetailFragment.newInstance(
+                            article.getImgResId(),
+                            article.getTitle(),
+                            article.getContent()
+                    );
+
+                    // Change the fragment
+                    ((MainActivity)v.getContext()).changeToFragment(fragment);
+                }
+            });
         }
     }
 

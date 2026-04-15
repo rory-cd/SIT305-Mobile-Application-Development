@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +69,7 @@ public class HomeFragment extends Fragment {
                 "Ut consectetur bibendum elit rutrum congue. Nunc accumsan sapien dolor, sit amet venenatis libero maximus quis. Curabitur posuere lectus vel commodo dignissim. Proin rhoncus accumsan iaculis. Pellentesque velit velit, mollis at libero vel, laoreet faucibus erat. Curabitur sed sollicitudin nisl. Vivamus pellentesque nunc et lectus volutpat, a dapibus nisl volutpat. Suspendisse gravida odio justo, eu vestibulum nunc lacinia quis. Duis dui eros, lobortis et erat tempor, sagittis dapibus nunc. Sed dapibus metus ante, nec viverra est pretium nec. Proin ac odio elit. Nulla id ornare sem, ut lobortis nisi. Donec eu euismod orci. Vivamus ac diam ex. Integer molestie, orci quis lacinia tempor, orci arcu bibendum purus, a interdum mauris libero vel orci."
             ),
             new Article(
-                6, R.drawable.afl_2, "Riots as Liverpool beat Manchester",
+                6, R.drawable.afl_2, "Injuries plague Geelong",
                 "Donec pharetra ipsum sed aliquam dignissim. Integer blandit, massa non mattis sollicitudin, ante massa tempor orci, vel mollis lacus turpis et arcu. Suspendisse bibendum ante nec tempor rhoncus. Suspendisse dapibus eros ut sem imperdiet mattis. Proin sit amet dignissim erat. Nam sit amet finibus nunc. Maecenas mollis magna scelerisque, accumsan mi sit amet, laoreet nunc. Proin gravida suscipit lorem, quis fermentum risus tincidunt non. Ut semper vestibulum malesuada. Nullam quam purus, convallis gravida augue vitae, vehicula consequat nisi. Maecenas vulputate blandit diam a fringilla. Praesent magna eros, elementum at ullamcorper nec, eleifend non elit. Cras at nisl ultricies, lobortis orci eget, porta enim. Praesent semper metus in ornare placerat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
             )
         ));
