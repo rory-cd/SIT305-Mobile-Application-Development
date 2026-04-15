@@ -5,4 +5,5 @@
     <string name="article_img_content_desc">News article image</string>
     <string name="filter_hint">Filter by</string>
     <string name="top_stories_title">TOP STORIES</string>
+    <string name="related_stories_title">RELATED STORIES</string>
 </resources>

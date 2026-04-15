@@ -59,11 +59,7 @@ public class TopStoriesViewAdapter extends RecyclerView.Adapter<TopStoriesViewAd
                     Article article = articleList.get(position);
 
                     // Create the new detail fragment based on the current item
-                    DetailFragment fragment = DetailFragment.newInstance(
-                            article.getImgResId(),
-                            article.getTitle(),
-                            article.getContent()
-                    );
+                    DetailFragment fragment = DetailFragment.newInstance(article.getId());
 
                     // Change the fragment
                     ((MainActivity)v.getContext()).changeToFragment(fragment);
