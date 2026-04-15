@@ -58,4 +58,9 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.ViewHo
             tvNewsItemContent = itemView.findViewById(R.id.tvNewsItemContent);
         }
     }
+
+    public void updateList(List<Article> newList) {
+        this.articleList = newList;
+        notifyDataSetChanged();
+    }
 }
