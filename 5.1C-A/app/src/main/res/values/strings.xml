@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Sport News Feed</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="news_title">NEWS</string>
+    <string name="article_img_content_desc">News article image</string>
+    <string name="filter_hint">Filter by</string>
+    <string name="top_stories_title">TOP STORIES</string>
 </resources>
