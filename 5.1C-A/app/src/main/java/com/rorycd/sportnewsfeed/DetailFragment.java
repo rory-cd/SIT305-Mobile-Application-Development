@@ -1,5 +1,6 @@
 package com.rorycd.sportnewsfeed;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,7 @@ import java.util.List;
 public class DetailFragment extends Fragment {
 
     ImageView ivHeader;
-    TextView tvTitle, tvContent;
+    TextView tvTitle, tvContent, tvRelatedStories;
     LinearLayout llRelatedStories;
 
     private static final String ARG_ARTICLE_ID = "articleId";
@@ -75,10 +76,11 @@ public class DetailFragment extends Fragment {
         // Set "related stories"
         llRelatedStories = view.findViewById(R.id.llRelatedStories);
 
+        int relatedStoryCount = 0;
+
         for (Article a : ArticleDataSource.getArticles()) {
             // If a different article has the same category
             if (a.getId() != article.getId() && a.getCategory().equals(article.getCategory())) {
-
                 // Add a card
                 View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.item_related_story, llRelatedStories, false);
 
@@ -104,7 +106,13 @@ public class DetailFragment extends Fragment {
                 });
 
                 llRelatedStories.addView(itemView);
+                relatedStoryCount++;
             }
+        }
+
+        if (relatedStoryCount == 0) {
+            tvRelatedStories = view.findViewById(R.id.tvRelatedStories);
+            tvRelatedStories.setVisibility(View.INVISIBLE);
         }
     }
 }
