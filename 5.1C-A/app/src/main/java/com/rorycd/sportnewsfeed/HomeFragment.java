@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView rvTopStories, rvNews;
     NewsViewAdapter rvNewsAdapter;
+    TextView tvNoResults;
     EditText etFilter;
     TopStoriesViewAdapter rvTopStoriesAdapter;
 
@@ -72,6 +74,7 @@ public class HomeFragment extends Fragment {
         rvNews.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
         // News filter
+        tvNoResults = view.findViewById(R.id.tvNoResults);
         etFilter = view.findViewById(R.id.etFilter);
         etFilter.addTextChangedListener(new TextWatcher() {
             @Override
@@ -80,12 +83,18 @@ public class HomeFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterArticles(s.toString());
+                List<Article> results = filterArticles(s.toString());
+                // Show "no results found" text
+                if (results.isEmpty()) {
+                    tvNoResults.setVisibility(View.VISIBLE);
+                } else {
+                    tvNoResults.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
 
-    private void filterArticles(String query) {
+    private List<Article> filterArticles(String query) {
         filteredList.clear();
         for (Article article : articleList) {
 
@@ -102,5 +111,6 @@ public class HomeFragment extends Fragment {
             }
             rvNewsAdapter.updateList(filteredList);
         }
+        return filteredList;
     }
 }
