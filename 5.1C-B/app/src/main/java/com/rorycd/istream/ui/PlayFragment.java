@@ -17,11 +17,9 @@ import com.rorycd.istream.R;
 
 public class PlayFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_URL = "url";
+    private static final String ARG_VIDEO_ID = "url";
 
-    private String url;
+    private String videoId;
 
     public PlayFragment() {
         // Required empty public constructor
@@ -30,7 +28,7 @@ public class PlayFragment extends Fragment {
     public static PlayFragment newInstance(String url) {
         PlayFragment fragment = new PlayFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
+        args.putString(ARG_VIDEO_ID, url);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,7 +37,7 @@ public class PlayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            url = getArguments().getString(ARG_URL);
+            videoId = getArguments().getString(ARG_VIDEO_ID);
         }
     }
 
@@ -56,12 +54,11 @@ public class PlayFragment extends Fragment {
 
         // Make YTPlayerView a lifecycle observer of its parent
         YouTubePlayerView youTubePlayerView = view.findViewById(R.id.youtube_player_view);
-        getLifecycle().addObserver(youTubePlayerView);
+        getViewLifecycleOwner().getLifecycle().addObserver(youTubePlayerView);
 
         youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                String videoId = "S0Q4gqBUs7c";
                 youTubePlayer.loadVideo(videoId, 0);
             }
         });

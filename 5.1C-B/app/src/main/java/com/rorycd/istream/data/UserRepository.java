@@ -26,6 +26,10 @@ public class UserRepository {
         void onResult(int userId);
     }
 
+    public interface PlaylistCallback {
+        void onResult(List<String> playlist);
+    }
+
     private UserRepository(Context context) {
         userDao = UserDatabase.getInstance(context).userDao();
         playlistDao = UserDatabase.getInstance(context).playlistDao();
@@ -76,8 +80,14 @@ public class UserRepository {
         });
     }
 
-    public List<String> getPlaylist() {
-        return playlistDao.getPlaylistForUser(getCurrentUserId());
+    public void getPlaylist(PlaylistCallback callback) {
+        // Run a separate thread
+        executor.execute(() -> {
+            List<String> playlist = playlistDao.getPlaylistForUser(getCurrentUserId());
+
+            // Execute the callback on the main thread
+            new Handler(Looper.getMainLooper()).post(() -> callback.onResult(playlist));
+        });
     }
 
     public boolean isLoggedIn() {
