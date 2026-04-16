@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface PlaylistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    int addItem(PlaylistItem item);
+    void addItem(PlaylistItem item);
 
     @Query("SELECT url FROM playlists WHERE userId = :userId")
     List<String> getPlaylistForUser(int userId);
