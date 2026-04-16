@@ -1,13 +1,15 @@
 package com.rorycd.sportnewsfeed;
 
-import android.opengl.Visibility;
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +18,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.button.MaterialButton;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DetailFragment extends Fragment {
 
-    ImageView ivHeader;
-    TextView tvTitle, tvContent, tvRelatedStories;
-    LinearLayout llRelatedStories;
+    private ImageView ivHeader;
+    private TextView tvTitle, tvContent, tvRelatedStories;
+    private LinearLayout llRelatedStories;
+    private MaterialButton btnBookmark;
+    private BookmarkDatabase database;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private static final String ARG_ARTICLE_ID = "articleId";
 
@@ -48,6 +55,7 @@ public class DetailFragment extends Fragment {
             int id = getArguments().getInt(ARG_ARTICLE_ID);
             article = ArticleDataSource.getArticleById(id);
         }
+        database = BookmarkDatabase.getInstance(requireContext());
     }
 
     @Override
@@ -73,6 +81,37 @@ public class DetailFragment extends Fragment {
         tvContent = view.findViewById(R.id.tvContent);
         tvContent.setText(article.getContent());
 
+        // Bookmark
+        btnBookmark = view.findViewById(R.id.btnBookmark);
+
+        executorService.execute(() -> {
+            boolean isBookmarked = database.bookmarkDao().isBookmarked(article.getId());
+
+            getActivity().runOnUiThread(() -> {
+                setBookmarkIconStatus(isBookmarked);
+            });
+        });
+
+        // Set bookmark listener
+        btnBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = article.getId();
+
+                executorService.execute(() -> {
+                    boolean isBookmarked = database.bookmarkDao().isBookmarked(id);
+
+                    if (isBookmarked) {
+                        database.bookmarkDao().delete(id);
+                        getActivity().runOnUiThread(() -> setBookmarkIconStatus(false));
+                    } else {
+                        database.bookmarkDao().insert(new Bookmark(id));
+                        getActivity().runOnUiThread(() -> setBookmarkIconStatus(true));
+                    }
+                });
+            }
+        });
+
         // Set "related stories"
         llRelatedStories = view.findViewById(R.id.llRelatedStories);
 
@@ -82,7 +121,7 @@ public class DetailFragment extends Fragment {
             // If a different article has the same category
             if (a.getId() != article.getId() && a.getCategory().equals(article.getCategory())) {
                 // Add a card
-                View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.item_related_story, llRelatedStories, false);
+                View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.article_card_horizontal, llRelatedStories, false);
 
                 // Set the card's values
                 ImageView ivNewsItem = itemView.findViewById(R.id.ivNewsItem);
@@ -114,5 +153,11 @@ public class DetailFragment extends Fragment {
             tvRelatedStories = view.findViewById(R.id.tvRelatedStories);
             tvRelatedStories.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public void setBookmarkIconStatus(boolean isBookmarked) {
+        int iconId = isBookmarked ? R.drawable.ic_bookmark_added : R.drawable.ic_bookmark;
+        Drawable icon = ContextCompat.getDrawable(requireContext(), iconId);
+        btnBookmark.setIcon(icon);
     }
 }

@@ -7,4 +7,7 @@
     <string name="top_stories_title">TOP STORIES</string>
     <string name="related_stories_title">RELATED STORIES</string>
     <string name="no_results">No matching results found</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="news_tab">News</string>
+    <string name="bookmarks_tab">Bookmarks</string>
 </resources>

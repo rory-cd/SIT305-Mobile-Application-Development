@@ -25,7 +25,7 @@ public class TopStoriesViewAdapter extends RecyclerView.Adapter<TopStoriesViewAd
     @NonNull
     @Override
     public TopStoriesViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(context).inflate(R.layout.item_top_story, parent, false);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.article_card_square, parent, false);
 
         return new ViewHolder(itemView, articleList);
     }
