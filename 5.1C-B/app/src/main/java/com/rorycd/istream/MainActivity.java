@@ -15,7 +15,7 @@ import com.rorycd.istream.data.UserRepository;
 import com.rorycd.istream.ui.HomeFragment;
 import com.rorycd.istream.ui.LoginFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Navigator {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +23,11 @@ public class MainActivity extends AppCompatActivity {
 
         // On the first OnCreate
         if (savedInstanceState == null) {
-            UserRepository repo = new UserRepository(this);
+            UserRepository repo = UserRepository.getInstance(this);
 
             Fragment initial = repo.isLoggedIn() ? HomeFragment.newInstance() : LoginFragment.newInstance();
 
-            changeToFragment(initial);
+            navigateTo(initial, false);
         }
 
         EdgeToEdge.enable(this);
@@ -40,9 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void changeToFragment(Fragment fragment) {
+    @Override
+    public void navigateTo(Fragment fragment, boolean addToBackStack) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main, fragment).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.main, fragment);
+        if (addToBackStack) fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
