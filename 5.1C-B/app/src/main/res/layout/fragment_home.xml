@@ -44,6 +44,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnPlay" />
 
+    <!-- My playlist -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/playlist_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnAdd" />
+
     <!-- Sign out -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignOut"
@@ -53,6 +64,6 @@
         android:text="@string/signout_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAdd" />
+        app:layout_constraintTop_toBottomOf="@id/btnPlaylist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

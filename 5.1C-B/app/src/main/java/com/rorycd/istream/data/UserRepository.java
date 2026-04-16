@@ -69,7 +69,11 @@ public class UserRepository {
 
     public void addUrlToPlaylist(String url) {
         PlaylistItem item = new PlaylistItem(getCurrentUserId(), url);
-        playlistDao.addItem(item);
+
+        // Run a separate thread
+        executor.execute(() -> {
+            playlistDao.addItem(item);
+        });
     }
 
     public List<String> getPlaylist() {
