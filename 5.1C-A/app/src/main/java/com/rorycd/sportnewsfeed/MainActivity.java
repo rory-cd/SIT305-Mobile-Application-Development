@@ -51,18 +51,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 changeToFragment(new HomeFragment());
             }
-//
-//            String tabString = tab.getText().toString();
-//            int titleStartIndex = tabString.indexOf(" ") + 1;
-//            currentTab = tabString.toLowerCase().substring(titleStartIndex);
-//
-//            int tabPos = tabLayout.getSelectedTabPosition();
-//            TabLayout.Tab tab = tabLayout.getTabAt(tabPos);
-//            if (tab == null) return;
-//            String tabString = tab.getText().toString();
-//            int titleStartIndex = tabString.indexOf(" ") + 1;
-//            currentTab = tabString.toLowerCase().substring(titleStartIndex);
-//            resetConverterState();
         }
         @Override public void onTabUnselected(TabLayout.Tab tab) { }
         @Override public void onTabReselected(TabLayout.Tab tab) { }
