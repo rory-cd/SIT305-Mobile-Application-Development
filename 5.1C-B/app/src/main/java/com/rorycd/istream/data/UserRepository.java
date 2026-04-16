@@ -22,6 +22,10 @@ public class UserRepository {
         void onResult(User user);
     }
 
+    public interface SignupCallback {
+        void onResult(int userId);
+    }
+
     private UserRepository(Context context) {
         userDao = UserDatabase.getInstance(context).userDao();
         playlistDao = UserDatabase.getInstance(context).playlistDao();
@@ -35,10 +39,16 @@ public class UserRepository {
         return INSTANCE;
     }
 
-    public void registerUser(String username, String fullName, String password) {
+    public void registerUser(String username, String fullName, String password, SignupCallback callback) {
         User newUser = new User(username, fullName, password);
-        int userId = (int)userDao.registerUser(newUser);
-        sharedPrefs.edit().putInt(USER_ID, userId).apply();
+        // Run on a separate thread
+        executor.execute(() -> {
+            int userId = (int) userDao.registerUser(newUser);
+            sharedPrefs.edit().putInt(USER_ID, userId).apply();
+
+            // Execute the callback on the main thread
+            new Handler(Looper.getMainLooper()).post(() -> callback.onResult(userId));
+        });
     }
 
     public void login(String username, String password, LoginCallback callback) {

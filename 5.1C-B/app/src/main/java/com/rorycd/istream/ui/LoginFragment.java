@@ -52,11 +52,27 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get UI references
+        // Text fields
         tilUsername = view.findViewById(R.id.tilUsername);
         tilPassword = view.findViewById(R.id.tilPassword);
+
         etUsername = view.findViewById(R.id.etUsername);
+        etUsername.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                tilUsername.setError(null);
+                tilUsername.setErrorEnabled(false);
+            }
+        });
+
         etPassword = view.findViewById(R.id.etPassword);
+        etPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                tilPassword.setError(null);
+                tilPassword.setErrorEnabled(false);
+            }
+        });
+
+        // Buttons
         MaterialButton btnLogin = view.findViewById(R.id.btnLogin);
         MaterialButton btnSignup = view.findViewById(R.id.btnSignup);
         nav = (Navigator) requireActivity();

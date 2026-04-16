@@ -5,4 +5,11 @@
     <string name="reenter_password_hint">Re-enter password</string>
     <string name="login_button">Log in</string>
     <string name="signup_button">Sign up</string>
+    <string name="fullname_hint">Full name</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="create_account_button">Create account</string>
+    <string name="url_hint">YouTube URL</string>
+    <string name="signout_button">Sign out</string>
+    <string name="play_button">Play</string>
+    <string name="add_button">Add to playlist</string>
 </resources>
