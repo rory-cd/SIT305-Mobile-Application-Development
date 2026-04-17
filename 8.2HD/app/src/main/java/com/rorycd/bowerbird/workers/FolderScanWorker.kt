@@ -3,6 +3,7 @@ package com.rorycd.bowerbird.workers
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.rorycd.bowerbird.data.AppDatabase
@@ -40,11 +41,11 @@ class FolderScanWorker(context: Context, params: WorkerParameters) : CoroutineWo
                         val files = folderDf.listFiles()
 
                         for (file in files) {
-                            // If the file hasn't been processed yet, action it
                             Log.d(TAG, "Checking file...")
-
-                            if (!repo.fileHasBeenProcessedIn(file.uri, folder)) {
-                                Log.d(TAG, "Updating file ${file.uri.toString()}")
+                            // If the file is valid and hasn't been processed yet, action it
+                            if (isSupportedImage(file.uri) &&
+                                    !repo.fileHasBeenProcessedIn(file.uri, folder)) {
+                                applyRules(file.uri)
                             }
                         }
                     }
@@ -55,5 +56,20 @@ class FolderScanWorker(context: Context, params: WorkerParameters) : CoroutineWo
                 Result.failure()
             }
         }
+    }
+
+    fun isSupportedImage(file: Uri): Boolean {
+        val type = applicationContext.contentResolver.getType(file) ?: return false
+
+        return when (type) {
+            "image/jpeg",
+            "image/png",
+            "image/webp" -> true
+            else -> false
+        }
+    }
+
+    fun applyRules(file: Uri) {
+        Log.d(TAG, "Updating file $file")
     }
 }
