@@ -1,47 +1,82 @@
 package com.rorycd.bowerbird
 
+import android.content.Context
+import android.content.Intent
+import java.util.concurrent.TimeUnit
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.rorycd.bowerbird.data.AppDatabase
+import com.rorycd.bowerbird.data.FolderRepository
 import com.rorycd.bowerbird.ui.theme.BowerbirdTheme
+import com.rorycd.bowerbird.workers.FolderScanWorker
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // UI
         enableEdgeToEdge()
         setContent {
             BowerbirdTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            }
+        }
+
+        // Get database and repo
+        val db = AppDatabase.getDatabase(applicationContext)
+        val repo = FolderRepository(
+            db.folderDao(),
+            db.processedFileDao()
+        )
+
+        // Get folder
+        val folderSelectLauncher = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri != null) {
+                Log.e("FOLDER", uri.toString());
+
+                // Retain permissions to access this folder after restart
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                // Check for the freshest data.
+                contentResolver.takePersistableUriPermission(uri, takeFlags)
+
+                // Add folder to watched folders
+                lifecycleScope.launch {
+                    repo.addFolder(uri)
                 }
             }
         }
+        folderSelectLauncher.launch(null)
+
+        // Perform a scan on opening app
+        val immediateScan = OneTimeWorkRequestBuilder<FolderScanWorker>().build()
+        WorkManager.getInstance(this).enqueue(immediateScan)
+
+        // Schedule ongoing scans
+        scheduleFolderScan(this)
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun scheduleFolderScan(context: Context) {
+    val scanBuilder = PeriodicWorkRequestBuilder<FolderScanWorker>(
+        repeatInterval = 15,
+        repeatIntervalTimeUnit = TimeUnit.MINUTES,
+        flexTimeInterval = 5,
+        flexTimeIntervalUnit = TimeUnit.MINUTES
     )
-}
+    val workManager = WorkManager.getInstance(context)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BowerbirdTheme {
-        Greeting("Android")
-    }
+    workManager.enqueueUniquePeriodicWork(
+        "folder_scan_work",
+        androidx.work.ExistingPeriodicWorkPolicy.KEEP, // If there's a match, keep existing running
+        scanBuilder.build()
+    )
 }
