@@ -11,19 +11,19 @@ class FolderRepository(
         folderDao.insert(Folder(folder.toString()))
     }
 
-    suspend fun getAllWatchedFolders() : List<Uri> {
+    suspend fun getAllWatchedFolders(): List<Uri> {
         return folderDao.getAllFolders().map { it.uri.toUri() }
     }
 
-    suspend fun fileHasBeenProcessed(file: Uri) : Boolean {
+    suspend fun fileHasBeenProcessed(file: Uri): Boolean {
         return processedFileDao.exists(file.toString())
     }
 
-    suspend fun fileHasBeenProcessedIn(file: Uri, folder: Uri) : Boolean {
+    suspend fun fileHasBeenProcessedIn(file: Uri, folder: Uri): Boolean {
         return processedFileDao.existsIn(file.toString(), folder.toString())
     }
 
-    suspend fun getProcessedFilesIn(folder: Uri) : List<Uri> {
+    suspend fun getProcessedFilesIn(folder: Uri): List<Uri> {
         return processedFileDao.getFilesInFolder(folder.toString()).map { it.folderUri.toUri() }
     }
 }
