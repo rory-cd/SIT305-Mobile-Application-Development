@@ -31,6 +31,7 @@ class FolderScanWorker(context: Context, params: WorkerParameters) : CoroutineWo
                 val folders = repo.getAllWatchedFolders()
 
                 for (folder in folders) {
+                    Log.d(TAG, "Scanning folder ${folder.toString()}")
                     // Convert to DocumentFile for scanning
                     val folderDf = DocumentFile.fromTreeUri(applicationContext, folder)
 
@@ -40,6 +41,8 @@ class FolderScanWorker(context: Context, params: WorkerParameters) : CoroutineWo
 
                         for (file in files) {
                             // If the file hasn't been processed yet, action it
+                            Log.d(TAG, "Checking file...")
+
                             if (!repo.fileHasBeenProcessedIn(file.uri, folder)) {
                                 Log.d(TAG, "Updating file ${file.uri.toString()}")
                             }

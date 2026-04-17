@@ -7,7 +7,7 @@ import androidx.room.Entity
  */
 @Entity(
     tableName = "processed_files",
-    primaryKeys = ["folderUri, fileUri"]
+    primaryKeys = ["folderUri", "fileUri"]
 )
 data class ProcessedFile(
     val folderUri: String,
