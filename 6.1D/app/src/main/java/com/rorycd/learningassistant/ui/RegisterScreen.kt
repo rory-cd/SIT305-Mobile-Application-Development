@@ -129,7 +129,7 @@ fun RegisterScreen(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_24px),
-                    contentDescription = "Check mark")
+                    contentDescription = stringResource(R.string.checkmark_desc))
             }
         }
 

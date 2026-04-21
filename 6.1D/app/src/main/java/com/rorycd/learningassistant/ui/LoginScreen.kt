@@ -1,6 +1,5 @@
 package com.rorycd.learningassistant.ui
 
-import android.app.Application
 import android.os.Parcelable
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +46,7 @@ fun LoginScreen(
     var uiState by rememberSaveable { mutableStateOf(WelcomeUiState("", "")) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val failMsg = stringResource(R.string.login_failed)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -85,7 +85,9 @@ fun LoginScreen(
                     val success = repo.login(uiState.username.trim(), uiState.password)
 
                     if (success) onLoginSuccess()
-                    else Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
+                    else {
+                        Toast.makeText(context, failMsg, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         ) {

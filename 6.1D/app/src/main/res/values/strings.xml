@@ -14,4 +14,9 @@
     <string name="confirm_email_label">Confirm email</string>
     <string name="confirm_password_label">Confirm password</string>
     <string name="phone_label">Phone number</string>
+    <string name="hello_message">Hello,</string>
+    <string name="log_out_button">Log out</string>
+    <string name="next">Next</string>
+    <string name="login_failed">Login failed</string>
+    <string name="checkmark_desc">Check mark</string>
 </resources>

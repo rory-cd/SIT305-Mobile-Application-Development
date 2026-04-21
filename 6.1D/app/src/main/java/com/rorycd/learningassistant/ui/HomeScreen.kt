@@ -28,7 +28,7 @@ fun HomeScreen(
     ) {
         // Welcome message
         Text(
-            text = stringResource(R.string.welcome_message)
+            text = stringResource(R.string.hello_message)
         )
         Button(
             onClick = {
@@ -36,7 +36,7 @@ fun HomeScreen(
                 onLogOut()
             }
         ) {
-            Text("Log out")
+            Text(stringResource(R.string.log_out_button))
         }
     }
 }

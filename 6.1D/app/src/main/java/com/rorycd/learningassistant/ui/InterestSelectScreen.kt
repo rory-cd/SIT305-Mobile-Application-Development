@@ -13,7 +13,9 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.rorycd.learningassistant.R
 import com.rorycd.learningassistant.data.UserRepository
 import kotlinx.coroutines.launch
 
@@ -27,7 +29,6 @@ fun InterestSelectScreen(
         "Data Structures",
         "Web Development",
         "Testing",
-        "Algorithms",
         "Front End",
         "Back End",
         "Data Science",
@@ -67,6 +68,6 @@ fun InterestSelectScreen(
                 onFinishSelection()
             }
         )
-        { Text("Next") }
+        { Text(stringResource(R.string.next)) }
     }
 }
