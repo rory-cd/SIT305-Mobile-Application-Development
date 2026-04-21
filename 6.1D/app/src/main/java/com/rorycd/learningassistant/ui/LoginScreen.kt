@@ -82,7 +82,7 @@ fun LoginScreen(
             onClick = {
                 // Try to log in
                 scope.launch {
-                    val success = repo.login(uiState.username, uiState.password)
+                    val success = repo.login(uiState.username.trim(), uiState.password)
 
                     if (success) onLoginSuccess()
                     else Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()

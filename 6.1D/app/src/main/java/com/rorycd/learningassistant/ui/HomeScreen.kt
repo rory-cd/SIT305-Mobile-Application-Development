@@ -17,6 +17,7 @@ import com.rorycd.learningassistant.data.UserRepository
 
 @Composable
 fun HomeScreen(
+    onLogOut: () -> Unit,
     repo: UserRepository
 ) {
     Column(
@@ -31,7 +32,8 @@ fun HomeScreen(
         )
         Button(
             onClick = {
-
+                repo.logOut()
+                onLogOut()
             }
         ) {
             Text("Log out")

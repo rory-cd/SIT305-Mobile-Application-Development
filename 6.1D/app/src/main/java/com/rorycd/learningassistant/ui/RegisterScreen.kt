@@ -133,7 +133,6 @@ fun RegisterScreen(
             }
         }
 
-
         // Form fields
         TextInputField(
             value = uiState.username,
@@ -168,9 +167,9 @@ fun RegisterScreen(
                 if (formIsValid()) {
                     scope.launch {
                         repo.register(
-                            uiState.username,
+                            uiState.username.trim(),
                             uiState.password,
-                            uiState.email,
+                            uiState.email.trim(),
                             uiState.imgUri
                         )
                         onRegistrationSuccess()

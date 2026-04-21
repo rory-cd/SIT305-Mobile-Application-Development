@@ -32,13 +32,22 @@ class UserRepository(private val context: Context) {
         email: String,
         imgUri: String?
     ) {
-        val newUser = User(0, username, password, email, imgUri)
+        val newUser = User(0, username, password, email, interests = null, imgUri = imgUri)
         userDao.insert(newUser)
         login(username, password)
     }
 
+    fun currentUserId(): Int {
+        return sharedPrefs.getInt(USER_ID_KEY, -1)
+    }
+
     fun isLoggedIn() : Boolean {
-        val currentUserId = sharedPrefs.getInt(USER_ID_KEY, -1)
-        return currentUserId != -1
+        return currentUserId() != -1
+    }
+
+    suspend fun addInterests(
+       interests: List<String>
+    ) {
+        userDao.updateInterests(currentUserId(), interests)
     }
 }

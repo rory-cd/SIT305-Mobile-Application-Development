@@ -18,9 +18,15 @@ interface UserDao {
     @Update
     suspend fun update(user: User)
 
+    @Query("UPDATE users SET interests = :interests WHERE id = :id")
+    suspend fun updateInterests(id: Int, interests: List<String>)
+
     @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
     suspend fun login(username: String, password: String) : User?
 
     @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
-    fun getUserById(id: Int): Flow<User?>
+    suspend fun getUserById(id: Int): User?
+
+    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
+    fun getUserFlowById(id: Int): Flow<User?>
 }
