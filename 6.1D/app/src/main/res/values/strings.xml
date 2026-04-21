@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Learning Assistant</string>
+    <string name="welcome_message">Welcome,</string>
+    <string name="student">Student!</string>
+    <string name="learning_message">Let\'s start learning!</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="need_account_message">Need an account?</string>
+    <string name="login_button">Login</string>
 </resources>
