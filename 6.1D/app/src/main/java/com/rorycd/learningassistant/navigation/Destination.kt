@@ -1,7 +1,7 @@
 package com.rorycd.learningassistant.navigation
 
 enum class Destination {
-    WELCOME,
+    LOGIN,
     HOME,
     REGISTER
 }

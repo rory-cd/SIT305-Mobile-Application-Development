@@ -11,7 +11,9 @@ fun TextInputField(
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorMessage: String? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -20,5 +22,7 @@ fun TextInputField(
         singleLine = true,
         maxLines = 1,
         modifier = modifier.fillMaxWidth(),
+        isError = isError,
+        supportingText = { if (isError && !errorMessage.isNullOrEmpty()) { Text(errorMessage) } }
     )
 }

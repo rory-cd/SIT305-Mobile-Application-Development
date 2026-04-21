@@ -7,4 +7,11 @@
     <string name="password_label">Password</string>
     <string name="need_account_message">Need an account?</string>
     <string name="login_button">Login</string>
+    <string name="register_message">Let\'s get you set up!</string>
+    <string name="user_image_description">The user\'s profile image</string>
+    <string name="register_button">Create new account</string>
+    <string name="email_label">Email</string>
+    <string name="confirm_email_label">Confirm email</string>
+    <string name="confirm_password_label">Confirm password</string>
+    <string name="phone_label">Phone number</string>
 </resources>
