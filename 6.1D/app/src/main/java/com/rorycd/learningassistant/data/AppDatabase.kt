@@ -6,23 +6,21 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-/**
- * Room database for [User]
- */
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, Quiz::class, Question::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
-abstract class UserDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+    abstract fun quizDao(): QuizDao
 
     companion object {
         @Volatile
-        private var Instance: UserDatabase? = null
+        private var Instance: AppDatabase? = null
 
-        fun getDatabase(context: Context): UserDatabase {
+        fun getDatabase(context: Context): AppDatabase {
             // If the Instance is not null, return it, otherwise create a new database instance and save a reference to it
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, UserDatabase::class.java, "user_database")
+                Room.databaseBuilder(context, AppDatabase::class.java, "app_database")
                     .build().also { Instance = it }
             }
         }

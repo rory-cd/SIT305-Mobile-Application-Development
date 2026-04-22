@@ -8,4 +8,6 @@ class QuizRepository(private val context: Context) {
     suspend fun fetchQuiz(topic: String): QuizResponse {
         return RetrofitInstance.quizApiService.getQuiz(topic)
     }
+
+
 }

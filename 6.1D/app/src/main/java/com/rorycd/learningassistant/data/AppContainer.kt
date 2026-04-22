@@ -7,7 +7,7 @@ import android.content.Context
  */
 class AppContainer(private val context: Context) {
     val userRepo: UserRepository by lazy {
-        UserRepository(UserDatabase.getDatabase(context).userDao(), context)
+        UserRepository(AppDatabase.getDatabase(context).userDao(), context)
     }
     val quizRepo: QuizRepository by lazy {
         QuizRepository(context)
