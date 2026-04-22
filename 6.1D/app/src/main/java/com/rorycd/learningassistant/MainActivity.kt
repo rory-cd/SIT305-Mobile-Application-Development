@@ -21,8 +21,6 @@ class MainActivity : ComponentActivity() {
             LearningAssistantTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LearningAssistantNavHost(
-                        userRepo = UserRepository(this),
-                        quizRepo = QuizRepository(this),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

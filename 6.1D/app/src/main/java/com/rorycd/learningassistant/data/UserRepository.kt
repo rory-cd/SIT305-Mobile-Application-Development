@@ -8,9 +8,8 @@ import kotlinx.coroutines.flow.Flow
 const val USER_ID_KEY = "current_user_id"
 const val SHARED_PREFS_NAME = "prefs"
 
-class UserRepository(private val context: Context) {
+class UserRepository(private val userDao: UserDao, private val context: Context) {
     val sharedPrefs: SharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-    var userDao = UserDatabase.getDatabase(context).userDao()
 
     suspend fun login(username: String, password: String) : Boolean {
         // Check user exists
@@ -60,9 +59,8 @@ class UserRepository(private val context: Context) {
         return currentUserId() != -1
     }
 
-    suspend fun addInterests(
-       interests: List<String>
-    ) {
-        userDao.updateInterests(currentUserId(), interests)
+    suspend fun addInterests(interests: Set<String>) {
+        val interestList = interests.toList()
+        userDao.updateInterests(currentUserId(), interestList)
     }
 }

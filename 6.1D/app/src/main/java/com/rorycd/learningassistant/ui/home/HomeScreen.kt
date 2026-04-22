@@ -1,4 +1,4 @@
-package com.rorycd.learningassistant.ui
+package com.rorycd.learningassistant.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,27 +26,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.rorycd.learningassistant.LearningApplication
 import com.rorycd.learningassistant.R
 import com.rorycd.learningassistant.data.QuizRepository
 import com.rorycd.learningassistant.network.QuizResponse
 import com.rorycd.learningassistant.data.UserRepository
+import com.rorycd.learningassistant.ui.AppViewModelProvider
+import com.rorycd.learningassistant.ui.interestselect.InterestSelectViewModel
 
 @Composable
 fun HomeScreen(
     onLogOut: () -> Unit,
-    userRepo: UserRepository,
-    quizRepo: QuizRepository
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
+    val app = LocalContext.current.applicationContext as LearningApplication
+    val userRepo = app.container.userRepo
+    val quizRepo = app.container.quizRepo
     val collectedState by userRepo.getCurrentUserFlow().collectAsStateWithLifecycle(null)
     var quizResponse by remember { mutableStateOf<QuizResponse?>(null) }
     val state = collectedState
-    val scope = rememberCoroutineScope()
-
 
     LaunchedEffect(Unit) {
         quizResponse = quizRepo.fetchQuiz("Android")
