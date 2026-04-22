@@ -19,4 +19,33 @@
     <string name="next">Next</string>
     <string name="login_failed">Login failed</string>
     <string name="checkmark_desc">Check mark</string>
+    <string name="tick_desc">Tick</string>
+    <string name="your_interests">Your interests</string>
+    <string name="interest_message">You may select up to 10 topics</string>
+    <string name="username_taken">The selected username is already taken</string>
+    <string name="username_empty">Username must be provided.</string>
+    <string name="email_empty">Email address must be provided.</string>
+    <string name="email_contains">Email address must be in correct format.</string>
+    <string name="password_length">Password must be 6 or more characters.</string>
+    <string name="password_match">Passwords must match.</string>
+    <string-array name="interests">
+        <item>Algorithms</item>
+        <item>Data Structures</item>
+        <item>Web Development</item>
+        <item>Testing</item>
+        <item>Front End</item>
+        <item>Back End</item>
+        <item>Data Science</item>
+        <item>AI</item>
+        <item>Quantum Computing</item>
+        <item>JavaScript</item>
+        <item>C</item>
+        <item>Networking</item>
+        <item>Git</item>
+        <item>Linux</item>
+        <item>IoT</item>
+        <item>Android</item>
+        <item>Mobile Development</item>
+        <item>Kotlin</item>
+    </string-array>
 </resources>
