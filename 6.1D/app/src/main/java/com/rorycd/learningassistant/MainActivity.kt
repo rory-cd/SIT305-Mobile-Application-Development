@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.rorycd.learningassistant.data.QuizRepository
 import com.rorycd.learningassistant.data.UserRepository
 import com.rorycd.learningassistant.navigation.LearningAssistantNavHost
 import com.rorycd.learningassistant.ui.theme.LearningAssistantTheme
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
             LearningAssistantTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LearningAssistantNavHost(
-                        repo = UserRepository(this),
+                        userRepo = UserRepository(this),
+                        quizRepo = QuizRepository(this),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

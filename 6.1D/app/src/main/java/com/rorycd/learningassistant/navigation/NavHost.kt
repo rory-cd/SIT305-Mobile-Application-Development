@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.rorycd.learningassistant.data.QuizRepository
 import com.rorycd.learningassistant.data.UserRepository
 import com.rorycd.learningassistant.ui.HomeScreen
 import com.rorycd.learningassistant.ui.InterestSelectScreen
@@ -16,13 +17,14 @@ import com.rorycd.learningassistant.ui.LoginScreen
  */
 @Composable
 fun LearningAssistantNavHost (
-    repo: UserRepository,
+    userRepo: UserRepository,
+    quizRepo: QuizRepository,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
 
     fun userNavigateTo(destination : Destination) {
-        val finalDestination = if (repo.isLoggedIn()) destination else Destination.LOGIN
+        val finalDestination = if (userRepo.isLoggedIn()) destination else Destination.LOGIN
         navController.navigate(route = finalDestination.name)
     }
 
@@ -32,13 +34,13 @@ fun LearningAssistantNavHost (
 
     NavHost(
         navController = navController,
-        startDestination = if (!repo.isLoggedIn()) Destination.LOGIN.name else Destination.HOME.name,
+        startDestination = if (!userRepo.isLoggedIn()) Destination.LOGIN.name else Destination.HOME.name,
         modifier = modifier
     ) {
         // Login screen
         composable(route = Destination.LOGIN.name) {
             LoginScreen(
-                repo = repo,
+                repo = userRepo,
                 onLoginSuccess = { userNavigateTo(Destination.HOME) },
                 onRequireRegistration = { guestNavigateTo(Destination.REGISTER) }
             )
@@ -46,7 +48,7 @@ fun LearningAssistantNavHost (
         // Register screen
         composable(route = Destination.REGISTER.name) {
             RegisterScreen(
-                repo = repo,
+                repo = userRepo,
                 onRegistrationSuccess = { userNavigateTo(Destination.INTEREST_SELECTION) }
             )
         }
@@ -54,14 +56,15 @@ fun LearningAssistantNavHost (
         composable(route = Destination.HOME.name) {
             HomeScreen(
                 onLogOut = { guestNavigateTo(Destination.LOGIN) },
-                repo = repo
+                userRepo = userRepo,
+                quizRepo = quizRepo
             )
         }
         // Interest selection screen
         composable(route = Destination.INTEREST_SELECTION.name) {
             InterestSelectScreen(
                 onFinishSelection = { userNavigateTo(Destination.HOME) },
-                repo = repo
+                repo = userRepo
             )
         }
     }
