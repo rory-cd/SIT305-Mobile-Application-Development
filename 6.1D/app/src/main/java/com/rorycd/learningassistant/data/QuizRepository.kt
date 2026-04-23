@@ -8,7 +8,7 @@ import com.rorycd.learningassistant.network.RetrofitInstance
 import com.rorycd.learningassistant.network.toRoomEntities
 import kotlinx.coroutines.flow.Flow
 
-const val MAX_QUIZZES = 1
+const val MAX_QUIZZES = 3
 
 /**
  * Repository for managing [Quiz], [Question], and [QuizResult] data

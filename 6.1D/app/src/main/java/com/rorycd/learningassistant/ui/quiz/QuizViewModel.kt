@@ -87,7 +87,7 @@ class QuizViewModel(
                     quiz!!.topic,
                     lastCompleted = Date()
                 )
-//                quizRepo.completeQuiz(updatedQuiz, quizResult)
+                quizRepo.completeQuiz(updatedQuiz, quizResult)
             }
         }
     }
