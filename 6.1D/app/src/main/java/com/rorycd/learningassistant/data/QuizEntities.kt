@@ -50,6 +50,35 @@ data class Quiz (
     val id: Int = 0,
     val userId: Int,
     val topic: String,
-    val score: Int,
     val lastCompleted: Date? = null
+)
+
+/**
+ * Room entity, models data for quiz results
+ */
+@Entity(
+    tableName = "results",
+    foreignKeys = [
+        ForeignKey(
+            entity = User::class,
+            parentColumns = ["id"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Quiz::class,
+            parentColumns = ["id"],
+            childColumns = ["quizId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index(value = ["quizId"]), Index(value = ["userId"])]
+)
+data class QuizResult (
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val userId: Int,
+    val quizId: Int,
+    val correctQuestions: List<String> = emptyList(),
+    val incorrectQuestions: List<String> = emptyList()
 )

@@ -12,6 +12,7 @@ import com.rorycd.learningassistant.ui.interestselect.InterestSelectViewModel
 import com.rorycd.learningassistant.ui.login.LoginViewModel
 import com.rorycd.learningassistant.ui.quiz.QuizViewModel
 import com.rorycd.learningassistant.ui.register.RegisterViewModel
+import com.rorycd.learningassistant.ui.results.ResultsViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire app
@@ -47,7 +48,16 @@ object AppViewModelProvider {
         initializer {
             QuizViewModel(
                 createSavedStateHandle(),
-                learningApplication().container.quizRepo
+                userRepo = learningApplication().container.userRepo,
+                quizRepo = learningApplication().container.quizRepo
+            )
+        }
+        // Initializer for ResultsViewModel
+        initializer {
+            ResultsViewModel(
+                createSavedStateHandle(),
+                userRepo = learningApplication().container.userRepo,
+                quizRepo = learningApplication().container.quizRepo
             )
         }
     }

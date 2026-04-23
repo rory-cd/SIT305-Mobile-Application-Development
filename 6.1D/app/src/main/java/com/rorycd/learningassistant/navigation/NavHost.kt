@@ -19,6 +19,8 @@ import com.rorycd.learningassistant.ui.login.LoginScreen
 import com.rorycd.learningassistant.ui.quiz.QuizDestination
 import com.rorycd.learningassistant.ui.quiz.QuizScreen
 import com.rorycd.learningassistant.ui.register.RegisterDestination
+import com.rorycd.learningassistant.ui.results.ResultsDestination
+import com.rorycd.learningassistant.ui.results.ResultsScreen
 
 /**
  * Composable defining navigation routes for the main app content
@@ -80,12 +82,23 @@ fun LearningAssistantNavHost (
         // Quiz screen
         composable(
             route = QuizDestination.routeWithArgs,
-            arguments = listOf(navArgument(QuizDestination.quizIdArg) {
+            arguments = listOf(navArgument(QuizDestination.QUIZ_ID_ARG) {
                 type = NavType.IntType
             })
         ) {
             QuizScreen(
-                onQuizComplete = { quizId, correctCount ->  userNavigateTo(HomeDestination.route) }
+                onQuizComplete = { userNavigateTo("${ResultsDestination.route}/$it") }
+            )
+        }
+        // Results screen
+        composable(
+            route = ResultsDestination.routeWithArgs,
+            arguments = listOf(navArgument(ResultsDestination.QUIZ_ID_ARG)
+                { type = NavType.IntType }
+            )
+        ) {
+            ResultsScreen(
+                onGoHome = { userNavigateTo(HomeDestination.route) }
             )
         }
     }

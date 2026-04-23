@@ -31,13 +31,13 @@ object QuizDestination : NavigationDestination {
     override val route = "quiz"
     override val titleRes = R.string.quiz_destination_title
 
-    const val quizIdArg = "quizId"
-    val routeWithArgs = "${route}/{$quizIdArg}"
+    const val QUIZ_ID_ARG = "quizId"
+    val routeWithArgs = "${route}/{$QUIZ_ID_ARG}"
 }
 
 @Composable
 fun QuizScreen(
-    onQuizComplete: (quizId: Int, correctCount: Int) -> Unit,
+    onQuizComplete: (quizId: Int) -> Unit,
     viewModel: QuizViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     // Collect state flow
@@ -53,9 +53,10 @@ fun QuizScreen(
         // Header
         item {
             Text(
-                text = "${state.questionNumber}/${state.totalQuestions}",
+                text = "${state.questionNumber + 1}/${state.totalQuestions}",
                 modifier = Modifier.padding(top = 16.dp),
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -104,11 +105,16 @@ fun QuizScreen(
             val isLastQuestion = state.questionNumber == state.totalQuestions - 1
 
             Button(
+                enabled = selected != -1,
                 onClick = {
-                    if (isLastQuestion) onQuizComplete(state.quizId, state.correctAnswers)
-                    else {
-                        selected = -1
+                    if (isLastQuestion) {
                         viewModel.submitAnswer(selected)
+                        viewModel.submitResult()
+                        onQuizComplete(state.quizId)
+                    }
+                    else {
+                        viewModel.submitAnswer(selected)
+                        selected = -1
                     }
                 },
                 modifier = Modifier.fillMaxWidth()

@@ -12,8 +12,7 @@ fun QuizResponse.toRoomEntities(userId: Int, topic: String): Pair<Quiz, List<Que
     // Quiz
     val quiz = Quiz(
         userId = userId,
-        topic = topic,
-        score = 0
+        topic = topic
     )
 
     // Questions

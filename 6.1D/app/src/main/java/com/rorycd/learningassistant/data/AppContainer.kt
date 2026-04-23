@@ -10,6 +10,10 @@ class AppContainer(private val context: Context) {
         UserRepository(AppDatabase.getDatabase(context).userDao(), context)
     }
     val quizRepo: QuizRepository by lazy {
-        QuizRepository(AppDatabase.getDatabase(context).quizDao(), context)
+        QuizRepository(
+            AppDatabase.getDatabase(context),
+            AppDatabase.getDatabase(context).quizDao(),
+            AppDatabase.getDatabase(context).resultsDao()
+        )
     }
 }

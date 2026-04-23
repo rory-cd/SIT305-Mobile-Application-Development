@@ -1,17 +1,36 @@
 package com.rorycd.learningassistant.data
 
-import android.content.Context
 import android.util.Log
+import androidx.room.RoomDatabase
+import androidx.room.withTransaction
+import com.rorycd.learningassistant.network.FeedbackRequest
 import com.rorycd.learningassistant.network.QuizResponse
 import com.rorycd.learningassistant.network.RetrofitInstance
 import com.rorycd.learningassistant.network.toRoomEntities
 import kotlinx.coroutines.flow.Flow
 
-class QuizRepository(private val quizDao: QuizDao, private val context: Context) {
+class QuizRepository(
+    private val database: RoomDatabase,
+    private val quizDao: QuizDao,
+    private val resultDao: ResultDao
+) {
     suspend fun fetchQuiz(topic: String): QuizResponse {
         val result = RetrofitInstance.quizApiService.getQuiz(topic)
-        Log.e("QUIZ", result.quiz.toString())
         return result
+    }
+
+    suspend fun fetchPlanForImprovement(questions: List<String>): String {
+        val questionsString = questions.toString()
+        val request = FeedbackRequest(questions = questionsString)
+        val response = RetrofitInstance.quizApiService.getFeedback(request)
+        return response.feedback
+    }
+
+    suspend fun fetchPlanForExtension(questions: List<String>): String {
+        val questionsString = questions.toString()
+        val request = FeedbackRequest(questions = questionsString)
+        val response = RetrofitInstance.quizApiService.getExtension(request)
+        return response.feedback
     }
 
     suspend fun refillQuizzesForUser(user: User) {
@@ -42,5 +61,17 @@ class QuizRepository(private val quizDao: QuizDao, private val context: Context)
 
     fun getIncompleteQuizzesStream(userId: Int): Flow<List<Quiz?>> {
         return quizDao.getIncompleteQuizFlow(userId)
+    }
+
+    suspend fun getResultForQuiz(quizId: Int, userId: Int): QuizResult? {
+        return resultDao.getResultForQuiz(quizId, userId)
+    }
+
+    // Database transaction to make calls to two DAOs
+    suspend fun completeQuiz(quiz: Quiz, result: QuizResult) {
+        database.withTransaction {
+            quizDao.updateQuiz(quiz)
+            resultDao.insertResult(result)
+        }
     }
 }

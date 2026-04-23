@@ -37,6 +37,11 @@
     <string name="home_destination_title">Home</string>
     <string name="select_interest_destination_title">Select interests</string>
     <string name="quiz_destination_title">Quiz</string>
+    <string name="results_destination_title">Quiz results</string>
+    <string name="results_heading">Your results:</string>
+    <string name="feedback">Recommended study plan:</string>
+    <string name="back_to_home">Return home</string>
+    <string name="loading_results">Loading results...</string>
     <string-array name="interests">
         <item>Algorithms</item>
         <item>Data Structures</item>

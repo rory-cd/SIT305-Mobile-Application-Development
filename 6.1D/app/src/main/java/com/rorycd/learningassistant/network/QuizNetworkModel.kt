@@ -15,3 +15,9 @@ data class QuizItem(
     @SerialName("correct_answer")
     val correctAnswer: String
 )
+
+@Serializable
+data class FeedbackRequest(val questions: String)
+
+@Serializable
+data class FeedbackResponse(val feedback: String)

@@ -9,6 +9,5 @@ data class QuizUiState(
     val options: List<String> = emptyList(),
     val currentScore: Int = 0,
     val questionNumber: Int = -1,
-    val totalQuestions: Int = -1,
-    val correctAnswers: Int = 0
+    val totalQuestions: Int = -1
 )

@@ -21,6 +21,9 @@ interface QuizDao {
         insertQuestions(questionsWithId)
     }
 
+    @Update
+    suspend fun updateQuiz(quiz: Quiz)
+
     @Insert
     suspend fun insertQuizOnly(quiz: Quiz) : Long
 

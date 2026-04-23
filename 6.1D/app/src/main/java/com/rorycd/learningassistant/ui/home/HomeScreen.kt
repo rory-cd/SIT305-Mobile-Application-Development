@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import com.rorycd.learningassistant.R
 import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
+import com.rorycd.learningassistant.ui.components.LoadingSpinner
 import com.rorycd.learningassistant.ui.components.QuizCard
 
 object HomeDestination : NavigationDestination {
@@ -122,25 +123,7 @@ fun HomeScreen(
                     Text(stringResource(R.string.no_interests))
                 }
             } else if (quizzes.isEmpty()) {
-                // Show loading
-                Column {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 64.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(48.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    Text(
-                        text = stringResource(R.string.generating_quizzes),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                LoadingSpinner(stringResource(R.string.generating_quizzes))
             }
         }
 
