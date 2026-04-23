@@ -24,7 +24,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
+
+object SelectInterestsDestination : NavigationDestination {
+    override val route = "select_interests"
+    override val titleRes = R.string.select_interest_destination_title
+}
 
 @Composable
 fun InterestSelectScreen(

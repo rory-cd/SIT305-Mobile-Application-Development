@@ -24,9 +24,9 @@ fun QuestionCard(
     idx: Int,
     question: String,
     answers: List<String>,
-    selectedAnswer: String? = null,
     onAnswerSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectedAnswer: String? = null
 ) {
     Card(
         modifier = modifier

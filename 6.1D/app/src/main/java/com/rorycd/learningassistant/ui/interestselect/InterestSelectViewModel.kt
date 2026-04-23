@@ -19,7 +19,7 @@ class InterestSelectViewModel(private val userRepo: UserRepository) : ViewModel(
     // UI
     fun toggleInterest(interest: String) {
         _uiState.update {
-            if (it.selected.contains(interest))
+            if (!it.selected.contains(interest))
                 it.copy(selected = it.selected + interest)
             else
                 it.copy(selected = it.selected - interest)

@@ -13,7 +13,7 @@ import java.util.Date
     tableName = "questions",
     foreignKeys = [
         ForeignKey(
-            entity = User::class,
+            entity = Quiz::class,
             parentColumns = ["id"],
             childColumns = ["quizId"],
             onDelete = ForeignKey.CASCADE
@@ -27,7 +27,7 @@ data class Question (
     val quizId: Int,
     val title: String,
     val options: List<String>,
-    val answer: Int
+    val answer: String
 )
 
 /**

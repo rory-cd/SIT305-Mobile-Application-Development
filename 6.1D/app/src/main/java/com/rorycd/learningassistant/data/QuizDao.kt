@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -13,18 +14,31 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface QuizDao {
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertQuiz(quiz: Quiz)
+    @Transaction
+    suspend fun insertFullQuiz(quiz: Quiz, questions: List<Question>) {
+        val id = insertQuizOnly(quiz)
+        val questionsWithId = questions.map { it.copy(quizId = id.toInt()) }
+        insertQuestions(questionsWithId)
+    }
 
-    @Update
+    @Insert
+    suspend fun insertQuizOnly(quiz: Quiz) : Long
+
+    @Insert
     suspend fun insertQuestions(questions: List<Question>)
 
     @Delete
     suspend fun deleteQuiz(quiz: Quiz)
 
-    @Query("SELECT * FROM quizzes WHERE lastCompleted = NULL")
-    suspend fun getIncompleteQuizzes(): List<Quiz>
+    @Query("SELECT * FROM quizzes WHERE userId = :userId AND lastCompleted IS NULL")
+    suspend fun getIncompleteQuizzes(userId: Int): List<Quiz>
+
+    @Query("SELECT * FROM questions WHERE quizId = :quizId")
+    suspend fun getQuestionsForQuiz(quizId: Int): List<Question>
+
+    @Query("SELECT * FROM quizzes WHERE userId = :userId AND lastCompleted IS NULL")
+    fun getIncompleteQuizFlow(userId: Int): Flow<List<Quiz>>
 
     @Query("SELECT * FROM quizzes WHERE id = :id LIMIT 1")
-    fun getQuizById(id: Int): Flow<Quiz?>
+    suspend fun getQuizById(id: Int): Quiz?
 }

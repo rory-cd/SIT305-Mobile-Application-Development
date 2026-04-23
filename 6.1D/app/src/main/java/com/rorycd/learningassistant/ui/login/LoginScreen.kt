@@ -21,9 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.learningassistant.R
+import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
 import com.rorycd.learningassistant.ui.components.PasswordInputField
 import com.rorycd.learningassistant.ui.components.TextInputField
+
+object LoginDestination : NavigationDestination {
+    override val route = "login"
+    override val titleRes = R.string.login_destination_title
+}
 
 @Composable
 fun LoginScreen(

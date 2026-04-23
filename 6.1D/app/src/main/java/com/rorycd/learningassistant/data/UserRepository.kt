@@ -46,6 +46,12 @@ class UserRepository(private val userDao: UserDao, private val context: Context)
         return sharedPrefs.getInt(USER_ID_KEY, -1)
     }
 
+    suspend fun getCurrentUser(): User? {
+        val id = currentUserId()
+        val user = userDao.getUserById(id)
+        return user
+    }
+
     fun getCurrentUserFlow(): Flow<User?> {
         return userDao.getUserFlowById(currentUserId())
     }

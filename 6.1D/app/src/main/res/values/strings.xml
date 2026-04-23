@@ -28,6 +28,15 @@
     <string name="email_contains">Email address must be in correct format.</string>
     <string name="password_length">Password must be 6 or more characters.</string>
     <string name="password_match">Passwords must match.</string>
+    <string name="wand_desc">Magic wand icon</string>
+    <string name="no_interests">No interests recorded. Want to pick some?</string>
+    <string name="generating_quizzes">Generating quizzes…</string>
+    <string name="finish">Finish</string>
+    <string name="login_destination_title">Log in</string>
+    <string name="register_destination_title">Create account</string>
+    <string name="home_destination_title">Home</string>
+    <string name="select_interest_destination_title">Select interests</string>
+    <string name="quiz_destination_title">Quiz</string>
     <string-array name="interests">
         <item>Algorithms</item>
         <item>Data Structures</item>

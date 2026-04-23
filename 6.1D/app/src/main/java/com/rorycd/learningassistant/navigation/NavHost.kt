@@ -1,17 +1,24 @@
 package com.rorycd.learningassistant.navigation
 
-import android.app.Application
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.rorycd.learningassistant.LearningApplication
+import com.rorycd.learningassistant.ui.home.HomeDestination
 import com.rorycd.learningassistant.ui.home.HomeScreen
 import com.rorycd.learningassistant.ui.interestselect.InterestSelectScreen
+import com.rorycd.learningassistant.ui.interestselect.SelectInterestsDestination
+import com.rorycd.learningassistant.ui.login.LoginDestination
 import com.rorycd.learningassistant.ui.register.RegisterScreen
 import com.rorycd.learningassistant.ui.login.LoginScreen
+import com.rorycd.learningassistant.ui.quiz.QuizDestination
+import com.rorycd.learningassistant.ui.quiz.QuizScreen
+import com.rorycd.learningassistant.ui.register.RegisterDestination
 
 /**
  * Composable defining navigation routes for the main app content
@@ -24,43 +31,61 @@ fun LearningAssistantNavHost (
     val app = LocalContext.current.applicationContext as LearningApplication
     val userRepo = app.container.userRepo
 
-    fun userNavigateTo(destination : Destination) {
-        val finalDestination = if (userRepo.isLoggedIn()) destination else Destination.LOGIN
-        navController.navigate(route = finalDestination.name)
+    fun userNavigateTo(route : String) {
+        if (userRepo.isLoggedIn()) {
+            navController.navigate(route)
+        } else {
+            navController.navigate(LoginDestination.route) {
+                popUpTo(0)
+            }
+        }
     }
 
-    fun guestNavigateTo(destination : Destination) {
-        navController.navigate(route = destination.name)
+    fun guestNavigateTo(route : String) {
+        navController.navigate(route = route)
     }
 
     NavHost(
         navController = navController,
-        startDestination = if (!userRepo.isLoggedIn()) Destination.LOGIN.name else Destination.HOME.name,
+        startDestination = if (!userRepo.isLoggedIn()) LoginDestination.route else HomeDestination.route,
         modifier = modifier
     ) {
         // Login screen
-        composable(route = Destination.LOGIN.name) {
+        composable(route = LoginDestination.route) {
             LoginScreen(
-                onLoginSuccess = { userNavigateTo(Destination.HOME) },
-                onRequireRegistration = { guestNavigateTo(Destination.REGISTER) }
+                onLoginSuccess = { userNavigateTo(HomeDestination.route) },
+                onRequireRegistration = { guestNavigateTo(RegisterDestination.route) }
             )
         }
         // Register screen
-        composable(route = Destination.REGISTER.name) {
+        composable(route = RegisterDestination.route) {
             RegisterScreen(
-                onRegistrationSuccess = { userNavigateTo(Destination.INTEREST_SELECTION) }
+                onRegistrationSuccess = { userNavigateTo(SelectInterestsDestination.route) }
             )
         }
         // Home screen
-        composable(route = Destination.HOME.name) {
+        composable(route = HomeDestination.route) {
             HomeScreen(
-                onLogOut = { guestNavigateTo(Destination.LOGIN) }
+                onLogOut = { guestNavigateTo(LoginDestination.route) },
+                onStartQuiz = { userNavigateTo("${QuizDestination.route}/$it") },
+                onPickInterests = { userNavigateTo(SelectInterestsDestination.route) }
             )
         }
         // Interest selection screen
-        composable(route = Destination.INTEREST_SELECTION.name) {
+        composable(route = SelectInterestsDestination.route) {
             InterestSelectScreen(
-                onFinishSelection = { userNavigateTo(Destination.HOME) }
+                onFinishSelection = { userNavigateTo(HomeDestination.route) }
+            )
+        }
+        // Quiz screen
+        composable(
+            route = QuizDestination.routeWithArgs,
+            arguments = listOf(navArgument(QuizDestination.quizIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            QuizScreen(
+                onQuizComplete = { quizId, correctCount ->  userNavigateTo(HomeDestination.route) }
             )
         }
     }
