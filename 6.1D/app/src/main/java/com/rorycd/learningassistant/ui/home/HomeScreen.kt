@@ -3,7 +3,6 @@ package com.rorycd.learningassistant.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -23,11 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,12 +33,19 @@ import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
 import com.rorycd.learningassistant.ui.components.LoadingSpinner
 import com.rorycd.learningassistant.ui.components.QuizCard
+import com.rorycd.learningassistant.ui.interestselect.InterestSelectScreen
 
+/**
+ * Destination class for NavGraph route to [HomeScreen]
+ */
 object HomeDestination : NavigationDestination {
     override val route = "home"
     override val titleRes = R.string.home_destination_title
 }
 
+/**
+ * Screen where users can view pending quizzes
+ */
 @Composable
 fun HomeScreen(
     onLogOut: () -> Unit,

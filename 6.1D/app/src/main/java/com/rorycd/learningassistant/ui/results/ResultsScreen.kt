@@ -1,5 +1,7 @@
 package com.rorycd.learningassistant.ui.results
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,8 +13,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +29,9 @@ import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
 import com.rorycd.learningassistant.ui.components.LoadingSpinner
 
+/**
+ * Destination class for NavGraph route to [ResultsScreen]
+ */
 object ResultsDestination : NavigationDestination {
     override val route = "results"
     override val titleRes = R.string.results_destination_title
@@ -33,6 +40,9 @@ object ResultsDestination : NavigationDestination {
     val routeWithArgs = "${route}/{$QUIZ_ID_ARG}"
 }
 
+/**
+ * Screen to show quiz results and recommended study plan
+ */
 @Composable
 fun ResultsScreen(
     onGoHome: () -> Unit,
@@ -40,6 +50,7 @@ fun ResultsScreen(
 ) {
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,6 +62,7 @@ fun ResultsScreen(
         if (!state.isLoaded) {
             LoadingSpinner(stringResource(R.string.loading_results))
         } else {
+            // Header
             Text(
                 text = stringResource(R.string.results_heading),
                 style = MaterialTheme.typography.headlineMedium,
@@ -62,6 +74,7 @@ fun ResultsScreen(
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(top = 8.dp)
             )
+            // Feedback section
             Text(
                 text = stringResource(R.string.feedback),
                 style = MaterialTheme.typography.headlineSmall,
@@ -86,6 +99,14 @@ fun ResultsScreen(
                     modifier = Modifier.padding(8.dp)
                 )
             }
+        }
+    }
+
+    // Show toast if toast message is set
+    LaunchedEffect(state.toastMessage) {
+        state.toastMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearToast()
         }
     }
 }

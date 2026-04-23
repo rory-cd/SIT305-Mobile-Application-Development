@@ -26,12 +26,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
+import com.rorycd.learningassistant.ui.login.LoginScreen
 
+/**
+ * Destination class for NavGraph route to [InterestSelectScreen]
+ */
 object SelectInterestsDestination : NavigationDestination {
     override val route = "select_interests"
     override val titleRes = R.string.select_interest_destination_title
 }
 
+/**
+ * Screen to select user's interests from a preset list
+ */
 @Composable
 fun InterestSelectScreen(
     onFinishSelection: () -> Unit,
@@ -86,10 +93,11 @@ fun InterestSelectScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
-        )
-        { Text(
-            text = stringResource(R.string.next),
-            fontWeight = FontWeight.Bold
-        ) }
+        ) {
+            Text(
+                text = stringResource(R.string.next),
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }

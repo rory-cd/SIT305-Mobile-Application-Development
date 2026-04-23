@@ -1,6 +1,5 @@
 package com.rorycd.learningassistant.data
 
-import android.util.Log
 import androidx.room.RoomDatabase
 import androidx.room.withTransaction
 import com.rorycd.learningassistant.network.FeedbackRequest
@@ -9,16 +8,24 @@ import com.rorycd.learningassistant.network.RetrofitInstance
 import com.rorycd.learningassistant.network.toRoomEntities
 import kotlinx.coroutines.flow.Flow
 
+const val MAX_QUIZZES = 1
+
+/**
+ * Repository for managing [Quiz], [Question], and [QuizResult] data
+ */
 class QuizRepository(
     private val database: RoomDatabase,
     private val quizDao: QuizDao,
     private val resultDao: ResultDao
 ) {
+
+    // Fetches a quiz from the API (Llama)
     suspend fun fetchQuiz(topic: String): QuizResponse {
         val result = RetrofitInstance.quizApiService.getQuiz(topic)
         return result
     }
 
+    // Fetches an improvement plan from the API (Llama)
     suspend fun fetchPlanForImprovement(questions: List<String>): String {
         val questionsString = questions.toString()
         val request = FeedbackRequest(questions = questionsString)
@@ -26,6 +33,7 @@ class QuizRepository(
         return response.feedback
     }
 
+    // Fetches an extension plan from the API (Llama)
     suspend fun fetchPlanForExtension(questions: List<String>): String {
         val questionsString = questions.toString()
         val request = FeedbackRequest(questions = questionsString)
@@ -33,11 +41,14 @@ class QuizRepository(
         return response.feedback
     }
 
+    // Generates user-assigned quizzes if the user has less than the defined number
     suspend fun refillQuizzesForUser(user: User) {
         if (user.interests.isNullOrEmpty()) return
 
         val incompleteQuizzes = quizDao.getIncompleteQuizzes(user.id)
-        val required = 1 - incompleteQuizzes.size
+
+        // Check how many quizzes are required
+        val required = MAX_QUIZZES - incompleteQuizzes.size
 
         repeat (required) {
             val topic = user.interests.random()
@@ -45,7 +56,6 @@ class QuizRepository(
             val quizResponse = fetchQuiz(topic)
             // Convert to room format
             val (quiz, questions) = quizResponse.toRoomEntities(user.id, topic)
-            Log.e("QUIZ", questions.toString())
             // Add to database
             quizDao.insertFullQuiz(quiz, questions)
         }

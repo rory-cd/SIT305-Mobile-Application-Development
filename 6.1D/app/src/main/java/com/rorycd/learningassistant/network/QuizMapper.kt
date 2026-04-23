@@ -1,6 +1,5 @@
 package com.rorycd.learningassistant.network
 
-import android.util.Log
 import com.rorycd.learningassistant.data.Question
 import com.rorycd.learningassistant.data.Quiz
 

@@ -11,13 +11,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * View model for [RegisterScreen]. Manages UI
+ * View model for [RegisterScreen]
  */
 class RegisterViewModel(private val userRepo: UserRepository) : ViewModel() {
+    // UI state
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState.asStateFlow()
 
-    // UI
+    // UI management
     fun onUsernameChanged(newUsername: String) {
         _uiState.update { it.copy(
             username = newUsername,
@@ -97,7 +98,6 @@ class RegisterViewModel(private val userRepo: UserRepository) : ViewModel() {
                 confirmPasswordError = confirmPassErr
             )
         }
-
         return usernameErr == null && emailErr == null && passwordErr == null && confirmPassErr == null
     }
 }

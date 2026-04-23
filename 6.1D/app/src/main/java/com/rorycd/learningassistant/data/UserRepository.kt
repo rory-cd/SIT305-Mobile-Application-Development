@@ -8,8 +8,15 @@ import kotlinx.coroutines.flow.Flow
 const val USER_ID_KEY = "current_user_id"
 const val SHARED_PREFS_NAME = "prefs"
 
+/**
+ * Repository for managing [User] data
+ */
 class UserRepository(private val userDao: UserDao, private val context: Context) {
-    val sharedPrefs: SharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+    // Get shared preferences for current user tracking
+    val sharedPrefs: SharedPreferences = context.getSharedPreferences(
+        SHARED_PREFS_NAME,
+        Context.MODE_PRIVATE
+    )
 
     suspend fun login(username: String, password: String) : Boolean {
         // Check user exists

@@ -25,12 +25,19 @@ import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
 import com.rorycd.learningassistant.ui.components.PasswordInputField
 import com.rorycd.learningassistant.ui.components.TextInputField
+import com.rorycd.learningassistant.ui.quiz.QuizScreen
 
+/**
+ * Destination class for NavGraph route to [LoginScreen]
+ */
 object LoginDestination : NavigationDestination {
     override val route = "login"
     override val titleRes = R.string.login_destination_title
 }
 
+/**
+ * Screen where users can log in to their account
+ */
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
@@ -39,7 +46,6 @@ fun LoginScreen(
 ) {
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
     val failMsg = stringResource(R.string.login_failed)
 

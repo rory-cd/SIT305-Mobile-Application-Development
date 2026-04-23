@@ -5,6 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
+/**
+ * Retrofit API endpoint definitions
+ */
 public interface QuizApiService {
     @GET("getQuiz")
     suspend fun getQuiz(

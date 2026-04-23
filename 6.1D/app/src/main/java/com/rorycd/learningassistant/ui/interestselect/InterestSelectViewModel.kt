@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * View model for [InterestSelectScreen]. Manages UI
+ * View model for [InterestSelectScreen]
  */
 class InterestSelectViewModel(private val userRepo: UserRepository) : ViewModel() {
+    // UI state
     private val _uiState = MutableStateFlow(InterestUiState())
     val uiState: StateFlow<InterestUiState> = _uiState.asStateFlow()
 

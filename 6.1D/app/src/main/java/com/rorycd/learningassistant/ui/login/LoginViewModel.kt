@@ -10,13 +10,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
- * View model for [LoginScreen]. Manages UI
+ * View model for [LoginScreen]
  */
 class LoginViewModel(private val userRepo: UserRepository) : ViewModel() {
+    // UI state
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    // UI
+    // UI management
     fun onUsernameChanged(newUsername: String) {
         _uiState.update {
             val updated = it.copy(username = newUsername)

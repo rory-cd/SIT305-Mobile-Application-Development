@@ -1,6 +1,5 @@
 package com.rorycd.learningassistant.ui.quiz
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 import java.util.Date
 
 /**
- * View model for [QuizScreen]. Manages UI
+ * View model for [QuizScreen]
  */
 class QuizViewModel(
     savedStateHandle: SavedStateHandle,
@@ -30,15 +29,23 @@ class QuizViewModel(
     private val incorrectQuestions = mutableListOf<String>()
     private var quiz: Quiz? = null
 
+    // UI state
     private val _uiState = MutableStateFlow(QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            // Get quiz id from route args
             val quizId: Int = checkNotNull(savedStateHandle["quizId"])
+
             quiz = quizRepo.getQuizById(quizId)
-            if (quiz != null)
-                allQuestions = quizRepo.getQuizQuestions(quiz!!.id)
+
+            if (quiz == null) {
+                _uiState.update { it.copy(toastMessage = "Something went wrong - results could not be fetched.") }
+                return@launch
+            }
+
+            allQuestions = quizRepo.getQuizQuestions(quiz!!.id)
 
             // Set initial ui state values
             _uiState.update {
@@ -94,5 +101,8 @@ class QuizViewModel(
                 questionNumber = nextQuestion
             )
         }
+    }
+    fun clearToast() {
+        _uiState.update { it.copy(toastMessage = null) }
     }
 }

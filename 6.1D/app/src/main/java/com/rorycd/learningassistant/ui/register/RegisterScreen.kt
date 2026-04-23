@@ -41,11 +41,17 @@ import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
 import com.rorycd.learningassistant.ui.components.TextInputField
 
+/**
+ * Destination class for NavGraph route to [RegisterScreen]
+ */
 object RegisterDestination : NavigationDestination {
     override val route = "register"
     override val titleRes = R.string.register_destination_title
 }
 
+/**
+ * Screen to allow users to create an account
+ */
 @Composable
 fun RegisterScreen(
     onRegistrationSuccess: () -> Unit,
@@ -53,9 +59,8 @@ fun RegisterScreen(
 ) {
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val context = LocalContext.current
     val failMsg = stringResource(R.string.username_taken)
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier

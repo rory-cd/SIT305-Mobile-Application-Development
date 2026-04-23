@@ -3,6 +3,7 @@ package com.rorycd.learningassistant.network
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// Model classes to define the shape of data received from the network
 @Serializable
 data class QuizResponse(
     val quiz: List<QuizItem>

@@ -3,6 +3,9 @@ package com.rorycd.learningassistant.data
 import androidx.room.TypeConverter
 import java.util.Date
 
+/**
+ * Room type converters for serialization
+ */
 class Converters {
     @TypeConverter
     fun fromString(value: String): List<String>? {

@@ -8,5 +8,6 @@ data class ResultsUiState (
     val correctAnswers: Int = 0,
     val questionCount: Int = 0,
     val feedback: String = "",
+    val toastMessage: String? = null,
     val isLoaded: Boolean = false
 )

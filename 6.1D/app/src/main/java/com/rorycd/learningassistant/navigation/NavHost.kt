@@ -33,18 +33,21 @@ fun LearningAssistantNavHost (
     val app = LocalContext.current.applicationContext as LearningApplication
     val userRepo = app.container.userRepo
 
-    fun userNavigateTo(route : String) {
-        if (userRepo.isLoggedIn()) {
-            navController.navigate(route)
-        } else {
+    fun navigateWithGuard(route : String, clearStack: Boolean = false) {
+        if (!userRepo.isLoggedIn()) {
+            // Redirect logged-out users
             navController.navigate(LoginDestination.route) {
-                popUpTo(0)
+                popUpTo(0) { inclusive = true }
             }
+            return
         }
-    }
 
-    fun guestNavigateTo(route : String) {
-        navController.navigate(route = route)
+        navController.navigate(route) {
+            if (clearStack) {
+                popUpTo(0) { inclusive = true }
+            }
+            launchSingleTop = true
+        }
     }
 
     NavHost(
@@ -55,28 +58,28 @@ fun LearningAssistantNavHost (
         // Login screen
         composable(route = LoginDestination.route) {
             LoginScreen(
-                onLoginSuccess = { userNavigateTo(HomeDestination.route) },
-                onRequireRegistration = { guestNavigateTo(RegisterDestination.route) }
+                onLoginSuccess = { navigateWithGuard(route = HomeDestination.route, true)},
+                onRequireRegistration = { navController.navigate(RegisterDestination.route) }
             )
         }
         // Register screen
         composable(route = RegisterDestination.route) {
             RegisterScreen(
-                onRegistrationSuccess = { userNavigateTo(SelectInterestsDestination.route) }
+                onRegistrationSuccess = { navigateWithGuard(SelectInterestsDestination.route) }
             )
         }
         // Home screen
         composable(route = HomeDestination.route) {
             HomeScreen(
-                onLogOut = { guestNavigateTo(LoginDestination.route) },
-                onStartQuiz = { userNavigateTo("${QuizDestination.route}/$it") },
-                onPickInterests = { userNavigateTo(SelectInterestsDestination.route) }
+                onLogOut = { navController.navigate(LoginDestination.route) { popUpTo(0) } },
+                onStartQuiz = { navigateWithGuard("${QuizDestination.route}/$it") },
+                onPickInterests = { navigateWithGuard(SelectInterestsDestination.route) }
             )
         }
         // Interest selection screen
         composable(route = SelectInterestsDestination.route) {
             InterestSelectScreen(
-                onFinishSelection = { userNavigateTo(HomeDestination.route) }
+                onFinishSelection = { navigateWithGuard(HomeDestination.route, true) }
             )
         }
         // Quiz screen
@@ -87,7 +90,9 @@ fun LearningAssistantNavHost (
             })
         ) {
             QuizScreen(
-                onQuizComplete = { userNavigateTo("${ResultsDestination.route}/$it") }
+                onQuizComplete = {
+                    navigateWithGuard(route = "${ResultsDestination.route}/$it")
+                }
             )
         }
         // Results screen
@@ -98,7 +103,7 @@ fun LearningAssistantNavHost (
             )
         ) {
             ResultsScreen(
-                onGoHome = { userNavigateTo(HomeDestination.route) }
+                onGoHome = { navigateWithGuard(HomeDestination.route, true) }
             )
         }
     }

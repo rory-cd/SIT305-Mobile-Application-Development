@@ -1,5 +1,6 @@
 package com.rorycd.learningassistant.ui.quiz
 
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,21 +13,26 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.learningassistant.R
 import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
+import com.rorycd.learningassistant.ui.register.RegisterScreen
 
+/**
+ * Destination class for NavGraph route to [QuizScreen]
+ */
 object QuizDestination : NavigationDestination {
     override val route = "quiz"
     override val titleRes = R.string.quiz_destination_title
@@ -35,6 +41,9 @@ object QuizDestination : NavigationDestination {
     val routeWithArgs = "${route}/{$QUIZ_ID_ARG}"
 }
 
+/**
+ * Screen where quizzes are completed
+ */
 @Composable
 fun QuizScreen(
     onQuizComplete: (quizId: Int) -> Unit,
@@ -43,6 +52,7 @@ fun QuizScreen(
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var selected by rememberSaveable { mutableIntStateOf(-1) }
+    val context = LocalContext.current
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -127,6 +137,13 @@ fun QuizScreen(
                     modifier = Modifier.padding(8.dp)
                 )
             }
+        }
+    }
+    // Show toast if toast message is set
+    LaunchedEffect(state.toastMessage) {
+        state.toastMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearToast()
         }
     }
 }
