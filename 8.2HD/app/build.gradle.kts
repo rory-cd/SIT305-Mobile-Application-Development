@@ -65,4 +65,7 @@ dependencies {
     // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
     // See Add the KSP plugin to your project
     ksp("androidx.room:room-compiler:$room_version")
+
+    // Gemini Nano (ML Kit Prompt API)
+    implementation("com.google.mlkit:genai-prompt:1.0.0-beta2")
 }
