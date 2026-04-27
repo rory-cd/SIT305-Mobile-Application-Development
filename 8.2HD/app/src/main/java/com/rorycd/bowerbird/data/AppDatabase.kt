@@ -11,7 +11,8 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         Folder::class,
-        ProcessedFile::class
+        ScannedFile::class,
+        QueuedFile::class
     ],
     version = 1,
     exportSchema = false
@@ -19,7 +20,8 @@ import androidx.room.RoomDatabase
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun folderDao(): FolderDao
-    abstract fun processedFileDao(): ProcessedFileDao
+    abstract fun scannedFileDao(): ScannedFileDao
+    abstract fun queuedFileDao(): QueuedFileDao
 
     companion object {
         @Volatile

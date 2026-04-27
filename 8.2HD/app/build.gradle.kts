@@ -68,4 +68,13 @@ dependencies {
 
     // Gemini Nano (ML Kit Prompt API)
     implementation("com.google.mlkit:genai-prompt:1.0.0-beta2")
+
+    // Mediapipe
+    // This is the specific bundle for On-Device LLM/Multimodal
+    implementation("com.google.mediapipe:tasks-genai:0.10.27")
+    // Ensure you also have the base tasks library
+    implementation("com.google.mediapipe:tasks-vision:0.10.33")
+
+    // Google AI Edge SDK (LiteRT)
+    implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
 }

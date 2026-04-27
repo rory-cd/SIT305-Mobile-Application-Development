@@ -7,7 +7,7 @@ import com.rorycd.bowerbird.data.AppDataContainer
 /**
  * Application subclass
  */
-class EventApplication : Application() {
+class BowerbirdApplication : Application() {
 
     // AppContainer instance used by the rest of the classes
     lateinit var container: AppContainer

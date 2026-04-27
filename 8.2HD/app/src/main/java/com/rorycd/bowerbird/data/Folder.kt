@@ -9,5 +9,5 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "folders")
 data class Folder(
     @PrimaryKey
-    val uri: String,
+    val uri: String
 )

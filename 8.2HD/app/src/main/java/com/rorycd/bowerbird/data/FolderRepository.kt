@@ -5,7 +5,7 @@ import androidx.core.net.toUri
 
 class FolderRepository(
     private val folderDao: FolderDao,
-    private val processedFileDao: ProcessedFileDao
+    private val processedFileDao: ScannedFileDao
 ) {
     suspend fun addFolder(folder: Uri) {
         folderDao.insert(Folder(folder.toString()))
@@ -15,15 +15,16 @@ class FolderRepository(
         return folderDao.getAllFolders().map { it.uri.toUri() }
     }
 
-    suspend fun fileHasBeenProcessed(file: Uri): Boolean {
-        return processedFileDao.exists(file.toString())
+    suspend fun addToScanned(file: Uri, originalFolder: Uri) {
+        processedFileDao.insert(
+            ScannedFile(
+                fileUri = file.toString(),
+                folderUri = originalFolder.toString()
+            )
+        )
     }
 
-    suspend fun fileHasBeenProcessedIn(file: Uri, folder: Uri): Boolean {
+    suspend fun fileHasBeenScanned(file: Uri, folder: Uri): Boolean {
         return processedFileDao.existsIn(file.toString(), folder.toString())
-    }
-
-    suspend fun getProcessedFilesIn(folder: Uri): List<Uri> {
-        return processedFileDao.getFilesInFolder(folder.toString()).map { it.folderUri.toUri() }
     }
 }
