@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.lostandfound.data.Advert
 import com.rorycd.lostandfound.data.AdvertRepository
-import com.rorycd.lostandfound.data.OfflineAdvertRepository
 import com.rorycd.lostandfound.data.PostType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 

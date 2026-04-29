@@ -13,6 +13,8 @@ import com.rorycd.lostandfound.ui.create.CreateAdvertScreen
 import com.rorycd.lostandfound.ui.create.CreateDestination
 import com.rorycd.lostandfound.ui.home.HomeDestination
 import com.rorycd.lostandfound.ui.home.HomeScreen
+import com.rorycd.lostandfound.ui.itemlist.ItemListDestination
+import com.rorycd.lostandfound.ui.itemlist.ItemListScreen
 
 /**
  * Composable defining navigation routes for the main app content
@@ -49,52 +51,20 @@ fun LostAndFoundNavHost (
         composable(route = HomeDestination.route) {
             HomeScreen(
                 onCreateAdvert = { navController.navigate(CreateDestination.route) },
-                onShowAllItems = {}
+                onShowAllItems = { navController.navigate(ItemListDestination.route) }
             )
         }
-        // Register screen
+        // Create advert screen
         composable(route = CreateDestination.route) {
             CreateAdvertScreen(
-                onAdvertCreated = {}
+                onAdvertCreated = { navController.navigate(ItemListDestination.route) }
             )
         }
-//        // Home screen
-//        composable(route = HomeDestination.route) {
-//            HomeScreen(
-//                onLogOut = { navController.navigate(LoginDestination.route) { popUpTo(0) } },
-//                onStartQuiz = { navigateWithGuard("${QuizDestination.route}/$it") },
-//                onPickInterests = { navigateWithGuard(SelectInterestsDestination.route) }
-//            )
-//        }
-//        // Interest selection screen
-//        composable(route = SelectInterestsDestination.route) {
-//            InterestSelectScreen(
-//                onFinishSelection = { navigateWithGuard(HomeDestination.route, true) }
-//            )
-//        }
-//        // Quiz screen
-//        composable(
-//            route = QuizDestination.routeWithArgs,
-//            arguments = listOf(navArgument(QuizDestination.QUIZ_ID_ARG) {
-//                type = NavType.IntType
-//            })
-//        ) {
-//            QuizScreen(
-//                onQuizComplete = {
-//                    navigateWithGuard(route = "${ResultsDestination.route}/$it")
-//                }
-//            )
-//        }
-//        // Results screen
-//        composable(
-//            route = ResultsDestination.routeWithArgs,
-//            arguments = listOf(navArgument(ResultsDestination.QUIZ_ID_ARG)
-//            { type = NavType.IntType }
-//            )
-//        ) {
-//            ResultsScreen(
-//                onGoHome = { navigateWithGuard(HomeDestination.route, true) }
-//            )
-//        }
+        // Create advert screen
+        composable(route = ItemListDestination.route) {
+            ItemListScreen(
+                onSelectItem = { navController.navigate(HomeDestination.route) }
+            )
+        }
     }
 }

@@ -53,7 +53,7 @@ fun RadioGroupHorizontal(
                 Text(
                     text = option.toString().lowercase().replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
         }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.rorycd.lostandfound.LostAndFoundApplication
 import com.rorycd.lostandfound.ui.create.CreateAdvertViewModel
+import com.rorycd.lostandfound.ui.itemlist.ItemListViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire Planner app
@@ -16,6 +17,12 @@ object AppViewModelProvider {
         // Initializer for CreateAdvertViewModel
         initializer {
             CreateAdvertViewModel(
+                lostAndFoundApplication().container.advertRepository
+            )
+        }
+        // Initializer for ItemListViewModel
+        initializer {
+            ItemListViewModel(
                 lostAndFoundApplication().container.advertRepository
             )
         }

@@ -30,7 +30,8 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     onCreateAdvert: () -> Unit,
-    onShowAllItems: () -> Unit
+    onShowAllItems: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

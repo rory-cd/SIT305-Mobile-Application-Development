@@ -2,8 +2,6 @@ package com.rorycd.lostandfound.ui.create
 
 import com.rorycd.lostandfound.data.PostType
 import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 /**
  * Represents the current state of the [CreateAdvertScreen] UI

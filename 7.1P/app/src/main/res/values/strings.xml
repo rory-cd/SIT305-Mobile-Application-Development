@@ -10,4 +10,7 @@
     <string name="description_input_label">Description*</string>
     <string name="location_input_label">Location*</string>
     <string name="post_type_label">Post Type:</string>
+    <string name="item_list_destination_title">Item list</string>
+    <string name="item_list_title"><![CDATA[Lost & found items]]></string>
+    <string name="filter_input_label">Filter</string>
 </resources>

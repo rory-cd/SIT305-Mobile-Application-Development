@@ -7,9 +7,7 @@ enum class PostType {
 }
 
 class OfflineAdvertRepository(private val advertDao: AdvertDao) : AdvertRepository {
-    override fun getAllAdvertStream(): Flow<List<Advert>> {
-        TODO("Not yet implemented")
-    }
+    override fun getAllAdvertStream(): Flow<List<Advert>> = advertDao.getAllAdverts()
 
     override fun getAdvert(id: Int): Advert? {
         TODO("Not yet implemented")
