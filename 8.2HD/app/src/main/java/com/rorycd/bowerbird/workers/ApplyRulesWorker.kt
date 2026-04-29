@@ -3,13 +3,11 @@ package com.rorycd.bowerbird.workers
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import com.rorycd.bowerbird.data.AppDatabase
 import com.rorycd.bowerbird.data.FolderRepository
 import com.rorycd.bowerbird.data.QueueRepository
-import com.rorycd.bowerbird.prompt.GemmaRepository
-import androidx.core.net.toUri
+import com.rorycd.bowerbird.BowerbirdApplication
 
 private const val TAG = "ApplyRulesWorker"
 
@@ -32,9 +30,10 @@ class ApplyRulesWorker(val context: Context, params: WorkerParameters) : Corouti
                 val files = queueRepo.getQueuedFilesIn(folder)
 
                 for (file in files) {
-                    val repoTest = GemmaRepository(context)
-                    repoTest.loadModel()
-                    val response = repoTest.getResponse("Describe this image in two sentences, each in JSON format with keys of '1' and '2' respectively.", file)
+                    val app = applicationContext as BowerbirdApplication
+                    val repo = app.container.promptRepository
+                    repo.loadModel()
+                    val response = repo.getResponse("Describe this image in two sentences, each in JSON format with keys of '1' and '2' respectively.", file)
                     queueRepo.markAsDone(file, folder)
                     Log.e(TAG, response)
                 }

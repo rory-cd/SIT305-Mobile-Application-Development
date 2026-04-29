@@ -15,8 +15,14 @@ class QueueRepository(
         )
     }
 
-    suspend fun markAsProcessing(file: QueuedFile) {
-        queuedFileDao.update(file.copy(status = FileStatus.PROCESSING, lastModified = System.currentTimeMillis()))
+    suspend fun markAsProcessing(file: Uri, folder: Uri) {
+        val updated = QueuedFile(
+            fileUri = file.toString(),
+            folderUri = folder.toString(),
+            status = FileStatus.PROCESSING,
+            lastModified = System.currentTimeMillis()
+        )
+        queuedFileDao.update(updated)
     }
 
     suspend fun markAsDone(file: Uri, folder: Uri) {
@@ -29,8 +35,14 @@ class QueueRepository(
         queuedFileDao.update(updated)
     }
 
-    suspend fun markAsFailed(file: QueuedFile) {
-        queuedFileDao.update(file.copy(status = FileStatus.FAILED, lastModified = System.currentTimeMillis()))
+    suspend fun markAsFailed(file: Uri, folder: Uri) {
+        val updated = QueuedFile(
+            fileUri = file.toString(),
+            folderUri = folder.toString(),
+            status = FileStatus.FAILED,
+            lastModified = System.currentTimeMillis()
+        )
+        queuedFileDao.update(updated)
     }
 
     suspend fun getQueuedFilesIn(folder: Uri): List<Uri> {
