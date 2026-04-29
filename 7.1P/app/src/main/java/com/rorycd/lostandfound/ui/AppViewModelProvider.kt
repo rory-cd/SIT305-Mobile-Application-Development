@@ -1,0 +1,30 @@
+package com.rorycd.lostandfound.ui
+
+import android.app.Application
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.rorycd.lostandfound.LostAndFoundApplication
+import com.rorycd.lostandfound.ui.create.CreateAdvertViewModel
+
+/**
+ * Provides Factory to create instance of ViewModel for the entire Planner app
+ */
+object AppViewModelProvider {
+    val factory = viewModelFactory {
+        // Initializer for CreateAdvertViewModel
+        initializer {
+            CreateAdvertViewModel(
+                lostAndFoundApplication().container.advertRepository
+            )
+        }
+    }
+}
+
+/**
+ * Extension function to queries for [Application] object and returns an instance of
+ * [LostAndFoundApplication].
+ */
+fun CreationExtras.lostAndFoundApplication(): LostAndFoundApplication =
+    (this[AndroidViewModelFactory.APPLICATION_KEY] as LostAndFoundApplication)
