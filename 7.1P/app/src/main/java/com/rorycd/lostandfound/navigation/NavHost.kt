@@ -9,6 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.rorycd.lostandfound.ui.create.CreateAdvertScreen
+import com.rorycd.lostandfound.ui.create.CreateDestination
 import com.rorycd.lostandfound.ui.home.HomeDestination
 import com.rorycd.lostandfound.ui.home.HomeScreen
 
@@ -46,16 +48,16 @@ fun LostAndFoundNavHost (
         // Home screen
         composable(route = HomeDestination.route) {
             HomeScreen(
-                onCreateAdvert = {},
+                onCreateAdvert = { navController.navigate(CreateDestination.route) },
                 onShowAllItems = {}
             )
         }
-//        // Register screen
-//        composable(route = RegisterDestination.route) {
-//            RegisterScreen(
-//                onRegistrationSuccess = { navigateWithGuard(SelectInterestsDestination.route) }
-//            )
-//        }
+        // Register screen
+        composable(route = CreateDestination.route) {
+            CreateAdvertScreen(
+                onAdvertCreated = {}
+            )
+        }
 //        // Home screen
 //        composable(route = HomeDestination.route) {
 //            HomeScreen(
