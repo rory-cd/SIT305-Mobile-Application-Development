@@ -15,5 +15,6 @@ data class Advert (
     val phone: String,
     val description: String,
     val date: Long,
-    val location: String
+    val location: String,
+    val imgUri: String
 )

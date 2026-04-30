@@ -55,12 +55,23 @@ class CreateAdvertViewModel(private val advertRepository: AdvertRepository) : Vi
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli()
-            it.copy(date = localMillis)
+            val updated = it.copy(date = localMillis)
+            updated.copy(isValid = isValid(updated))
         }
     }
 
     fun onLocationChanged(newLocation: String) {
-        _uiState.update { it.copy(location = newLocation) }
+        _uiState.update {
+            val updated = it.copy(location = newLocation)
+            updated.copy(isValid = isValid(updated))
+        }
+    }
+
+    fun onImageSelected(newUri: String) {
+        _uiState.update {
+            val updated = it.copy(imgUri = newUri)
+            updated.copy(isValid = isValid(updated))
+        }
     }
 
 
@@ -75,7 +86,8 @@ class CreateAdvertViewModel(private val advertRepository: AdvertRepository) : Vi
                 phone = state.phone,
                 description = state.description,
                 date = state.date,
-                location = state.location
+                location = state.location,
+                imgUri = state.imgUri
             )
             advertRepository.insertAdvert(newAdvert)
         }
@@ -87,7 +99,8 @@ class CreateAdvertViewModel(private val advertRepository: AdvertRepository) : Vi
             name.isNotBlank() &&
             phone.isNotBlank() &&
             description.isNotBlank() &&
-            location.isNotBlank()
+            location.isNotBlank() &&
+            imgUri.isNotBlank()
         }
     }
 }

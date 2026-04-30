@@ -13,5 +13,6 @@ data class CreateAdvertUiState(
     val description: String = "",
     val date: Long = Instant.now().toEpochMilli(),
     val location: String = "",
+    val imgUri: String = "",
     val isValid: Boolean = false
 )

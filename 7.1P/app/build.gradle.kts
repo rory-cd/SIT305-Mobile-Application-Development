@@ -85,4 +85,7 @@ dependencies {
 
     // Desugaring for AGP 7.4+
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+
+    // Coil: For image loading
+    implementation("io.coil-kt:coil-compose:2.7.0")
 }

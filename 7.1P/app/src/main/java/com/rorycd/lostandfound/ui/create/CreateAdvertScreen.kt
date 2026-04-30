@@ -1,21 +1,37 @@
 package com.rorycd.lostandfound.ui.create
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import com.rorycd.lostandfound.R
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,6 +44,7 @@ import com.rorycd.lostandfound.ui.AppViewModelProvider
 import com.rorycd.lostandfound.ui.components.DatePickerText
 import com.rorycd.lostandfound.ui.components.RadioGroupHorizontal
 import com.rorycd.lostandfound.utils.formatDateAsString
+import coil.compose.AsyncImage
 
 /**
  * Destination class for NavGraph route to [CreateAdvertScreen].
@@ -49,6 +66,8 @@ fun CreateAdvertScreen(
 ) {
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -115,6 +134,58 @@ fun CreateAdvertScreen(
             maxLines = 1,
             modifier = Modifier.fillMaxWidth()
         )
+
+        Text(
+            text = stringResource(R.string.item_image_label),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        // Image
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 16.dp)
+        ) {
+            val imageSelectLauncher =
+                rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                    if (uri != null) {
+                        context.contentResolver.takePersistableUriPermission(
+                            uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        )
+                        viewModel.onImageSelected(uri.toString())
+                    }
+                }
+            AsyncImage(
+                model = state.imgUri,
+                contentDescription = stringResource(id = R.string.item_image_description),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(200.dp)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
+                    .border(
+                        width = 4.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+            )
+            IconButton(
+                onClick = {
+                    imageSelectLauncher.launch(
+                        input = PickVisualMediaRequest(
+                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                },
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primary)
+                    .align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.add_24px),
+                    contentDescription = stringResource(R.string.checkmark_desc),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
 
         // Create button
         Button(

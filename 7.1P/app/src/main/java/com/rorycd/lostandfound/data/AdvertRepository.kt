@@ -14,7 +14,7 @@ interface AdvertRepository {
     /**
      * Retrieve an advert from the given data source that matches with the [id]
      */
-    fun getAdvert(id: Int): Advert?
+    suspend fun getAdvert(id: Int): Advert?
 
     /**
      * Insert advert in the data source

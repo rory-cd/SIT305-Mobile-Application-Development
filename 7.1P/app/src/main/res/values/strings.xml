@@ -13,4 +13,7 @@
     <string name="item_list_destination_title">Item list</string>
     <string name="item_list_title"><![CDATA[Lost & found items]]></string>
     <string name="filter_input_label">Filter</string>
+    <string name="item_image_description">An image of a lost or found item</string>
+    <string name="checkmark_desc">A check mark</string>
+    <string name="item_image_label">Item image*:</string>
 </resources>
