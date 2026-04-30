@@ -16,4 +16,6 @@
     <string name="item_image_description">An image of a lost or found item</string>
     <string name="checkmark_desc">A check mark</string>
     <string name="item_image_label">Item image*:</string>
+    <string name="item_details_destination_title">Item details</string>
+    <string name="delete_item_button">Delete item</string>
 </resources>

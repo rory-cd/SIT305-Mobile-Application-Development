@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.update
 /**
  * View model for [ItemListScreen]
  */
-class ItemListViewModel(private val advertRepository: AdvertRepository) : ViewModel() {
+class ItemListViewModel(advertRepository: AdvertRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ItemListUiState())
     val uiState: StateFlow<ItemListUiState> = _uiState.asStateFlow()
@@ -34,7 +34,6 @@ class ItemListViewModel(private val advertRepository: AdvertRepository) : ViewMo
     fun onQueryChanged(newQuery: String) {
         _uiState.update { it.copy(query = newQuery) }
     }
-
 }
 
 /**

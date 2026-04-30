@@ -11,6 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.rorycd.lostandfound.ui.create.CreateAdvertScreen
 import com.rorycd.lostandfound.ui.create.CreateDestination
+import com.rorycd.lostandfound.ui.details.DetailsDestination
+import com.rorycd.lostandfound.ui.details.DetailsScreen
 import com.rorycd.lostandfound.ui.home.HomeDestination
 import com.rorycd.lostandfound.ui.home.HomeScreen
 import com.rorycd.lostandfound.ui.itemlist.ItemListDestination
@@ -57,13 +59,35 @@ fun LostAndFoundNavHost (
         // Create advert screen
         composable(route = CreateDestination.route) {
             CreateAdvertScreen(
-                onAdvertCreated = { navController.navigate(ItemListDestination.route) }
+                onAdvertCreated = {
+                    navController.navigate(
+                        ItemListDestination.route
+                    ){
+                        popUpTo(HomeDestination.route) { inclusive = false }
+                    }
+                }
             )
         }
-        // Create advert screen
+        // Item list screen
         composable(route = ItemListDestination.route) {
             ItemListScreen(
-                onSelectItem = { navController.navigate(HomeDestination.route) }
+                onSelectItem = { navController.navigate("${DetailsDestination.route}/$it") }
+            )
+        }
+        // Item details screen
+        composable(route = DetailsDestination.routeWithArgs,
+            arguments = listOf(navArgument(DetailsDestination.ITEM_ID_ARG) {
+                type = NavType.IntType
+            })
+        ) {
+            DetailsScreen(
+                onDeleteItem = {
+                    navController.navigate(
+                        ItemListDestination.route
+                    ){
+                        popUpTo(HomeDestination.route) { inclusive = false }
+                    }
+                }
             )
         }
     }

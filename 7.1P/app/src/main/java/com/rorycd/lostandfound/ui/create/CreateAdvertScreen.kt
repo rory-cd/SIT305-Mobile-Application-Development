@@ -112,7 +112,7 @@ fun CreateAdvertScreen(
             value = state.description,
             onValueChange = { viewModel.onDescriptionChanged(it) },
             label = { Text(stringResource(R.string.description_input_label)) },
-            singleLine = true,
+            singleLine = false,
             maxLines = 4,
             minLines = 4,
             modifier = Modifier.fillMaxWidth()
