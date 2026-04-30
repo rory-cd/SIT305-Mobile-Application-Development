@@ -3,7 +3,6 @@ package com.rorycd.lostandfound.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,30 +18,13 @@ import com.rorycd.lostandfound.ui.itemlist.ItemListDestination
 import com.rorycd.lostandfound.ui.itemlist.ItemListScreen
 
 /**
- * Composable defining navigation routes for the main app content
+ * Composable defining navigation routes for the main app
  */
 @Composable
 fun LostAndFoundNavHost (
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-
-//    fun navigateWithGuard(route : String, clearStack: Boolean = false) {
-//        if (!userRepo.isLoggedIn()) {
-//            // Redirect logged-out users
-//            navController.navigate(LoginDestination.route) {
-//                popUpTo(0) { inclusive = true }
-//            }
-//            return
-//        }
-//
-//        navController.navigate(route) {
-//            if (clearStack) {
-//                popUpTo(0) { inclusive = true }
-//            }
-//            launchSingleTop = true
-//        }
-//    }
 
     NavHost(
         navController = navController,

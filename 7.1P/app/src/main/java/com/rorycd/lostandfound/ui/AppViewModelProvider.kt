@@ -12,7 +12,7 @@ import com.rorycd.lostandfound.ui.details.DetailsViewModel
 import com.rorycd.lostandfound.ui.itemlist.ItemListViewModel
 
 /**
- * Provides Factory to create instance of ViewModel for the entire Planner app
+ * Provides Factory to create instance of ViewModel for the entire app
  */
 object AppViewModelProvider {
     val factory = viewModelFactory {

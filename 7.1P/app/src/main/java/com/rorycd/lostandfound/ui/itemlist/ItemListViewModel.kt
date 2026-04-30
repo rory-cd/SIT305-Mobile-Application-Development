@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.lostandfound.data.Advert
 import com.rorycd.lostandfound.data.AdvertRepository
-import com.rorycd.lostandfound.ui.create.CreateAdvertUiState
 import com.rorycd.lostandfound.utils.formatDateAsString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
