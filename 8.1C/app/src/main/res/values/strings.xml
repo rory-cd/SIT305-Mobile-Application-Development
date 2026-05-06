@@ -16,4 +16,11 @@
     <string name="login_button">Log in</string>
     <string name="login_failed">Login failed</string>
     <string name="need_account_message">Need an account?</string>
+    <string name="chat_destination_title">Chat</string>
+    <string name="user_input">Say something</string>
+    <string name="send_button">Send</string>
+    <string name="home_destination_title">Home</string>
+    <string name="log_out_button">Log out</string>
+    <string name="fetching_conversations">Loading conversations…</string>
+    <string name="new_conversation">New conversation</string>
 </resources>

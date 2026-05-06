@@ -37,6 +37,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+
     }
     buildFeatures {
         compose = true
@@ -76,4 +78,16 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.57.1")
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
     implementation(libs.hilt.navigation.compose)
+
+    // Desugaring (for date/time utils)
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+//    // Mediapipe
+//    // This is the specific bundle for On-Device LLM/Multimodal
+//    implementation("com.google.mediapipe:tasks-genai:0.10.27")
+//    // Ensure you also have the base tasks library
+//    implementation("com.google.mediapipe:tasks-vision:0.10.33")
+
+    // Google AI Edge SDK (LiteRT)
+    implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
 }

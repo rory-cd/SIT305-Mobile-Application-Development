@@ -2,8 +2,13 @@ package com.rorycd.chatbot.di
 
 import android.content.Context
 import com.rorycd.chatbot.data.AppDatabase
+import com.rorycd.chatbot.data.ConversationDao
+import com.rorycd.chatbot.data.MessageDao
 import com.rorycd.chatbot.data.PreferencesDataStore
 import com.rorycd.chatbot.data.UserDao
+import com.rorycd.chatbot.prompt.GemmaRepository
+import com.rorycd.chatbot.prompt.PromptRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,4 +39,25 @@ object DatabaseModule {
     fun provideUserDao(database: AppDatabase): UserDao {
         return database.userDao()
     }
+
+    @Provides
+    fun provideConversationDao(database: AppDatabase): ConversationDao {
+        return database.conversationDao()
+    }
+
+    @Provides
+    fun provideMessageDao(database: AppDatabase): MessageDao {
+        return database.messageDao()
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindPromptRepository(
+        impl: GemmaRepository
+    ): PromptRepository
 }

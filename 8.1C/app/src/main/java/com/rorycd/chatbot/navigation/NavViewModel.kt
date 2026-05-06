@@ -14,7 +14,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class NavViewModel @Inject constructor (
-    private val userRepo: UserRepository
+    userRepo: UserRepository
 ) : ViewModel() {
 
     val isLoggedIn: StateFlow<Boolean> = userRepo.isLoggedIn()
