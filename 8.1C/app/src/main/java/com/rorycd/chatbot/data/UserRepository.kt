@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -65,8 +66,7 @@ class UserRepository @Inject constructor(
         return user != null
     }
 
-    suspend fun isLoggedIn() : Boolean {
-        val id = currentUserId().first()
-        return id != null
+    fun isLoggedIn() : Flow<Boolean> {
+        return currentUserId().map { it != null }
     }
 }

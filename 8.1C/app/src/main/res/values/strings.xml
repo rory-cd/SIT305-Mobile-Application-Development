@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">chatbot</string>
+    <string name="app_name">Chat Bot</string>
+    <string name="register_destination_title">Register</string>
+    <string name="username_taken">The selected username is already taken.</string>
+    <string name="username_empty">Username must be provided.</string>
+    <string name="password_length">Password must be 6 or more characters.</string>
+    <string name="password_match">Passwords must match.</string>
+    <string name="register_message">Let\'s get you set up!</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="confirm_password_label">Confirm password</string>
+    <string name="register_button">Register</string>
+    <string name="login_destination_title">Log In</string>
+    <string name="welcome_message">Welcome,</string>
+    <string name="lets_chat">Let\'s Chat!</string>
+    <string name="login_button">Log in</string>
+    <string name="login_failed">Login failed</string>
+    <string name="need_account_message">Need an account?</string>
 </resources>
