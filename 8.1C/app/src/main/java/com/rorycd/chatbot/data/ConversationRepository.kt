@@ -16,14 +16,14 @@ class ConversationRepository @Inject constructor(
     fun getConversations(userId: Int): Flow<List<Conversation>> =
         conversationDao.getConversationsForUser(userId)
 
+    fun getConversationFlow(id: Int): Flow<Conversation?> =
+        conversationDao.getConversationFlowById(id)
+
     suspend fun createConversation(userId: Int): Long =
         conversationDao.insertConversation(Conversation(userId = userId))
 
     suspend fun renameConversation(id: Int, newName: String) =
         conversationDao.updateConversationTitle(id, newName)
-
-    suspend fun updateConversationSummary(id: Int, newSummary: String) =
-        conversationDao.updateConversationSummary(id, newSummary)
 
     suspend fun deleteConversation(id: Int) =
         conversationDao.deleteConversation(id)
@@ -32,6 +32,9 @@ class ConversationRepository @Inject constructor(
     fun getMessages(conversationId: Int): Flow<List<ChatMessage>> =
         messageDao.getMessagesByConversation(conversationId)
 
+    suspend fun getMessageCount(conversationId: Int): Int =
+        messageDao.getMessageCount(conversationId)
+
     suspend fun createMessage(conversationId: Int, text: String, isFromUser: Boolean) =
         messageDao.insertMessage(ChatMessage(
             text = text,
@@ -39,7 +42,7 @@ class ConversationRepository @Inject constructor(
             isFromUser = isFromUser
         ))
 
-    suspend fun changeMessage(id: Int, newText: String) =
+    fun changeMessage(id: Int, newText: String) =
         messageDao.updateMessageText(id, newText)
 
     suspend fun deleteMessage(id: Int) =

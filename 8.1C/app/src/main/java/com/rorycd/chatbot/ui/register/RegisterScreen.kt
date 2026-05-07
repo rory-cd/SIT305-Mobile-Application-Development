@@ -9,10 +9,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.rorycd.chatbot.R
@@ -45,57 +45,61 @@ fun RegisterScreen(
     val failMsg = stringResource(R.string.username_taken)
     val context = LocalContext.current
 
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = dimensionResource(R.dimen.padding_medium))
-    ) {
-        // Message
-        Text(
-            text = stringResource(R.string.register_message),
-            style = MaterialTheme.typography.displayMedium,
-            modifier = Modifier.padding(top = 32.dp)
-        )
-
-        // Form fields
-        TextInputField(
-            value = state.username,
-            onValueChange = { viewModel.onUsernameChanged(it) },
-            label = stringResource(R.string.username_label),
-            isError = state.usernameError != null,
-            errorMessage = state.usernameError?.let { stringResource(it) } ?: "",
+    Scaffold { innerPadding ->
+        Column(
             modifier = Modifier
-                .padding(top = 24.dp)
-        )
-        PasswordInputField(
-            value = state.password,
-            onValueChange = { viewModel.onPasswordChanged(it) },
-            label = stringResource(R.string.password_label),
-            isError = state.passwordError != null,
-            errorMessage = state.passwordError?.let { stringResource(it) } ?: ""
-        )
-        PasswordInputField(
-            value = state.confirmPassword,
-            onValueChange = { viewModel.onConfirmPasswordChanged(it) },
-            label = stringResource(R.string.confirm_password_label),
-            isError = state.confirmPasswordError != null,
-            errorMessage = state.confirmPasswordError?.let { stringResource(it) } ?: ""
-        )
-        Button(
-            onClick = {
-                viewModel.register(
-                    onSuccess = { onRegistrationSuccess() },
-                    onFailure = { Toast.makeText(context, failMsg, Toast.LENGTH_SHORT).show() }
-                )
-            },
-            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding)
+                .padding(16.dp)
                 .fillMaxWidth()
-                .padding(top = 16.dp)
         ) {
+            // Message
             Text(
-                stringResource(R.string.register_button),
-                fontWeight = FontWeight.Bold
+                text = stringResource(R.string.register_message),
+                style = MaterialTheme.typography.displayMedium,
+                modifier = Modifier.padding(top = 32.dp)
             )
+
+            // Form fields
+            TextInputField(
+                value = state.username,
+                onValueChange = { viewModel.onUsernameChanged(it) },
+                label = stringResource(R.string.username_label),
+                isError = state.usernameError != null,
+                errorMessage = state.usernameError?.let { stringResource(it) } ?: "",
+                modifier = Modifier
+                    .padding(top = 24.dp)
+            )
+            PasswordInputField(
+                value = state.password,
+                onValueChange = { viewModel.onPasswordChanged(it) },
+                label = stringResource(R.string.password_label),
+                isError = state.passwordError != null,
+                errorMessage = state.passwordError?.let { stringResource(it) } ?: ""
+            )
+            PasswordInputField(
+                value = state.confirmPassword,
+                onValueChange = { viewModel.onConfirmPasswordChanged(it) },
+                label = stringResource(R.string.confirm_password_label),
+                isError = state.confirmPasswordError != null,
+                errorMessage = state.confirmPasswordError?.let { stringResource(it) } ?: ""
+            )
+            Button(
+                onClick = {
+                    viewModel.register(
+                        onSuccess = { onRegistrationSuccess() },
+                        onFailure = { Toast.makeText(context, failMsg, Toast.LENGTH_SHORT).show() }
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text(
+                    stringResource(R.string.register_button),
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

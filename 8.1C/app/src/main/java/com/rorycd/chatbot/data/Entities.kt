@@ -49,7 +49,6 @@ data class Conversation (
     val id: Int = 0,
     val userId: Int,
     val title: String = "New Conversation",
-    val summary: String? = null,
     val timestamp: Long = System.currentTimeMillis()
 )
 

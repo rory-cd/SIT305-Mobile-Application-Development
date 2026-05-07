@@ -90,4 +90,7 @@ dependencies {
 
     // Google AI Edge SDK (LiteRT)
     implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
+
+    // Icons
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

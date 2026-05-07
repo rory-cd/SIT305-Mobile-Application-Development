@@ -7,5 +7,6 @@ data class ChatUiState(
     val userInput: String = "",
     val error: String = "",
     val streamingResponse: String = "",
+    val sessionMsgCount: Int = 0,
     val isAwaitingResponse: Boolean = false
 )

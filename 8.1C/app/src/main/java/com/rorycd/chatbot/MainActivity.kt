@@ -7,7 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.rorycd.chatbot.navigation.ChatBotNavHost
 import com.rorycd.chatbot.ui.theme.ChatbotTheme
@@ -23,9 +25,12 @@ class MainActivity : ComponentActivity() {
         viewModel
         enableEdgeToEdge()
         setContent {
-            ChatbotTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ChatBotNavHost(modifier = Modifier.padding(innerPadding))
+            ChatbotTheme(dynamicColor = false) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ){
+                    ChatBotNavHost()
                 }
             }
         }

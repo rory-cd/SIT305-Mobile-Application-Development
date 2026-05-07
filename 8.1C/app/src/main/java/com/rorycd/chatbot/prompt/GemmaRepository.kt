@@ -2,8 +2,6 @@ package com.rorycd.chatbot.prompt
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import com.google.ai.edge.litertlm.Backend
 import com.google.ai.edge.litertlm.Content
 import com.google.ai.edge.litertlm.Contents
 import com.google.ai.edge.litertlm.Conversation
@@ -47,28 +45,25 @@ class GemmaRepository @Inject constructor(
         }
     }
 
-    override suspend fun getResponse(prompt: String, uri: Uri?): Flow<String>? {
+    override suspend fun getResponseAsync(prompt: String, uri: Uri?): Flow<String>? {
         if (conversation == null) return null
 
-        var tempFile: File? = null
-
-        if (uri != null) {
-            // Get the real file path from the URI
-            val inputStream = context.contentResolver.openInputStream(uri)
-            tempFile = File(context.cacheDir, "temp_image.jpg")
-            tempFile.outputStream().use { inputStream?.copyTo(it) }
-        }
-
-        // Change contents if image is included
-        val contents = if (tempFile == null)
-            Contents.of(Content.Text(prompt))
-        else
-            Contents.of(Content.ImageFile(tempFile.absolutePath), Content.Text(prompt))
+        val contents = createContents(prompt, uri)
 
         return withContext(Dispatchers.IO) {
             conversation!!.sendMessageAsync(Message.user(contents))
                 .catch {  }
                 .map { it.toString() }
+        }
+    }
+
+    override suspend fun getResponse(prompt: String, uri: Uri?): String? {
+        if (conversation == null) return null
+
+        val contents = createContents(prompt, uri)
+
+        return withContext(Dispatchers.IO) {
+            conversation!!.sendMessage(Message.user(contents)).toString()
         }
     }
 
@@ -78,18 +73,20 @@ class GemmaRepository @Inject constructor(
         if (conversation != null) conversation!!.close()
 
         val conversationConfig = ConversationConfig(
-            systemInstruction = Contents.of("You are a helpful assistant."),
+            systemInstruction = Contents.of("You are a helpful assistant. You are talking to $userName."),
             samplerConfig = SamplerConfig(topK = 10, topP = 0.95, temperature = 0.8)
         )
 
         conversation = engine!!.createConversation(conversationConfig)
     }
 
-    override fun resumeConversation(userName: String, summary: String, initialMessages: List<ChatMessage>) {
+    override fun resumeConversation(userName: String, initialMessages: List<ChatMessage>) {
         if (engine == null) return
 
+        if (conversation != null) conversation!!.close()
+
         val conversationConfig = ConversationConfig(
-            systemInstruction = Contents.of("You are a helpful assistant. The conversation with $userName so far has covered $summary."),
+            systemInstruction = Contents.of("You are a helpful assistant. You are talking to $userName."),
             initialMessages = initialMessages.map { chatMsg ->
                 when (chatMsg.isFromUser) {
                     true -> Message.user(chatMsg.text)
@@ -105,5 +102,24 @@ class GemmaRepository @Inject constructor(
     override fun endConversation() {
         conversation?.close()
         conversation = null
+    }
+
+    private fun createContents(prompt: String, uri: Uri?): Contents {
+        var tempFile: File? = null
+
+        if (uri != null) {
+            // Get the real file path from the URI
+            val inputStream = context.contentResolver.openInputStream(uri)
+            tempFile = File(context.cacheDir, "temp_image.jpg")
+            tempFile.outputStream().use { inputStream?.copyTo(it) }
+        }
+
+        // Change contents if image is included
+        val contents = if (tempFile == null)
+            Contents.of(Content.Text(prompt))
+        else
+            Contents.of(Content.ImageFile(tempFile.absolutePath), Content.Text(prompt))
+
+        return contents
     }
 }

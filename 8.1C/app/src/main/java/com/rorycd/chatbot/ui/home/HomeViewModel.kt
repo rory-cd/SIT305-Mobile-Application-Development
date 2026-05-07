@@ -20,20 +20,13 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor (
-    private val userRepo: UserRepository,
+    userRepo: UserRepository,
     private val conversationRepo: ConversationRepository
 ) : ViewModel() {
 
     // UI state
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
-
-    val currentUser = userRepo.getCurrentUserFlow()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null
-        )
 
     // Conversation list - reacts to current user changing
     @OptIn(ExperimentalCoroutinesApi::class)

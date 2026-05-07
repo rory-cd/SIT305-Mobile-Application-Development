@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -14,13 +15,19 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class NavViewModel @Inject constructor (
-    userRepo: UserRepository
+    private val userRepo: UserRepository
 ) : ViewModel() {
 
-    val isLoggedIn: StateFlow<Boolean> = userRepo.isLoggedIn()
+    val isLoggedIn: StateFlow<Boolean?> = userRepo.isLoggedIn()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = false
+            initialValue = null
         )
+
+    fun logOut(){
+        viewModelScope.launch {
+            userRepo.logOut()
+        }
+    }
 }
