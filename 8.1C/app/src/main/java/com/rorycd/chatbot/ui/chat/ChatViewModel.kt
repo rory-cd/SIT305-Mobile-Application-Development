@@ -130,30 +130,6 @@ class ChatViewModel @Inject constructor (
         promptRepo.resumeConversation(_currentUser!!.username, history)
     }
 
-//    private suspend fun updateTitle(conversation: Conversation) {
-//        val msgCount = conversationRepo.getMessageCount(conversation.id)
-//        val sessionMsgCount = _uiState.value.sessionMsgCount;
-//
-//        // Rename conversation if it's the first message, or there have been 10 new messages since the last update
-//        if (msgCount == 1 || sessionMsgCount % 10 == 0) {
-//            // Get the chat history
-//            val history = conversationRepo.getMessages(
-//                conversationId.value).filter { it.isNotEmpty() }.first()
-//
-//            val snippet = history.takeLast(5).joinToString {"\n"}
-//
-//            val newTitle = promptRepo.getResponse(
-//                "Create a title for this chat based on these past messages: \n$snippet Use 5 words or fewer. Respond with ONLY the title, e.g. 'Android Studio basics'."
-//            )
-//            if (newTitle != null)
-//                conversationRepo.renameConversation(conversation.id, newTitle)
-//
-//            // Restart conversation before the title was prompted
-//
-//            promptRepo.resumeConversation(_currentUser!!.username, history)
-//        }
-//    }
-
     private suspend fun getResponse(input: String): String {
         var response = ""
         promptRepo.getResponseAsync(input, null)
