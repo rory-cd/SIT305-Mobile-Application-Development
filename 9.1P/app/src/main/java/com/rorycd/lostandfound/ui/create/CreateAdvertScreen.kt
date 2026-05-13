@@ -132,7 +132,7 @@ fun CreateAdvertScreen(
             predictions = state.locationPredictions,
             label = stringResource(R.string.location_input_label),
             isLoading = state.isLoadingPredictions,
-            locationSelected = state.selectedLocation != null,
+            locationSelected = state.selectedPlace != null,
             modifier = Modifier.fillMaxWidth()
         )
 

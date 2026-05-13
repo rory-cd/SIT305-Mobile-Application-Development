@@ -17,5 +17,6 @@ data class Advert (
     val date: Long,
     val latitude: Double,
     val longitude: Double,
+    val locationName: String,
     val imgUri: String
 )

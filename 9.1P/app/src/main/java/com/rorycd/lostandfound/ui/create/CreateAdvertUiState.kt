@@ -1,7 +1,7 @@
 package com.rorycd.lostandfound.ui.create
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.google.android.libraries.places.api.model.Place
 import com.rorycd.lostandfound.data.PostType
 import java.time.Instant
 
@@ -15,7 +15,7 @@ data class CreateAdvertUiState(
     val description: String = "",
     val date: Long = Instant.now().toEpochMilli(),
     val locationInput: String = "",
-    val selectedLocation: LatLng? = null,
+    val selectedPlace: Place? = null,
     val locationPredictions: List<AutocompletePrediction> = emptyList(),
     val isLoadingPredictions: Boolean = false,
     val imgUri: String = "",

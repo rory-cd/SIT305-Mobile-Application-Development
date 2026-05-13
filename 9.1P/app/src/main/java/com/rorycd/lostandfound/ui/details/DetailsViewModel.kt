@@ -42,6 +42,7 @@ class DetailsViewModel(
                     name = advert!!.name,
                     phone = advert!!.phone,
                     description = advert!!.description,
+                    location = advert!!.locationName,
                     imgUri = advert!!.imgUri,
                     dateFormatted = formatDateAsString(advert!!.date)
                 )

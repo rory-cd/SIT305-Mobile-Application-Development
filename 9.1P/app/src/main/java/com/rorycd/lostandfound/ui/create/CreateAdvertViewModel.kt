@@ -3,7 +3,6 @@ package com.rorycd.lostandfound.ui.create
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.query
 import com.rorycd.lostandfound.data.Advert
 import com.rorycd.lostandfound.data.AdvertRepository
 import com.rorycd.lostandfound.data.PostType
@@ -74,7 +73,7 @@ class CreateAdvertViewModel(
         // Update input state and wipe predictions
         _uiState.update { it.copy(
             locationInput = input,
-            selectedLocation = null,
+            selectedPlace = null,
             locationPredictions = emptyList()
         )}
 
@@ -123,7 +122,7 @@ class CreateAdvertViewModel(
                 if (place.location != null) {
                     _uiState.update {
                         val updated = it.copy(
-                            selectedLocation = place.location,
+                            selectedPlace = place,
                             locationInput = place.displayName ?: "",
                             locationPredictions = emptyList()
                         )
@@ -140,11 +139,13 @@ class CreateAdvertViewModel(
         }
     }
 
-
     // Database interaction
     fun createAdvert() {
         viewModelScope.launch {
             val state = uiState.value
+            val location = state.selectedPlace?.location
+
+            if (state.selectedPlace == null) return@launch
 
             val newAdvert = Advert(
                 postType = state.postType.toString(),
@@ -152,8 +153,9 @@ class CreateAdvertViewModel(
                 phone = state.phone,
                 description = state.description,
                 date = state.date,
-                latitude = state.selectedLocation?.latitude ?: -37.813670,
-                longitude = state.selectedLocation?.longitude ?: 144.962896,
+                latitude = location?.latitude ?: -37.813670,    // Default location: Melbourne
+                longitude = location?.longitude ?: 144.962896,
+                locationName = state.selectedPlace.displayName ?: "New location",
                 imgUri = state.imgUri
             )
             advertRepository.insertAdvert(newAdvert)
@@ -166,7 +168,7 @@ class CreateAdvertViewModel(
             name.isNotBlank() &&
             phone.isNotBlank() &&
             description.isNotBlank() &&
-            selectedLocation != null &&
+            selectedPlace != null &&
             imgUri.isNotBlank()
         }
     }

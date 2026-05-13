@@ -17,6 +17,7 @@
             android:value="@string/google_maps_key"/>
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/Theme.LostAndFound">
             <intent-filter>

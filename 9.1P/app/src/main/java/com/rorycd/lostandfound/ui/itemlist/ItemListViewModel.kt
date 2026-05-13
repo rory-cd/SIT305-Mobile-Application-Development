@@ -44,6 +44,6 @@ private fun Advert.toUiModel() = ItemUiModel(
     name = name,
     phone = phone,
     description = description,
-    location = "Placeholder",
+    location = locationName,
     dateFormatted = formatDateAsString(date)
 )
