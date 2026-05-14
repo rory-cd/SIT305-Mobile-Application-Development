@@ -35,10 +35,6 @@ class MapViewModel(
     private val _currentLocation = MutableStateFlow<LatLng?>(null)
     val currentLocation = _currentLocation.asStateFlow()
 
-    init {
-        setCurrentLocation()
-    }
-
     fun setCurrentLocation() {
         val context = getApplication<Application>().applicationContext
         val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)

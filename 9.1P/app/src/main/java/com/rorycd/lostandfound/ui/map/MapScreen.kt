@@ -1,5 +1,8 @@
 package com.rorycd.lostandfound.ui.map
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +25,6 @@ import com.rorycd.lostandfound.R
 import com.rorycd.lostandfound.navigation.NavigationDestination
 import com.rorycd.lostandfound.ui.AppViewModelProvider
 import com.rorycd.lostandfound.ui.components.LoadingSpinner
-import com.rorycd.lostandfound.ui.itemlist.ItemListViewModel
 
 /**
  * Destination class for NavGraph route to [MapScreen]
@@ -55,6 +57,26 @@ fun MapScreen(
         }
     }
 
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (granted) {
+            viewModel.setCurrentLocation()
+        }
+    }
+
+    // Get current location
+    LaunchedEffect(Unit) {
+        locationPermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMap(
             cameraPositionState = cameraPosition,
@@ -78,6 +100,5 @@ fun MapScreen(
                 LoadingSpinner(stringResource(R.string.loading_map_message))
             }
         }
-
     }
 }

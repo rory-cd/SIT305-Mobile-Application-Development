@@ -161,8 +161,6 @@ fun CreateAdvertScreen(
                                 Manifest.permission.ACCESS_COARSE_LOCATION
                             )
                         )
-
-                        viewModel.onUseCurrentLocation()
                     },
                     modifier = Modifier.fillMaxWidth()
                         .padding(top = 8.dp)
