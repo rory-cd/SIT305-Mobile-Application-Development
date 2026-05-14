@@ -15,3 +15,4 @@ This repository serves as a hub for all projects completed as part of Deakin uni
 | **7.1P** | Lost & Found app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |
 | **8.1C** | AI Chatbot app | Android Studio, Kotlin (Jetpack Compose), Gemma 4 E2B | ✅ Complete |
 | **8.2HD** | _Bowerbird_ AI image organiser app | Android Studio, Kotlin (Jetpack Compose), Gemini Nano | ⏳ In progress |
+| **9.1P** | Enhanced Lost & Found app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |

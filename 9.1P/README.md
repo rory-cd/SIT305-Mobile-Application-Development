@@ -1,8 +1,8 @@
-# Task 7.1P - Lost & Found App
+# Task 9.1P - Enhanced Lost & Found App
 
 ## Project Overview
 
-An app to connect lost items to their owners, with user-defined adverts displayed in a list. Each lost or found item is listed with fields like name, location, and image. 
+An app to connect lost items to their owners, with user-defined adverts displayed in a list. Each lost or found item is listed with fields like name, location, and image. Items can also be viewed as locations on a map.
 
 ### Tech Stack
 
@@ -15,7 +15,7 @@ An app to connect lost items to their owners, with user-defined adverts displaye
 
 - User-defined lost and found listings
 - Item list sorted by date
-- Listings are removable
+- Google Maps integration
 
 ## Implementation
 
