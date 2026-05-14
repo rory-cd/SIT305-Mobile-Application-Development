@@ -21,4 +21,5 @@
     <string name="show_on_map_button">Show on map</string>
     <string name="loading_locations">Loading locations</string>
     <string name="location_icon">Location icon</string>
+    <string name="use_current_location">Use current location</string>
 </resources>

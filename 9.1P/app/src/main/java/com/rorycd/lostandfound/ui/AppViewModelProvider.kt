@@ -20,8 +20,9 @@ object AppViewModelProvider {
         // Initializer for CreateAdvertViewModel
         initializer {
             CreateAdvertViewModel(
+                lostAndFoundApplication(),
                 lostAndFoundApplication().container.advertRepository,
-                Places.createClient(lostAndFoundApplication())
+                placesClient = Places.createClient(lostAndFoundApplication())
             )
         }
         // Initializer for ItemListViewModel

@@ -1,8 +1,18 @@
 package com.rorycd.lostandfound.ui.create
 
+import android.Manifest
+import android.app.Application
+import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.os.Build
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.CurrentLocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
 import com.rorycd.lostandfound.data.Advert
 import com.rorycd.lostandfound.data.AdvertRepository
 import com.rorycd.lostandfound.data.PostType
@@ -18,15 +28,18 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import kotlinx.coroutines.Dispatchers
 import java.time.ZoneOffset
+import java.util.Locale
 
 /**
  * View model for [CreateAdvertScreen]. Manages UI and adds new advert to database
  */
 class CreateAdvertViewModel(
+    application: Application,
     private val advertRepository: AdvertRepository,
     private val placesClient: PlacesClient
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(CreateAdvertUiState())
     val uiState: StateFlow<CreateAdvertUiState> = _uiState.asStateFlow()
 
@@ -73,7 +86,8 @@ class CreateAdvertViewModel(
         // Update input state and wipe predictions
         _uiState.update { it.copy(
             locationInput = input,
-            selectedPlace = null,
+            selectedLocation = null,
+            selectedLocationName = "",
             locationPredictions = emptyList()
         )}
 
@@ -118,11 +132,13 @@ class CreateAdvertViewModel(
         placesClient.fetchPlace(placeRequest)
             .addOnSuccessListener { response ->
                 val place = response.place
+                val location = place.location
 
-                if (place.location != null) {
+                if (location != null) {
                     _uiState.update {
                         val updated = it.copy(
-                            selectedPlace = place,
+                            selectedLocation = LatLng(location.latitude, location.longitude),
+                            selectedLocationName = place.displayName ?: "",
                             locationInput = place.displayName ?: "",
                             locationPredictions = emptyList()
                         )
@@ -130,6 +146,44 @@ class CreateAdvertViewModel(
                     }
                 }
             }
+    }
+
+    fun onUseCurrentLocation() {
+        val context = getApplication<Application>().applicationContext
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+        // Ensure permissions are granted
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) return
+
+        val locationRequest = CurrentLocationRequest.Builder()
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .build()
+
+        fusedLocationProviderClient.getCurrentLocation(locationRequest, null).addOnSuccessListener {location ->
+            location?.let {
+                val latLng = LatLng(it.latitude, it.longitude)
+                val geocoder = Geocoder(context, Locale.getDefault())
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Asynchronous version
+                    geocoder.getFromLocation(it.latitude, it.longitude, 1) { addresses ->
+                        val name = addresses.firstOrNull()?.getAddressLine(0) ?: ""
+                        _uiState.update { state -> state.copy(selectedLocation = latLng, selectedLocationName = name, locationInput = name) }
+                    }
+                } else {
+                    // Synchronous version
+                    viewModelScope.launch(Dispatchers.IO) {
+                        @Suppress("DEPRECATION")
+                        val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+                        val name = addresses?.firstOrNull()?.getAddressLine(0) ?: ""
+                        _uiState.update { state ->
+                            state.copy(selectedLocation = latLng, selectedLocationName = name, locationInput = name)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun onImageSelected(newUri: String) {
@@ -143,9 +197,8 @@ class CreateAdvertViewModel(
     fun createAdvert() {
         viewModelScope.launch {
             val state = uiState.value
-            val location = state.selectedPlace?.location
 
-            if (state.selectedPlace == null) return@launch
+            if (state.selectedLocation == null) return@launch
 
             val newAdvert = Advert(
                 postType = state.postType.toString(),
@@ -153,9 +206,9 @@ class CreateAdvertViewModel(
                 phone = state.phone,
                 description = state.description,
                 date = state.date,
-                latitude = location?.latitude ?: -37.813670,    // Default location: Melbourne
-                longitude = location?.longitude ?: 144.962896,
-                locationName = state.selectedPlace.displayName ?: "New location",
+                latitude = state.selectedLocation.latitude,    // Default location: Melbourne
+                longitude = state.selectedLocation.longitude,
+                locationName = state.selectedLocationName,
                 imgUri = state.imgUri
             )
             advertRepository.insertAdvert(newAdvert)
@@ -168,7 +221,7 @@ class CreateAdvertViewModel(
             name.isNotBlank() &&
             phone.isNotBlank() &&
             description.isNotBlank() &&
-            selectedPlace != null &&
+            selectedLocation != null &&
             imgUri.isNotBlank()
         }
     }

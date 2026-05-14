@@ -1,5 +1,6 @@
 package com.rorycd.lostandfound.ui.create
 
+import android.Manifest
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -68,6 +69,16 @@ fun CreateAdvertScreen(
 
     val context = LocalContext.current
 
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (granted) {
+            viewModel.onUseCurrentLocation()
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.Start,
@@ -132,9 +143,27 @@ fun CreateAdvertScreen(
             predictions = state.locationPredictions,
             label = stringResource(R.string.location_input_label),
             isLoading = state.isLoadingPredictions,
-            locationSelected = state.selectedPlace != null,
+            locationSelected = state.selectedLocation != null,
             modifier = Modifier.fillMaxWidth()
         )
+
+        // Current location button
+        Button(
+            onClick = {
+                locationPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+
+                viewModel.onUseCurrentLocation()
+            },
+            modifier = Modifier.fillMaxWidth()
+                .padding(top = 8.dp)
+        ) {
+            Text(stringResource(R.string.use_current_location))
+        }
 
         Text(
             text = stringResource(R.string.item_image_label),
