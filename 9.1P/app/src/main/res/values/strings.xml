@@ -22,4 +22,6 @@
     <string name="loading_locations">Loading locations</string>
     <string name="location_icon">Location icon</string>
     <string name="use_current_location">Use current location</string>
+    <string name="map_destination_title">Map</string>
+    <string name="loading_map_message">Loading current location</string>
 </resources>

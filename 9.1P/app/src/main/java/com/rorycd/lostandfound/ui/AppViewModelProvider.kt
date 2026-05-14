@@ -11,6 +11,7 @@ import com.rorycd.lostandfound.LostAndFoundApplication
 import com.rorycd.lostandfound.ui.create.CreateAdvertViewModel
 import com.rorycd.lostandfound.ui.details.DetailsViewModel
 import com.rorycd.lostandfound.ui.itemlist.ItemListViewModel
+import com.rorycd.lostandfound.ui.map.MapViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire app
@@ -35,6 +36,13 @@ object AppViewModelProvider {
         initializer {
             DetailsViewModel(
                 createSavedStateHandle(),
+                lostAndFoundApplication().container.advertRepository
+            )
+        }
+        // Initializer for MapViewModel
+        initializer {
+            MapViewModel(
+                lostAndFoundApplication(),
                 lostAndFoundApplication().container.advertRepository
             )
         }

@@ -16,6 +16,8 @@ import com.rorycd.lostandfound.ui.home.HomeDestination
 import com.rorycd.lostandfound.ui.home.HomeScreen
 import com.rorycd.lostandfound.ui.itemlist.ItemListDestination
 import com.rorycd.lostandfound.ui.itemlist.ItemListScreen
+import com.rorycd.lostandfound.ui.map.MapDestination
+import com.rorycd.lostandfound.ui.map.MapScreen
 
 /**
  * Composable defining navigation routes for the main app
@@ -36,7 +38,7 @@ fun LostAndFoundNavHost (
             HomeScreen(
                 onCreateAdvert = { navController.navigate(CreateDestination.route) },
                 onShowAllItems = { navController.navigate(ItemListDestination.route) },
-                onShowOnMap = {}
+                onShowOnMap = { navController.navigate(MapDestination.route) }
             )
         }
         // Create advert screen
@@ -72,6 +74,10 @@ fun LostAndFoundNavHost (
                     }
                 }
             )
+        }
+        // Map screen
+        composable(route = MapDestination.route) {
+            MapScreen()
         }
     }
 }
