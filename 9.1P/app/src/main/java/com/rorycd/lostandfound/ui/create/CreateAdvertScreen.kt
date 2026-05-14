@@ -45,6 +45,7 @@ import com.rorycd.lostandfound.ui.components.RadioGroupHorizontal
 import com.rorycd.lostandfound.utils.formatDateAsString
 import coil.compose.AsyncImage
 import com.rorycd.lostandfound.ui.components.AutoCompleteLocation
+import com.rorycd.lostandfound.ui.components.LoadingSpinner
 
 /**
  * Destination class for NavGraph route to [CreateAdvertScreen].
@@ -136,33 +137,39 @@ fun CreateAdvertScreen(
         )
 
         // Location
-        AutoCompleteLocation(
-            value = state.locationInput,
-            onValueChange = { viewModel.onLocationChanged(it) },
-            onSelectLocation = { viewModel.onSelectLocation(it) },
-            predictions = state.locationPredictions,
-            label = stringResource(R.string.location_input_label),
-            isLoading = state.isLoadingPredictions,
-            locationSelected = state.selectedLocation != null,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Current location button
-        Button(
-            onClick = {
-                locationPermissionLauncher.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
+        Box {
+            if (state.isLoadingCurrentLocation) LoadingSpinner("")
+            Column {
+                AutoCompleteLocation(
+                    value = state.locationInput,
+                    onValueChange = { viewModel.onLocationChanged(it) },
+                    onSelectLocation = { viewModel.onSelectLocation(it) },
+                    predictions = state.locationPredictions,
+                    label = stringResource(R.string.location_input_label),
+                    isLoading = state.isLoadingPredictions,
+                    locationSelected = state.selectedLocation != null,
+                    isEnabled = !state.isLoadingCurrentLocation,
+                    modifier = Modifier.fillMaxWidth()
                 )
+                // Current location button
+                Button(
+                    enabled = !state.isLoadingCurrentLocation,
+                    onClick = {
+                        locationPermissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
 
-                viewModel.onUseCurrentLocation()
-            },
-            modifier = Modifier.fillMaxWidth()
-                .padding(top = 8.dp)
-        ) {
-            Text(stringResource(R.string.use_current_location))
+                        viewModel.onUseCurrentLocation()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 8.dp)
+                ) {
+                    Text(stringResource(R.string.use_current_location))
+                }
+            }
         }
 
         Text(

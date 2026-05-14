@@ -86,21 +86,21 @@ fun DetailsScreen(
             Text(
                 text = "Phone: ${state.phone}",
             )
-        }
-        // Delete
-        Button(
-            onClick = {
-                viewModel.deleteItem()
-                onDeleteItem()
-            },
-            modifier = Modifier.fillMaxWidth()
-                .padding(top = 24.dp)
-        ) {
-            Text(
-                stringResource(R.string.delete_item_button),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(8.dp)
-            )
+            // Delete
+            Button(
+                onClick = {
+                    viewModel.deleteItem()
+                    onDeleteItem()
+                },
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 24.dp)
+            ) {
+                Text(
+                    stringResource(R.string.delete_item_button),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
         }
     }
 

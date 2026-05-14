@@ -1,8 +1,6 @@
 package com.rorycd.lostandfound.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,14 +13,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.rorycd.lostandfound.R
 
@@ -35,16 +33,21 @@ fun AutoCompleteLocation(
     isLoading: Boolean,
     locationSelected: Boolean,
     label: String,
+    isEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
+    var isFocused by remember { mutableStateOf(false) }
+
     Column(modifier = modifier) {
         OutlinedTextField(
             value = value,
+            enabled = isEnabled,
             onValueChange = { onValueChange(it) },
             label = { Text(label) },
             singleLine = true,
             maxLines = 1,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .onFocusChanged { focusState -> isFocused = focusState.isFocused },
             prefix = {
                 if (locationSelected) Icon(
                     imageVector = Icons.Filled.LocationOn,
@@ -53,7 +56,7 @@ fun AutoCompleteLocation(
                 )
             }
         )
-        if (isLoading || predictions.isNotEmpty()) {
+        if (isFocused && (isLoading || predictions.isNotEmpty())) {
 
             Surface(
                 modifier = Modifier

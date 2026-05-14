@@ -20,6 +20,7 @@ data class CreateAdvertUiState(
     val selectedLocationName: String = "",
     val locationPredictions: List<AutocompletePrediction> = emptyList(),
     val isLoadingPredictions: Boolean = false,
+    val isLoadingCurrentLocation: Boolean = false,
     val imgUri: String = "",
     val isValid: Boolean = false
 )

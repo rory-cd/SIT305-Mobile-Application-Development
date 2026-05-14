@@ -160,6 +160,8 @@ class CreateAdvertViewModel(
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
             .build()
 
+        _uiState.update { state -> state.copy(isLoadingCurrentLocation = true) }
+
         fusedLocationProviderClient.getCurrentLocation(locationRequest, null).addOnSuccessListener {location ->
             location?.let {
                 val latLng = LatLng(it.latitude, it.longitude)
@@ -169,7 +171,12 @@ class CreateAdvertViewModel(
                     // Asynchronous version
                     geocoder.getFromLocation(it.latitude, it.longitude, 1) { addresses ->
                         val name = addresses.firstOrNull()?.getAddressLine(0) ?: ""
-                        _uiState.update { state -> state.copy(selectedLocation = latLng, selectedLocationName = name, locationInput = name) }
+                        _uiState.update { state -> state.copy(
+                            selectedLocation = latLng,
+                            selectedLocationName = name,
+                            locationInput = name,
+                            isLoadingCurrentLocation = false
+                        ) }
                     }
                 } else {
                     // Synchronous version
@@ -178,7 +185,12 @@ class CreateAdvertViewModel(
                         val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
                         val name = addresses?.firstOrNull()?.getAddressLine(0) ?: ""
                         _uiState.update { state ->
-                            state.copy(selectedLocation = latLng, selectedLocationName = name, locationInput = name)
+                            state.copy(
+                                selectedLocation = latLng,
+                                selectedLocationName = name,
+                                locationInput = name,
+                                isLoadingCurrentLocation = false
+                            )
                         }
                     }
                 }
