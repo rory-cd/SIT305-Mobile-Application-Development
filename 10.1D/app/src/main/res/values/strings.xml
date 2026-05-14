@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Learning Assistant</string>
+    <string name="welcome_message">Welcome,</string>
+    <string name="student">Student!</string>
+    <string name="learning_message">Let\'s start learning!</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="need_account_message">Need an account?</string>
+    <string name="login_button">Login</string>
+    <string name="register_message">Let\'s get you set up!</string>
+    <string name="user_image_description">The user\'s profile image</string>
+    <string name="register_button">Create new account</string>
+    <string name="email_label">Email</string>
+    <string name="confirm_email_label">Confirm email</string>
+    <string name="confirm_password_label">Confirm password</string>
+    <string name="phone_label">Phone number</string>
+    <string name="hello_message">Hello,</string>
+    <string name="log_out_button">Log out</string>
+    <string name="next">Next</string>
+    <string name="login_failed">Login failed</string>
+    <string name="checkmark_desc">Check mark</string>
+    <string name="tick_desc">Tick</string>
+    <string name="your_interests">Your interests</string>
+    <string name="interest_message">You may select up to 10 topics</string>
+    <string name="username_taken">The selected username is already taken</string>
+    <string name="username_empty">Username must be provided.</string>
+    <string name="email_empty">Email address must be provided.</string>
+    <string name="email_contains">Email address must be in correct format.</string>
+    <string name="password_length">Password must be 6 or more characters.</string>
+    <string name="password_match">Passwords must match.</string>
+    <string name="wand_desc">Magic wand icon</string>
+    <string name="no_interests">No interests recorded. Want to pick some?</string>
+    <string name="generating_quizzes">Generating quizzes…</string>
+    <string name="finish">Finish</string>
+    <string name="login_destination_title">Log in</string>
+    <string name="register_destination_title">Create account</string>
+    <string name="home_destination_title">Home</string>
+    <string name="select_interest_destination_title">Select interests</string>
+    <string name="quiz_destination_title">Quiz</string>
+    <string name="results_destination_title">Quiz results</string>
+    <string name="results_heading">Your results:</string>
+    <string name="feedback">Recommended study plan:</string>
+    <string name="back_to_home">Return home</string>
+    <string name="loading_results">Loading results...</string>
+    <string-array name="interests">
+        <item>Algorithms</item>
+        <item>Data Structures</item>
+        <item>Web Development</item>
+        <item>Testing</item>
+        <item>Front End</item>
+        <item>Back End</item>
+        <item>Data Science</item>
+        <item>AI</item>
+        <item>Quantum Computing</item>
+        <item>JavaScript</item>
+        <item>C</item>
+        <item>Networking</item>
+        <item>Git</item>
+        <item>Linux</item>
+        <item>IoT</item>
+        <item>Android</item>
+        <item>Mobile Development</item>
+        <item>Kotlin</item>
+    </string-array>
+</resources>
