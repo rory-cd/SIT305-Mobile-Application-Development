@@ -50,6 +50,16 @@
     <string name="no_results_to_display">No results to display</string>
     <string name="top_topics">Best topics</string>
     <string name="bottom_topics">Worst topics</string>
+    <string name="share_profile_title">%s\'s Learning Assistant Profile</string>
+    <string name="share_desc">Share icon</string>
+    <string name="share_button">Share profile</string>
+    <string name="share_stats_template">
+        Check out my LearningAssistant Progress!\n\n
+        I have taken %1$d quizzes.\n\n
+        My average quiz score is %2$d%%.\n
+        My strongest topic is %3$s with an average of %4$d%%.\n
+        My weakest topic is %5$s with an average of %6$d%%.
+    </string>
     <string-array name="interests">
         <item>Algorithms</item>
         <item>Data Structures</item>

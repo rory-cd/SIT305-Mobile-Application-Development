@@ -1,5 +1,11 @@
 package com.rorycd.learningassistant.ui.profile
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.ACTION_SEND
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,17 +23,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -40,6 +52,8 @@ import com.rorycd.learningassistant.ui.AppViewModelProvider
 import com.rorycd.learningassistant.ui.components.LoadingSpinner
 import com.rorycd.learningassistant.ui.components.QuizCard
 import androidx.compose.ui.text.style.TextAlign
+import androidx.core.net.toUri
+import com.rorycd.learningassistant.data.User
 
 /**
  * Destination class for NavGraph route to [ProfileScreen]
@@ -58,6 +72,7 @@ fun ProfileScreen(
     onViewHistory: () -> Unit,
     viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
+    val context by rememberUpdatedState(LocalContext.current)
     val currentUser by viewModel.currentUser.collectAsStateWithLifecycle()
     val results by viewModel.results.collectAsStateWithLifecycle()
     val averageScore by viewModel.averageScore.collectAsStateWithLifecycle()
@@ -226,5 +241,57 @@ fun ProfileScreen(
                 )
             }
         }
+        // Share
+        Button(
+            enabled = topTopics.isNotEmpty() && bottomTopics.isNotEmpty() && currentUser != null,
+            onClick = {
+                val topTopic = topTopics.first()
+                val bottomTopic = bottomTopics.first()
+
+                val sharedText = context.getString(
+                    R.string.share_stats_template,
+                    results.size,
+                    averageScore,
+                    topTopic.first,
+                    topTopic.second,
+                    bottomTopic.first,
+                    bottomTopic.second
+                )
+
+                shareProfileStats(context, sharedText, currentUser!!)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.share_24px),
+                contentDescription = stringResource(R.string.share_desc),
+                Modifier.padding(end = 4.dp)
+            )
+            Text(
+                text = stringResource(R.string.share_button),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
     }
+}
+
+fun shareProfileStats(context: Context, content: String, user: User) {
+    val share = Intent.createChooser(
+        Intent().apply {
+            action = ACTION_SEND
+            type = "text/plain"
+            // Title
+            putExtra(
+                Intent.EXTRA_TITLE,
+                context.getString(R.string.share_profile_title, user.username)
+            )
+            // Content
+            putExtra(Intent.EXTRA_TEXT, content)
+        },
+        null
+    )
+    context.startActivity(share)
 }
