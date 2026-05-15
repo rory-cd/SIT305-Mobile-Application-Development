@@ -73,15 +73,21 @@ class QuizRepository(
         return quizDao.getIncompleteQuizFlow(userId)
     }
 
-    suspend fun getResultForQuiz(quizId: Int, userId: Int): QuizResult? {
+    fun getResultsForUser(userId: Int): Flow<List<QuizResultWithAnswers>> {
+        return resultDao.getResultsForUser(userId)
+    }
+
+    suspend fun getResultForQuiz(quizId: Int, userId: Int): QuizResultWithAnswers? {
         return resultDao.getResultForQuiz(quizId, userId)
     }
 
     // Database transaction to make calls to two DAOs
-    suspend fun completeQuiz(quiz: Quiz, result: QuizResult) {
+    suspend fun completeQuiz(quiz: Quiz, result: QuizResult, answers: List<Answer>) {
         database.withTransaction {
+            val id = resultDao.insertResult(result).toInt()
+            val answersWithId = answers.map { it.copy(resultId = id) }
+            resultDao.insertAnswers(answersWithId)
             quizDao.updateQuiz(quiz)
-            resultDao.insertResult(result)
         }
     }
 }

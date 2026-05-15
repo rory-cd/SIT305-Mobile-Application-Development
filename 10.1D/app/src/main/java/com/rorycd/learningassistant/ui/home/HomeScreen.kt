@@ -2,6 +2,7 @@ package com.rorycd.learningassistant.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,6 +52,7 @@ fun HomeScreen(
     onLogOut: () -> Unit,
     onStartQuiz: (Int) -> Unit,
     onPickInterests: () -> Unit,
+    onViewProfile: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     val currentUser by viewModel.currentUser.collectAsStateWithLifecycle()
@@ -100,6 +102,7 @@ fun HomeScreen(
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = CircleShape
                             )
+                            .clickable(enabled = true, onClick = onViewProfile)
                     )
                     TextButton(
                         onClick = {

@@ -33,7 +33,6 @@ class ResultsViewModel(
             // Get current quiz and user
             val quiz = quizRepo.getQuizById(quizId)
             val user = userRepo.getCurrentUser()
-            val questions = quizRepo.getQuizQuestions(quizId)
 
             // User or quiz not found - show error
             if (user == null || quiz == null) {
@@ -42,25 +41,33 @@ class ResultsViewModel(
             }
 
             // Get result
-            val result = quizRepo.getResultForQuiz(quizId, user.id)
-            if (result == null) {
+            val resultWithAnswers = quizRepo.getResultForQuiz(quizId, user.id)
+            if (resultWithAnswers == null) {
                 _uiState.update { it.copy(toastMessage = "Something went wrong - results could not be fetched.") }
                 return@launch
             }
 
+            // Get correct and incorrect answers with associated questions
+            val (correctAnswers, incorrectAnswers) = resultWithAnswers.answers.partition {
+                it.answer.isCorrect
+            }
+
+            val correctQuestions = correctAnswers.map { it.question.title }
+            val incorrectQuestions = incorrectAnswers.map { it.question.title }
+
             // Get plan based on results
-            val plan = if (result.incorrectQuestions.isEmpty()) {
-                quizRepo.fetchPlanForExtension(result.correctQuestions)
+            val plan = if (incorrectQuestions.isEmpty()) {
+                quizRepo.fetchPlanForExtension(correctQuestions)
             } else {
-                quizRepo.fetchPlanForImprovement(result.incorrectQuestions)
+                quizRepo.fetchPlanForImprovement(incorrectQuestions)
             }
 
             // Update UI state
             _uiState.update {
                 it.copy(
                     username = user.username,
-                    correctAnswers = result.correctQuestions.size,
-                    questionCount = questions.size,
+                    correctAnswers = resultWithAnswers.result.score,
+                    questionCount = resultWithAnswers.result.maxScore,
                     feedback = plan
                 )
             }

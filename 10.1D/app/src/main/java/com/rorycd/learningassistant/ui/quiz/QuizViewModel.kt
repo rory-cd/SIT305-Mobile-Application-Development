@@ -1,8 +1,10 @@
 package com.rorycd.learningassistant.ui.quiz
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rorycd.learningassistant.data.Answer
 import com.rorycd.learningassistant.data.Question
 import com.rorycd.learningassistant.data.Quiz
 import com.rorycd.learningassistant.data.QuizResult
@@ -24,10 +26,9 @@ class QuizViewModel(
     private val userRepo: UserRepository
 ) : ViewModel() {
 
-    private var allQuestions = emptyList<Question>()
-    private val correctQuestions = mutableListOf<String>()
-    private val incorrectQuestions = mutableListOf<String>()
-    private var quiz: Quiz? = null
+    private var _allQuestions = emptyList<Question>()
+    private val _answers = mutableMapOf<Int, String>()
+    private var _quiz: Quiz? = null
 
     // UI state
     private val _uiState = MutableStateFlow(QuizUiState())
@@ -38,20 +39,20 @@ class QuizViewModel(
             // Get quiz id from route args
             val quizId: Int = checkNotNull(savedStateHandle["quizId"])
 
-            quiz = quizRepo.getQuizById(quizId)
+            _quiz = quizRepo.getQuizById(quizId)
 
-            if (quiz == null) {
+            if (_quiz == null) {
                 _uiState.update { it.copy(toastMessage = "Something went wrong - results could not be fetched.") }
                 return@launch
             }
 
-            allQuestions = quizRepo.getQuizQuestions(quiz!!.id)
+            _allQuestions = quizRepo.getQuizQuestions(_quiz!!.id)
 
             // Set initial ui state values
             _uiState.update {
                 it.copy(
                     quizId = quizId,
-                    totalQuestions = allQuestions.size
+                    totalQuestions = _allQuestions.size
                 )
             }
             loadNextQuestion()
@@ -61,12 +62,14 @@ class QuizViewModel(
     fun submitAnswer(answer: Int) {
         val answerAsString = (65 + answer).toChar().toString()
         val questionIdx = _uiState.value.questionNumber
-        val answerCorrect = answerAsString == allQuestions[questionIdx].answer
-        if (answerCorrect) {
-            correctQuestions += _uiState.value.question
-        } else {
-            incorrectQuestions += _uiState.value.question
+        val question = _allQuestions[questionIdx]
+
+        // Record answer
+        _answers[question.id] = answerAsString
+        if (question.answer == answerAsString) {
+            _uiState.update { it.copy(currentScore = it.currentScore + 1) }
         }
+
         if (_uiState.value.questionNumber < _uiState.value.totalQuestions - 1) loadNextQuestion()
     }
 
@@ -74,20 +77,36 @@ class QuizViewModel(
         viewModelScope.launch {
             val userId = userRepo.getCurrentUser()?.id
             if (userId != null) {
+                val completeDate = Date()
+
+                // Create result
                 val quizResult = QuizResult (
                     userId = userId,
                     quizId = _uiState.value.quizId,
-                    correctQuestions = correctQuestions,
-                    incorrectQuestions = incorrectQuestions,
+                    score = _uiState.value.currentScore,
+                    maxScore = _allQuestions.size,
+                    completeDate = completeDate
                 )
+                // Map answers to entities
+                val answerEntities = _answers.map { (qId, selectedAnswer) ->
+                    val question = _allQuestions.find { it.id == qId }
+                        ?: throw IllegalStateException("Question with ID $qId not found")
+
+                    Answer(
+                        resultId = 0,
+                        questionId = qId,
+                        selectedAnswer = selectedAnswer,
+                        isCorrect = question.answer == selectedAnswer
+                    )
+                }
                 // Record completion time to mark as complete
                 val updatedQuiz = Quiz(
-                    quiz!!.id,
-                    quiz!!.userId,
-                    quiz!!.topic,
-                    lastCompleted = Date()
+                    _quiz!!.id,
+                    _quiz!!.userId,
+                    _quiz!!.topic,
+                    lastCompleted = completeDate
                 )
-                quizRepo.completeQuiz(updatedQuiz, quizResult)
+                quizRepo.completeQuiz(updatedQuiz, quizResult, answerEntities)
             }
         }
     }
@@ -96,8 +115,8 @@ class QuizViewModel(
         _uiState.update {
             val nextQuestion = it.questionNumber + 1
             it.copy(
-                question = allQuestions[nextQuestion].title,
-                options = allQuestions[nextQuestion].options,
+                question = _allQuestions[nextQuestion].title,
+                options = _allQuestions[nextQuestion].options,
                 questionNumber = nextQuestion
             )
         }

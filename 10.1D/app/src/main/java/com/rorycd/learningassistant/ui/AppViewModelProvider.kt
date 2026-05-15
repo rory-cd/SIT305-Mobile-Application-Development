@@ -10,6 +10,7 @@ import com.rorycd.learningassistant.LearningApplication
 import com.rorycd.learningassistant.ui.home.HomeViewModel
 import com.rorycd.learningassistant.ui.interestselect.InterestSelectViewModel
 import com.rorycd.learningassistant.ui.login.LoginViewModel
+import com.rorycd.learningassistant.ui.profile.ProfileViewModel
 import com.rorycd.learningassistant.ui.quiz.QuizViewModel
 import com.rorycd.learningassistant.ui.register.RegisterViewModel
 import com.rorycd.learningassistant.ui.results.ResultsViewModel
@@ -56,6 +57,13 @@ object AppViewModelProvider {
         initializer {
             ResultsViewModel(
                 createSavedStateHandle(),
+                userRepo = learningApplication().container.userRepo,
+                quizRepo = learningApplication().container.quizRepo
+            )
+        }
+        // Initializer for ResultsViewModel
+        initializer {
+            ProfileViewModel(
                 userRepo = learningApplication().container.userRepo,
                 quizRepo = learningApplication().container.quizRepo
             )

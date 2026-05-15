@@ -16,6 +16,8 @@ import com.rorycd.learningassistant.ui.interestselect.SelectInterestsDestination
 import com.rorycd.learningassistant.ui.login.LoginDestination
 import com.rorycd.learningassistant.ui.register.RegisterScreen
 import com.rorycd.learningassistant.ui.login.LoginScreen
+import com.rorycd.learningassistant.ui.profile.ProfileDestination
+import com.rorycd.learningassistant.ui.profile.ProfileScreen
 import com.rorycd.learningassistant.ui.quiz.QuizDestination
 import com.rorycd.learningassistant.ui.quiz.QuizScreen
 import com.rorycd.learningassistant.ui.register.RegisterDestination
@@ -73,7 +75,8 @@ fun LearningAssistantNavHost (
             HomeScreen(
                 onLogOut = { navController.navigate(LoginDestination.route) { popUpTo(0) } },
                 onStartQuiz = { navigateWithGuard("${QuizDestination.route}/$it") },
-                onPickInterests = { navigateWithGuard(SelectInterestsDestination.route) }
+                onPickInterests = { navigateWithGuard(SelectInterestsDestination.route) },
+                onViewProfile = { navigateWithGuard(ProfileDestination.route) }
             )
         }
         // Interest selection screen
@@ -104,6 +107,13 @@ fun LearningAssistantNavHost (
         ) {
             ResultsScreen(
                 onGoHome = { navigateWithGuard(HomeDestination.route, true) }
+            )
+        }
+        // Profile screen
+        composable(route = ProfileDestination.route) {
+            ProfileScreen(
+                onLogOut = { navController.navigate(LoginDestination.route) { popUpTo(0) } },
+                onViewHistory = {  }
             )
         }
     }

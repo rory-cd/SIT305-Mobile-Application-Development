@@ -42,6 +42,14 @@
     <string name="feedback">Recommended study plan:</string>
     <string name="back_to_home">Return home</string>
     <string name="loading_results">Loading results...</string>
+    <string name="profile_destination_title">Profile</string>
+    <string name="profile">Profile</string>
+    <string name="average_score">Average score:</string>
+    <string name="total_quiz_count">Quizzes completed:</string>
+    <string name="view_history">View history</string>
+    <string name="no_results_to_display">No results to display</string>
+    <string name="top_topics">Best topics</string>
+    <string name="bottom_topics">Worst topics</string>
     <string-array name="interests">
         <item>Algorithms</item>
         <item>Data Structures</item>

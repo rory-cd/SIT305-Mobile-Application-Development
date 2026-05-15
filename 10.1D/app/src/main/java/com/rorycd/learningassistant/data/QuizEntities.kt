@@ -1,9 +1,11 @@
 package com.rorycd.learningassistant.data
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import java.util.Date
 
 /**
@@ -79,6 +81,37 @@ data class QuizResult (
     val id: Int = 0,
     val userId: Int,
     val quizId: Int,
-    val correctQuestions: List<String> = emptyList(),
-    val incorrectQuestions: List<String> = emptyList()
+    val score: Int,
+    val maxScore: Int,
+    val completeDate: Date
+)
+
+/**
+ * Room entity, models data for a user's quiz answers
+ */
+@Entity(
+    tableName = "answers",
+    foreignKeys = [
+        ForeignKey(
+            entity = QuizResult::class,
+            parentColumns = ["id"],
+            childColumns = ["resultId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = Question::class,
+            parentColumns = ["id"],
+            childColumns = ["questionId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index(value = ["resultId"]), Index(value = ["questionId"])]
+)
+data class Answer (
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val resultId: Int,
+    val questionId: Int,
+    val selectedAnswer: String,
+    val isCorrect: Boolean
 )
