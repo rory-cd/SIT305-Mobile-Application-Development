@@ -60,6 +60,10 @@
         My strongest topic is %3$s with an average of %4$d%%.\n
         My weakest topic is %5$s with an average of %6$d%%.
     </string>
+    <string name="history_destination_title">Quiz History</string>
+    <string name="history">History</string>
+    <string name="arrow_down_description">Down arrow</string>
+    <string name="arrow_back_desc">Back arrow</string>
     <string-array name="interests">
         <item>Algorithms</item>
         <item>Data Structures</item>

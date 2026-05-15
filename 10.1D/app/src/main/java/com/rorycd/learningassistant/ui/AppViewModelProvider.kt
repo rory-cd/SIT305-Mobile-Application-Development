@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.rorycd.learningassistant.LearningApplication
+import com.rorycd.learningassistant.ui.history.HistoryViewModel
 import com.rorycd.learningassistant.ui.home.HomeViewModel
 import com.rorycd.learningassistant.ui.interestselect.InterestSelectViewModel
 import com.rorycd.learningassistant.ui.login.LoginViewModel
@@ -64,6 +65,13 @@ object AppViewModelProvider {
         // Initializer for ResultsViewModel
         initializer {
             ProfileViewModel(
+                userRepo = learningApplication().container.userRepo,
+                quizRepo = learningApplication().container.quizRepo
+            )
+        }
+        // Initializer for HistoryViewModel
+        initializer {
+            HistoryViewModel(
                 userRepo = learningApplication().container.userRepo,
                 quizRepo = learningApplication().container.quizRepo
             )

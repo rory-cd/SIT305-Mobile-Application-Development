@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.rorycd.learningassistant.LearningApplication
+import com.rorycd.learningassistant.ui.history.HistoryDestination
+import com.rorycd.learningassistant.ui.history.HistoryScreen
 import com.rorycd.learningassistant.ui.home.HomeDestination
 import com.rorycd.learningassistant.ui.home.HomeScreen
 import com.rorycd.learningassistant.ui.interestselect.InterestSelectScreen
@@ -113,8 +115,13 @@ fun LearningAssistantNavHost (
         composable(route = ProfileDestination.route) {
             ProfileScreen(
                 onLogOut = { navController.navigate(LoginDestination.route) { popUpTo(0) } },
-                onViewHistory = {  }
+                onNavigateBack = { navController.popBackStack() },
+                onViewHistory = { navigateWithGuard(HistoryDestination.route) }
             )
+        }
+        // History screen
+        composable(route = HistoryDestination.route) {
+            HistoryScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
 }
