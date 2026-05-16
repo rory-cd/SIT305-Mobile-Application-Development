@@ -1,6 +1,9 @@
 package com.rorycd.learningassistant.navigation
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
@@ -8,7 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.android.billingclient.api.BillingClient
 import com.rorycd.learningassistant.LearningApplication
+import com.rorycd.learningassistant.payments.processPurchases
 import com.rorycd.learningassistant.ui.history.HistoryDestination
 import com.rorycd.learningassistant.ui.history.HistoryScreen
 import com.rorycd.learningassistant.ui.home.HomeDestination
@@ -25,17 +30,22 @@ import com.rorycd.learningassistant.ui.quiz.QuizScreen
 import com.rorycd.learningassistant.ui.register.RegisterDestination
 import com.rorycd.learningassistant.ui.results.ResultsDestination
 import com.rorycd.learningassistant.ui.results.ResultsScreen
+import kotlinx.coroutines.launch
 
 /**
  * Composable defining navigation routes for the main app content
  */
 @Composable
 fun LearningAssistantNavHost (
+    context: Context,
+    billingClient: BillingClient,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
     val app = LocalContext.current.applicationContext as LearningApplication
     val userRepo = app.container.userRepo
+
+    val scope = rememberCoroutineScope()
 
     fun navigateWithGuard(route : String, clearStack: Boolean = false) {
         if (!userRepo.isLoggedIn()) {
@@ -116,7 +126,12 @@ fun LearningAssistantNavHost (
             ProfileScreen(
                 onLogOut = { navController.navigate(LoginDestination.route) { popUpTo(0) } },
                 onNavigateBack = { navController.popBackStack() },
-                onViewHistory = { navigateWithGuard(HistoryDestination.route) }
+                onViewHistory = { navigateWithGuard(HistoryDestination.route) },
+                onUpgradeToPremium = {
+                    scope.launch {
+                        processPurchases(context as Activity, billingClient, "android.test.purchased")
+                    }
+                }
             )
         }
         // History screen

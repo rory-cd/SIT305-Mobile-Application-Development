@@ -39,7 +39,7 @@ class UserRepository(private val userDao: UserDao, private val context: Context)
         email: String,
         imgUri: String?
     ): Boolean {
-        val newUser = User(0, username, password, email, interests = null, imgUri = imgUri)
+        val newUser = User(0, username, password, email, interests = null, imgUri = imgUri, isPremium = false)
         try {
             userDao.insert(newUser)
             login(username, password)
@@ -57,6 +57,15 @@ class UserRepository(private val userDao: UserDao, private val context: Context)
         val id = currentUserId()
         val user = userDao.getUserById(id)
         return user
+    }
+
+    suspend fun upgradeUser(): Boolean {
+        val currentUser = getCurrentUser() ?: return false
+        val updatedUser = currentUser.copy(
+            isPremium = true
+        )
+        userDao.update(updatedUser)
+        return true
     }
 
     fun getCurrentUserFlow(): Flow<User?> {

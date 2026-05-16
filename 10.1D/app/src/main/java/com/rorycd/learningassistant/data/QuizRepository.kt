@@ -8,8 +8,6 @@ import com.rorycd.learningassistant.network.RetrofitInstance
 import com.rorycd.learningassistant.network.toRoomEntities
 import kotlinx.coroutines.flow.Flow
 
-const val MAX_QUIZZES = 3
-
 /**
  * Repository for managing [Quiz], [Question], and [QuizResult] data
  */
@@ -48,7 +46,8 @@ class QuizRepository(
         val incompleteQuizzes = quizDao.getIncompleteQuizzes(user.id)
 
         // Check how many quizzes are required
-        val required = MAX_QUIZZES - incompleteQuizzes.size
+        val maxQuizzes = if (user.isPremium) 5 else 3
+        val required = maxQuizzes - incompleteQuizzes.size
 
         repeat (required) {
             val topic = user.interests.random()

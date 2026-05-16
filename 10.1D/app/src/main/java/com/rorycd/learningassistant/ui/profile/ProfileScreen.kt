@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
@@ -64,6 +66,7 @@ fun ProfileScreen(
     onLogOut: () -> Unit,
     onViewHistory: () -> Unit,
     onNavigateBack: () -> Unit,
+    onUpgradeToPremium: () -> Unit,
     viewModel: ProfileViewModel = viewModel(factory = AppViewModelProvider.factory)
 ) {
     val context by rememberUpdatedState(LocalContext.current)
@@ -72,12 +75,14 @@ fun ProfileScreen(
     val averageScore by viewModel.averageScore.collectAsStateWithLifecycle()
     val topTopics by viewModel.topTopics.collectAsStateWithLifecycle()
     val bottomTopics by viewModel.bottomTopics.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(horizontal = dimensionResource(R.dimen.padding_medium))
     ) {
         // Heading
@@ -102,18 +107,38 @@ fun ProfileScreen(
                         style = MaterialTheme.typography.displayMedium
                     )
                 }
+                // User details
                 HorizontalDivider(Modifier.padding(bottom = 4.dp))
+                // Name
                 Text(
                     text = currentUser?.username ?: "",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(start = 34.dp)
                 )
+                // Email
                 Text(
                     text = currentUser?.email ?: "",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(start = 34.dp)
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    // Account type
+                    Text(
+                        text =
+                            if (currentUser?.isPremium ?: false) stringResource(R.string.premium_member)
+                            else stringResource(R.string.basic_member),
+                    )
+                    if (currentUser != null && !currentUser!!.isPremium) Text(
+                        text = "(${stringResource(R.string.upgrade_account)})",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .clickable(onClick = onUpgradeToPremium)
+                            .padding(start = 6.dp)
+                    )
+                }
                 HorizontalDivider(Modifier.padding(vertical = 10.dp))
             }
             Column(

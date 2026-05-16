@@ -18,5 +18,6 @@ data class User (
     val password: String,
     val email: String,
     val interests: List<String>?,
-    val imgUri: String?
+    val imgUri: String?,
+    val isPremium: Boolean
 )

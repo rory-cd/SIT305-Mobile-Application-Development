@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +58,10 @@ fun HomeScreen(
 ) {
     val currentUser by viewModel.currentUser.collectAsStateWithLifecycle()
     val quizzes by viewModel.quizzes.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.generateQuizzes()
+    }
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),

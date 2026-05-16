@@ -64,6 +64,12 @@
     <string name="history">History</string>
     <string name="arrow_down_description">Down arrow</string>
     <string name="arrow_back_desc">Back arrow</string>
+    <string name="premium_member">Premium member</string>
+    <string name="basic_member">Basic member</string>
+    <string name="upgrade_account">Get premium</string>
+    <string name="account_upgraded">Account upgraded to Premium</string>
+    <string name="payment_cancelled">Payment cancelled</string>
+    <string name="billing_error">Billing error occurred</string>
     <string-array name="interests">
         <item>Algorithms</item>
         <item>Data Structures</item>

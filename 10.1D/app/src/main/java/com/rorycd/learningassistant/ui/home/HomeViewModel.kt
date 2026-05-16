@@ -33,7 +33,7 @@ class HomeViewModel(
         )
 
     // Generate new quizzes if required
-    init {
+    fun generateQuizzes() {
         viewModelScope.launch {
             val user = userRepo.getCurrentUserFlow().filterNotNull().first()
             quizRepo.refillQuizzesForUser(user)
