@@ -37,7 +37,6 @@ suspend fun processPurchases(activity: Activity, billingClient: BillingClient, p
 
         // Get first product
         val productDetails = productDetailsList[0]
-        Log.e("PRODUCT", productDetails.toString())
 
         // Set params for billing flow
         val productDetailsParamsList = listOf(
