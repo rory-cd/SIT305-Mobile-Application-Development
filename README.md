@@ -11,8 +11,9 @@ This repository serves as a hub for all projects completed as part of Deakin uni
 | **4.1P** | Event planner app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |
 | **5.1C (A)** | Sports news app | Android Studio, Java (Views), XML | ✅ Complete |
 | **5.1C (B)** | _iStream_ YouTube app | Android Studio, Java (Views), XML | ✅ Complete |
-| **6.1P** | AI-powered learning app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |
+| **6.1D** | AI-powered learning app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |
 | **7.1P** | Lost & Found app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |
 | **8.1C** | AI Chatbot app | Android Studio, Kotlin (Jetpack Compose), Gemma 4 E2B | ✅ Complete |
 | **8.2HD** | _Bowerbird_ AI image organiser app | Android Studio, Kotlin (Jetpack Compose), Gemini Nano | ⏳ In progress |
 | **9.1P** | Enhanced Lost & Found app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |
+| **10.1D** | Enhanced AI-powered learning app | Android Studio, Kotlin (Jetpack Compose) | ✅ Complete |

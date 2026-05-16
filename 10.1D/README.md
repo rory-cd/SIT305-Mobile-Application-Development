@@ -1,4 +1,4 @@
-# Task 6.1P - AI-Powered Learning App
+# Task 10.1D - Enhanced AI-Powered Learning App
 
 ## Project Overview
 
@@ -17,6 +17,8 @@ A quiz-based personalised learning app, using an LLM to generate quizzes based o
 - AI-generated quizzes
 - Personalised responses with learning plan recommendations
 - User accounts for multiple users
+- Premium accounts via Google Play payment
+- Quiz history and stats
 
 ## Implementation
 

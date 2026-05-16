@@ -1,7 +1,6 @@
 package com.rorycd.learningassistant.payments
 
 import android.app.Activity
-import android.util.Log
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.QueryProductDetailsParams
