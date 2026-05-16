@@ -28,7 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rorycd.learningassistant.R
 import com.rorycd.learningassistant.navigation.NavigationDestination
 import com.rorycd.learningassistant.ui.AppViewModelProvider
-import com.rorycd.learningassistant.ui.register.RegisterScreen
 
 /**
  * Destination class for NavGraph route to [QuizScreen]

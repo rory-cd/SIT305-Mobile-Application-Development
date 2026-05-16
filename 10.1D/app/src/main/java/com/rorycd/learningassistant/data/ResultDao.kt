@@ -28,9 +28,6 @@ interface ResultDao {
     @Query("SELECT * FROM results WHERE userId = :userId ORDER BY completeDate DESC")
     fun getResultsForUser(userId: Int): Flow<List<QuizResultWithAnswers>>
 
-//    @Query("SELECT * FROM results WHERE quizId = :quizId AND userId = :userId LIMIT 1")
-//    suspend fun getResultForQuiz(quizId: Int, userId: Int): QuizResult?
-
     @Transaction
     @Query("SELECT * FROM results WHERE quizId = :quizId AND userId = :userId LIMIT 1")
     suspend fun getResultForQuiz(quizId: Int, userId: Int): QuizResultWithAnswers?

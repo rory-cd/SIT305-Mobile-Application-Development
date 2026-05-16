@@ -129,7 +129,7 @@ fun LearningAssistantNavHost (
                 onViewHistory = { navigateWithGuard(HistoryDestination.route) },
                 onUpgradeToPremium = {
                     scope.launch {
-                        processPurchases(context as Activity, billingClient, "android.test.purchased")
+                        processPurchases(context as Activity, billingClient, "premium_account")
                     }
                 }
             )

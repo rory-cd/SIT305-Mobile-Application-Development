@@ -1,7 +1,5 @@
 package com.rorycd.learningassistant
 
-import android.app.Activity
-import android.app.Application
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -11,23 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.QueryProductDetailsParams
-import com.android.billingclient.api.queryProductDetails
 import com.rorycd.learningassistant.data.UserRepository
 import com.rorycd.learningassistant.navigation.LearningAssistantNavHost
-import com.rorycd.learningassistant.ui.learningApplication
 import com.rorycd.learningassistant.ui.theme.LearningAssistantTheme
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
@@ -39,6 +30,7 @@ class MainActivity : ComponentActivity() {
         val appContainer = (application as LearningApplication).container
         userRepository = appContainer.userRepo
 
+        // Listener fires on purchase completion
         val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 lifecycleScope.launch {
@@ -53,6 +45,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Create billing client
         val billingClient = BillingClient.newBuilder(this)
             .setListener(purchasesUpdatedListener)
             .enableAutoServiceReconnection()
@@ -61,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     .enableOneTimeProducts()
                     .build()
             )
-            // Configure other settings.
             .build()
 
         // Connect to Google Play
