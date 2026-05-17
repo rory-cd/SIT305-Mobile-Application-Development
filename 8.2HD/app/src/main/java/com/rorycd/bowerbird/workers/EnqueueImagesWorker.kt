@@ -6,24 +6,24 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
+import androidx.hilt.work.HiltWorker
 import com.rorycd.bowerbird.data.AppDatabase
 import com.rorycd.bowerbird.data.FolderRepository
 import com.rorycd.bowerbird.data.QueueRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
 private const val TAG = "EnqueueImagesWorker"
 
-class EnqueueImagesWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+@HiltWorker
+class EnqueueImagesWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val folderRepo: FolderRepository,
+    private val queueRepo: QueueRepository,
+) : CoroutineWorker(context, params) {
 
     private val db = AppDatabase.getDatabase(applicationContext)
-
-    private val folderRepo = FolderRepository(
-        db.folderDao(),
-        db.scannedFileDao()
-    )
-
-    private val queueRepo = QueueRepository(
-        db.queuedFileDao()
-    )
 
     override suspend fun doWork(): Result {
         return try {

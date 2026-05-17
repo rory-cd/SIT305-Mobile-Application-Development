@@ -8,12 +8,16 @@ import com.google.ai.edge.litertlm.Conversation
 import com.google.ai.edge.litertlm.Engine
 import com.google.ai.edge.litertlm.EngineConfig
 import com.google.ai.edge.litertlm.Message
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class GemmaRepository (
-    private val context: Context
+@Singleton
+class GemmaRepository @Inject constructor(
+    @ApplicationContext private val context: Context
 ) : PromptRepository {
 
     private var engine: Engine? = null
