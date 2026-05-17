@@ -2,9 +2,12 @@ package com.rorycd.bowerbird.ui.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -122,7 +125,64 @@ fun MainAppScreen() {
                     )
                 }
             }
-        }
+        },
+        floatingActionButton = {
+            when {
+                currentDestination?.hasRoute(RulesRoute::class) == true -> {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            // navController.navigate(AddRuleRoute)
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        shape = CircleShape,
+                        icon = {
+                            Icon(
+                                Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.new_rule)
+                            )
+                        },
+                        text = { Text(stringResource(R.string.new_rule)) }
+                    )
+                }
+                currentDestination?.hasRoute(FoldersRoute::class) == true -> {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            // navController.navigate(AddFolderRoute)
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        shape = CircleShape,
+                        icon = {
+                            Icon(
+                                Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.add_folder)
+                            )
+                        },
+                        text = { Text(stringResource(R.string.add_folder)) }
+                    )
+                }
+            }
+        },
+//        floatingActionButton = {
+//            if (currentDestination?.hasRoute(RulesRoute::class) == true) {
+//                ExtendedFloatingActionButton(
+//                    onClick = {
+//                        // navController.navigate(AddRuleRoute)
+//                    },
+//                    containerColor = MaterialTheme.colorScheme.primary,
+//                    contentColor = MaterialTheme.colorScheme.onPrimary,
+//                    shape = CircleShape,
+//                    icon = {
+//                        Icon(
+//                            Icons.Filled.Add,
+//                            contentDescription = stringResource(R.string.new_rule)
+//                        )
+//                    },
+//                    text = { Text(stringResource(R.string.new_rule)) }
+//                )
+//            }
+//        }
     ) { innerPadding ->
         BowerbirdNavHost(
             navController = navController,

@@ -19,24 +19,28 @@ data class RuleEntity (
     val id: Int = 0,
     val name: String,
     val conditions: List<RuleCondition>?,
-    val actions: List<RuleAction>
+    val actions: List<RuleAction>,
+    val isEnabled: Boolean
 )
 
 // Extension function - convert POCO to DB entity (for saving)
-fun Rule.toEntity(id: Int = 0): RuleEntity {
+fun Rule.toEntity(): RuleEntity {
     return RuleEntity(
-        id = id,
+        id = this.id,
         name = this.name,
         conditions = this.conditions,
-        actions = this.actions
+        actions = this.actions,
+        isEnabled = this.isEnabled
     )
 }
 
 // Extension function - convert DB entity to POCO (For reading)
 fun RuleEntity.toDomain(): Rule {
     return Rule(
+        id = this.id,
         name = this.name,
         conditions = this.conditions,
-        actions = this.actions
+        actions = this.actions,
+        isEnabled = this.isEnabled
     )
 }
