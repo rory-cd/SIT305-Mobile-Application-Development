@@ -4,8 +4,9 @@ import android.net.Uri
 import com.rorycd.bowerbird.rules.Rule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class RuleRepository(
+class RuleRepository @Inject constructor(
     private val folderDao: FolderDao,
     private val ruleDao: RuleDao
 ) {
