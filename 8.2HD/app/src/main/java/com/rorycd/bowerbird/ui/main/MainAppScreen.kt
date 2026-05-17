@@ -7,18 +7,22 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.toUpperCase
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -45,8 +49,8 @@ enum class NavBarOption(
 fun MainAppScreen() {
     val navController = rememberNavController()
 
-    val activeColor = colorResource(R.color.teal_200)
-    val inActiveColor = colorResource(R.color.purple_200)
+    val activeColor = MaterialTheme.colorScheme.primary
+    val inActiveColor = MaterialTheme.colorScheme.onSurfaceVariant
 
     // Get current destination
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -60,7 +64,13 @@ fun MainAppScreen() {
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(getDestinationTitleRes(currentDestination))) },
+                title = {
+                    Text(
+                        text = stringResource(getDestinationTitleRes(currentDestination)),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     if (!isTopLevelDestination) {
                         IconButton(onClick = { navController.navigateUp() }) {
@@ -102,7 +112,15 @@ fun MainAppScreen() {
                                 tint = if (isSelected) activeColor else inActiveColor
                             )
                         },
-                        label = { Text(navOptionTitle.uppercase()) }
+                        label = {
+                            Text(
+                                text = navOptionTitle.uppercase(),
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color.Transparent
+                        )
                     )
                 }
             }
@@ -116,12 +134,20 @@ fun MainAppScreen() {
 }
 
 fun getDestinationTitleRes(route: Any?): Int {
-    // Set title based on destination
     return when (route) {
         null -> R.string.app_name
+
+        is NavDestination -> when {
+            route.hasRoute(RulesRoute::class) -> R.string.rules_destination_title
+            route.hasRoute(FoldersRoute::class) -> R.string.folders_destination_title
+            route.hasRoute(SettingsRoute::class) -> R.string.settings_destination_title
+            else -> R.string.app_name
+        }
+
         is RulesRoute -> R.string.rules_destination_title
         is FoldersRoute -> R.string.folders_destination_title
         is SettingsRoute -> R.string.settings_destination_title
+
         else -> R.string.app_name
     }
 }
