@@ -26,13 +26,20 @@ class ApplyRulesWorker(val context: Context, params: WorkerParameters) : Corouti
 
             // Get folders
             val folders = folderRepo.getAllWatchedFolders()
+
             for (folder in folders) {
+                // Get queued files for folder
                 val files = queueRepo.getQueuedFilesIn(folder)
+                if (files.isEmpty()) continue
+
+                // Ensure AI is loaded
+                val app = applicationContext as BowerbirdApplication
+                val repo = app.container.promptRepository
+                repo.loadModel()
+
+                // Get rules for folder
 
                 for (file in files) {
-                    val app = applicationContext as BowerbirdApplication
-                    val repo = app.container.promptRepository
-                    repo.loadModel()
                     val response = repo.getResponse("Describe this image in two sentences, each in JSON format with keys of '1' and '2' respectively.", file)
                     queueRepo.markAsDone(file, folder)
                     Log.e(TAG, response)

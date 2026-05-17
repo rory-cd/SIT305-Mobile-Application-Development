@@ -6,7 +6,10 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.webkit.MimeTypeMap
 import androidx.documentfile.provider.DocumentFile
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface RuleAction {
     fun executeAction(context: Context, fileUri: Uri?)
 
@@ -15,6 +18,8 @@ sealed interface RuleAction {
     interface SmartAction : RuleAction {}
 }
 
+@Serializable
+@SerialName("tag_exif")
 data class TagExif(
     val prompt: String
 ) : RuleAction.SmartAction {
@@ -37,6 +42,8 @@ data class TagExif(
     }
 }
 
+@Serializable
+@SerialName("rename")
 data class Rename(
     val newName: String
 ) : RuleAction.BasicAction {
@@ -55,6 +62,8 @@ data class Rename(
     }
 }
 
+@Serializable
+@SerialName("move")
 data class Move(
     val targetFolder: Uri?
 ) : RuleAction.BasicAction {
@@ -78,6 +87,8 @@ data class Move(
     }
 }
 
+@Serializable
+@SerialName("copy")
 data class Copy(
     val targetFolder: Uri?
 ) : RuleAction.BasicAction {

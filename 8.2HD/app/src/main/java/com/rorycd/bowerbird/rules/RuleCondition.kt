@@ -3,7 +3,10 @@ package com.rorycd.bowerbird.rules
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class Operator {
     CONTAINS,
     ENDS_WITH,
@@ -13,6 +16,7 @@ enum class Operator {
     LESS_THAN
 }
 
+@Serializable
 sealed interface RuleCondition {
     interface BasicCondition : RuleCondition {
         val operator: Operator
@@ -26,6 +30,8 @@ sealed interface RuleCondition {
     }
 }
 
+@Serializable
+@SerialName("filename")
 data class FilenameCondition(
     override val operator: Operator,
     override val operand: String,
@@ -57,10 +63,13 @@ data class FilenameCondition(
     }
 }
 
+@Serializable
 enum class FileSizeUnit {
     KILOBYTES, MEGABYTES
 }
 
+@Serializable
+@SerialName("file_size")
 data class FileSizeCondition(
     override val operator: Operator,
     override val operand: String,
@@ -100,6 +109,8 @@ data class FileSizeCondition(
     }
 }
 
+@Serializable
+@SerialName("image_check")
 data class ImageCheckCondition(
     override val condition: String
 ) : RuleCondition.SmartCondition {

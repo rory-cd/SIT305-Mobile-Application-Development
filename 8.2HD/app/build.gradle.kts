@@ -67,6 +67,9 @@ dependencies {
     // See Add the KSP plugin to your project
     ksp("androidx.room:room-compiler:$room_version")
 
+    // JSON serialization library, works with the Kotlin serialization plugin
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
     // Gemini Nano (ML Kit Prompt API)
     implementation("com.google.mlkit:genai-prompt:1.0.0-beta2")
 
