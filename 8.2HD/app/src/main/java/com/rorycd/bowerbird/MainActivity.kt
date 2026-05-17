@@ -10,13 +10,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.rorycd.bowerbird.data.AppDatabase
 import com.rorycd.bowerbird.data.FolderRepository
+import com.rorycd.bowerbird.navigation.BowerbirdNavHost
+import com.rorycd.bowerbird.ui.main.MainAppScreen
 import com.rorycd.bowerbird.ui.theme.BowerbirdTheme
 import com.rorycd.bowerbird.workers.ApplyRulesWorker
 import com.rorycd.bowerbird.workers.EnqueueImagesWorker
@@ -75,9 +81,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BowerbirdTheme {
-                Column {
-                    Text("Test")
-                }
+                MainAppScreen()
             }
         }
     }

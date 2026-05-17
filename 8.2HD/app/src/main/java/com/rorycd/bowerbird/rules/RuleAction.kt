@@ -5,6 +5,7 @@ import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.webkit.MimeTypeMap
+import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -65,13 +66,13 @@ data class Rename(
 @Serializable
 @SerialName("move")
 data class Move(
-    val targetFolder: Uri?
+    val targetFolder: String?
 ) : RuleAction.BasicAction {
     override fun executeAction(context: Context, fileUri: Uri?) {
         if (fileUri == null || targetFolder == null) return
 
         val sourceFile = DocumentFile.fromSingleUri(context, fileUri) ?: return
-        val destDir = DocumentFile.fromTreeUri(context, targetFolder) ?: return
+        val destDir = DocumentFile.fromTreeUri(context, targetFolder.toUri()) ?: return
 
         val destFile = destDir.createFile(
             sourceFile.type ?: "application/octet-stream",
@@ -90,13 +91,13 @@ data class Move(
 @Serializable
 @SerialName("copy")
 data class Copy(
-    val targetFolder: Uri?
+    val targetFolder: String?
 ) : RuleAction.BasicAction {
     override fun executeAction(context: Context, fileUri: Uri?) {
         if (fileUri == null || targetFolder == null) return
 
         val sourceFile = DocumentFile.fromSingleUri(context, fileUri) ?: return
-        val destDir = DocumentFile.fromTreeUri(context, targetFolder) ?: return
+        val destDir = DocumentFile.fromTreeUri(context, targetFolder.toUri()) ?: return
 
         val destFile = destDir.createFile(
             sourceFile.type ?: "application/octet-stream",
