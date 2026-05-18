@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.rorycd.bowerbird.ui.editrule.EditRuleScreen
+import com.rorycd.bowerbird.ui.folderdetails.FolderDetailsScreen
 import com.rorycd.bowerbird.ui.rules.RulesScreen
 import com.rorycd.bowerbird.ui.folders.FoldersScreen
 import com.rorycd.bowerbird.ui.newrule.NewRuleScreen
@@ -19,6 +20,7 @@ import kotlinx.serialization.Serializable
 @Serializable object NewRuleRoute
 @Serializable data class EditRuleRoute(val ruleId: Int)
 @Serializable object FoldersRoute
+@Serializable data class FolderDetailsRoute(val uri: String)
 @Serializable object SettingsRoute
 
 /**
@@ -77,7 +79,31 @@ fun BowerbirdNavHost (
         }
         // Folders screen
         composable<FoldersRoute> {
-            FoldersScreen()
+            FoldersScreen(
+                onSelectFolder = {
+                    // To folder detail screen
+                    navController.navigate(FolderDetailsRoute(it)) {
+                        launchSingleTop = true
+                    }
+                },
+                onDeleteFolder = {
+                    // To folders list
+                    navController.navigate(FoldersRoute) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+        // Folder details screen
+        composable<FolderDetailsRoute> {
+            FolderDetailsScreen(
+                onSelectRule = {
+                    navController.navigate(EditRuleRoute(it)) {
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         // Settings screen
         composable<SettingsRoute> {

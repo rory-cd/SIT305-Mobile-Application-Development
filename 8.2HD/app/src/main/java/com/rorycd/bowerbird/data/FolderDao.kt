@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Data Access Object for Room [Folder] table access
@@ -24,6 +25,13 @@ interface FolderDao {
     @Transaction
     @Query("SELECT * FROM folders WHERE uri = :uri")
     suspend fun getFolderWithRules(uri: String): FolderWithRules?
+
+    @Transaction
+    @Query("SELECT * FROM folders WHERE uri = :uri")
+    fun getFolderWithRulesFlow(uri: String): Flow<FolderWithRules?>
+
+    @Query("SELECT * from folders")
+    fun getAllFoldersFlow(): Flow<List<Folder>>
 
     @Query("SELECT * from folders")
     suspend fun getAllFolders(): List<Folder>

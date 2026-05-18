@@ -1,5 +1,8 @@
 package com.rorycd.bowerbird.ui.main
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +40,7 @@ import com.rorycd.bowerbird.navigation.RulesRoute
 import com.rorycd.bowerbird.navigation.SettingsRoute
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.rorycd.bowerbird.navigation.EditRuleRoute
+import com.rorycd.bowerbird.navigation.FolderDetailsRoute
 import com.rorycd.bowerbird.navigation.NewRuleRoute
 
 enum class NavBarOption(
@@ -52,6 +57,8 @@ enum class NavBarOption(
 fun MainAppScreen() {
     val navController = rememberNavController()
 
+    val context = LocalContext.current
+
     val activeColor = MaterialTheme.colorScheme.primary
     val inActiveColor = MaterialTheme.colorScheme.onSurfaceVariant
 
@@ -61,6 +68,20 @@ fun MainAppScreen() {
 
     val isTopLevelDestination = NavBarOption.entries.any {
         currentDestination?.hasRoute(it.destination::class) == true
+    }
+
+    // Folder select launcher
+    val folderSelectLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        if (uri != null) {
+            // Retain permissions to access this folder after restart
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            // Check for the freshest data.
+            context.contentResolver.takePersistableUriPermission(uri, takeFlags)
+            // Navigate to folder details screen
+            // A new folder will be created if none exists for this uri
+            navController.navigate(FolderDetailsRoute(uri.toString()))
+        }
     }
 
     Scaffold(
@@ -148,7 +169,7 @@ fun MainAppScreen() {
                 currentDestination?.hasRoute(FoldersRoute::class) == true -> {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            // navController.navigate(AddFolderRoute)
+                            folderSelectLauncher.launch(null)
                         },
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -163,26 +184,7 @@ fun MainAppScreen() {
                     )
                 }
             }
-        },
-//        floatingActionButton = {
-//            if (currentDestination?.hasRoute(RulesRoute::class) == true) {
-//                ExtendedFloatingActionButton(
-//                    onClick = {
-//                        // navController.navigate(AddRuleRoute)
-//                    },
-//                    containerColor = MaterialTheme.colorScheme.primary,
-//                    contentColor = MaterialTheme.colorScheme.onPrimary,
-//                    shape = CircleShape,
-//                    icon = {
-//                        Icon(
-//                            Icons.Filled.Add,
-//                            contentDescription = stringResource(R.string.new_rule)
-//                        )
-//                    },
-//                    text = { Text(stringResource(R.string.new_rule)) }
-//                )
-//            }
-//        }
+        }
     ) { innerPadding ->
         BowerbirdNavHost(
             navController = navController,
@@ -200,6 +202,7 @@ fun getDestinationTitleRes(route: Any?): Int {
             route.hasRoute(NewRuleRoute::class) -> R.string.new_rule_destination_title
             route.hasRoute(EditRuleRoute::class) -> R.string.edit_rule_destination_title
             route.hasRoute(FoldersRoute::class) -> R.string.folders_destination_title
+            route.hasRoute(FolderDetailsRoute::class) -> R.string.folder_details_destination_title
             route.hasRoute(SettingsRoute::class) -> R.string.settings_destination_title
             else -> R.string.app_name
         }
@@ -208,6 +211,7 @@ fun getDestinationTitleRes(route: Any?): Int {
         is NewRuleRoute -> R.string.new_rule_destination_title
         is EditRuleRoute -> R.string.edit_rule_destination_title
         is FoldersRoute -> R.string.folders_destination_title
+        is FolderDetailsRoute -> R.string.folder_details_destination_title
         is SettingsRoute -> R.string.settings_destination_title
 
         else -> R.string.app_name

@@ -2,7 +2,7 @@
     <string name="app_name">Bowerbird</string>
     <string name="rules_destination_title">Rules</string>
     <string name="back_button">Back button</string>
-    <string name="folders_destination_title">Folders</string>
+    <string name="folders_destination_title">Watched folders</string>
     <string name="settings_destination_title">Settings</string>
     <string name="no_rules_message">No rules found. Create some to get started!</string>
     <string name="add_rule">Add rule</string>
@@ -31,4 +31,10 @@
     <string name="delete_rule">Delete rule</string>
     <string name="enable">Activate</string>
     <string name="edit_rule_destination_title">Edit rule</string>
+    <string name="no_folders_message">No watched folders found. Add some to get started!</string>
+    <string name="remove">Remove</string>
+    <string name="active_rules">ACTIVE RULES</string>
+    <string name="inactive_rules">INACTIVE RULES</string>
+    <string name="no_rules_for_folder">No rules have been applied to this folder. Add some to get started!</string>
+    <string name="folder_details_destination_title">Folder details</string>
 </resources>
