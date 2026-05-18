@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rorycd.bowerbird.R
+import com.rorycd.bowerbird.ui.components.RuleCard
 
 /**
  * Screen showing the full list of rules
@@ -35,7 +36,7 @@ fun RulesScreen(
         }
 
         items(rules ?: emptyList()) { rule ->
-            Text(rule.toString())
+            RuleCard(rule) { viewModel.toggleRule(rule) }
         }
     }
 }

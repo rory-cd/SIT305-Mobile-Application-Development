@@ -35,6 +35,7 @@ import com.rorycd.bowerbird.navigation.FoldersRoute
 import com.rorycd.bowerbird.navigation.RulesRoute
 import com.rorycd.bowerbird.navigation.SettingsRoute
 import androidx.navigation.NavDestination.Companion.hasRoute
+import com.rorycd.bowerbird.navigation.NewRuleRoute
 
 enum class NavBarOption(
     val destination: Any,
@@ -130,9 +131,7 @@ fun MainAppScreen() {
             when {
                 currentDestination?.hasRoute(RulesRoute::class) == true -> {
                     ExtendedFloatingActionButton(
-                        onClick = {
-                            // navController.navigate(AddRuleRoute)
-                        },
+                        onClick = { navController.navigate(NewRuleRoute) },
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         shape = CircleShape,
@@ -197,12 +196,14 @@ fun getDestinationTitleRes(route: Any?): Int {
 
         is NavDestination -> when {
             route.hasRoute(RulesRoute::class) -> R.string.rules_destination_title
+            route.hasRoute(NewRuleRoute::class) -> R.string.new_rule_destination_title
             route.hasRoute(FoldersRoute::class) -> R.string.folders_destination_title
             route.hasRoute(SettingsRoute::class) -> R.string.settings_destination_title
             else -> R.string.app_name
         }
 
         is RulesRoute -> R.string.rules_destination_title
+        is NewRuleRoute -> R.string.new_rule_destination_title
         is FoldersRoute -> R.string.folders_destination_title
         is SettingsRoute -> R.string.settings_destination_title
 

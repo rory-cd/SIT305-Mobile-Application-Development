@@ -13,7 +13,7 @@ class RuleRepository @Inject constructor(
     suspend fun addRule(rule: Rule) =
         ruleDao.insert(rule.toEntity())
 
-    suspend fun updateRule(id: Int, rule: Rule) =
+    suspend fun updateRule(rule: Rule) =
         ruleDao.update(rule.toEntity())
 
     suspend fun deleteRule(id: Int) =

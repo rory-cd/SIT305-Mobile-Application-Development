@@ -7,11 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.rorycd.bowerbird.ui.rules.RulesScreen
 import com.rorycd.bowerbird.ui.folders.FoldersScreen
+import com.rorycd.bowerbird.ui.newrule.NewRuleScreen
 import com.rorycd.bowerbird.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 // NavDestinations
 @Serializable object RulesRoute
+@Serializable object NewRuleRoute
 @Serializable object FoldersRoute
 @Serializable object SettingsRoute
 
@@ -31,6 +33,10 @@ fun BowerbirdNavHost (
         // Rules screen
         composable<RulesRoute> {
             RulesScreen()
+        }
+        // New rule screen
+        composable<NewRuleRoute> {
+            NewRuleScreen()
         }
         // Folders screen
         composable<FoldersRoute> {

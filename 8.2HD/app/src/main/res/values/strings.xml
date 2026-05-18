@@ -8,4 +8,15 @@
     <string name="add_rule">Add rule</string>
     <string name="new_rule">New rule</string>
     <string name="add_folder">Add folder</string>
+    <string name="new_rule_name_hint">My amazing rule</string>
+    <string name="apply_conditions_label">Apply condition(s)</string>
+    <string name="new_rule_destination_title">New rule</string>
+    <string name="add_condition_button">Condition</string>
+    <string name="if_the_image">IF THE</string>
+    <string name="arrow_down_description">Dropdown arrow</string>
+    <string name="content_description">content description</string>
+    <string name="text">text</string>
+    <string name="default_filesize_input">2</string>
+    <string name="delete_button">Delete button</string>
+    <string name="and">AND THE</string>
 </resources>

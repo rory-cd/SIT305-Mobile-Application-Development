@@ -7,17 +7,20 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class Operator {
-    CONTAINS,
-    ENDS_WITH,
-    STARTS_WITH,
-    GREATER_THAN,
-    EQUALS,
-    LESS_THAN
+enum class Operator(
+    val displayName: String
+) {
+    CONTAINS("contains"),
+    ENDS_WITH("ends with"),
+    STARTS_WITH("starts with"),
+    GREATER_THAN("is greater than"),
+    EQUALS("equals"),
+    LESS_THAN("less than")
 }
 
 @Serializable
 sealed interface RuleCondition {
+    val displayName: String
     interface BasicCondition : RuleCondition {
         val operator: Operator
         val operand: String
@@ -42,6 +45,8 @@ data class FilenameCondition(
     )
 ) : RuleCondition.BasicCondition {
 
+    override val displayName: String get() = "Filename"
+
     override fun check(context: Context, fileUri: Uri): Boolean {
 
         val filename = getFileName(context, fileUri) ?: return false
@@ -64,8 +69,11 @@ data class FilenameCondition(
 }
 
 @Serializable
-enum class FileSizeUnit {
-    KILOBYTES, MEGABYTES
+enum class FileSizeUnit(
+    val displayName: String
+) {
+    KILOBYTES("KB"),
+    MEGABYTES("MB")
 }
 
 @Serializable
@@ -80,6 +88,8 @@ data class FileSizeCondition(
         Operator.GREATER_THAN
     )
 ) : RuleCondition.BasicCondition {
+
+    override val displayName: String get() = "File size"
 
     override fun check(context: Context, fileUri: Uri): Boolean {
 
@@ -114,5 +124,7 @@ data class FileSizeCondition(
 data class ImageCheckCondition(
     override val condition: String
 ) : RuleCondition.SmartCondition {
+
+    override val displayName: String get() = "Contains"
 
 }
