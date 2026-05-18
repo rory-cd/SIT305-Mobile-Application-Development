@@ -1,9 +1,16 @@
 package com.rorycd.bowerbird.ui.newrule
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFrom
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -12,11 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rorycd.bowerbird.R
+import com.rorycd.bowerbird.rules.CopyAction
 import com.rorycd.bowerbird.rules.FileSizeCondition
 import com.rorycd.bowerbird.rules.FileSizeUnit
 import com.rorycd.bowerbird.rules.FilenameCondition
 import com.rorycd.bowerbird.rules.ImageCheckCondition
+import com.rorycd.bowerbird.rules.MoveAction
 import com.rorycd.bowerbird.rules.Operator
+import com.rorycd.bowerbird.rules.RenameAction
+import com.rorycd.bowerbird.rules.TagExifAction
+import com.rorycd.bowerbird.ui.components.ActionBlock
+import com.rorycd.bowerbird.ui.components.ActionType
 import com.rorycd.bowerbird.ui.components.CheckboxWithLabel
 import com.rorycd.bowerbird.ui.components.ConditionBlock
 import com.rorycd.bowerbird.ui.components.ConditionType
@@ -31,17 +44,21 @@ fun NewRuleScreen(
 ) {
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier.padding(16.dp)
+            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
+        // Rule name
         MinimalTextInput(
             value = state.name,
             onValueChange = { viewModel.onNameChanged(it) },
             hint = stringResource(R.string.new_rule_name_hint),
             largeText = true,
             modifier = Modifier
-                .padding(bottom = 8.dp)
+                .padding(bottom = 10.dp, start = 4.dp)
                 .fillMaxWidth()
         )
         CheckboxWithLabel(
@@ -49,12 +66,14 @@ fun NewRuleScreen(
             onCheckedChange = { viewModel.onToggleConditions(it) },
             label = stringResource(R.string.apply_conditions_label)
         )
-        HorizontalDivider(
-            modifier = Modifier.padding(bottom = 10.dp, top = 4.dp)
-        )
 
         // Condition set
         if (state.applyConditions) {
+
+            HorizontalDivider(
+                modifier = Modifier.padding(bottom = 24.dp, top = 18.dp)
+            )
+
             ConditionBlock(
                 conditions = state.conditions,
                 onSelectCondition = { idx, conditionType ->
@@ -66,10 +85,8 @@ fun NewRuleScreen(
                     viewModel.onSetConditionType(idx, newCondition)
                 },
                 onPromptChange = { idx, prompt ->
-                    if (state.conditions[idx] is ImageCheckCondition) {
-                        viewModel.onConditionPromptChange(idx, prompt)
-                    }
-                 },
+                    viewModel.onConditionPromptChange(idx, prompt)
+                },
                 onSelectOperator = { idx, operator ->
                     viewModel.onSetConditionOperator(idx, operator)
                 },
@@ -83,6 +100,63 @@ fun NewRuleScreen(
                 canDeleteConditions = true,
                 onDelete = { viewModel.onDeleteCondition(it) }
             )
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(bottom = 24.dp, top = if (state.applyConditions) 24.dp else 18.dp)
+        )
+
+        if (state.applyConditions) {
+            // THEN
+            Text(
+                text = stringResource(R.string.then),
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 14.dp, start = 3.dp)
+            )
+        }
+
+        // Action set
+        ActionBlock(
+            actions = state.actions,
+            onSelectAction = { idx, actionType ->
+                val newAction = when(actionType) {
+                    ActionType.TAG -> TagExifAction("")
+                    ActionType.RENAME -> RenameAction("")
+                    ActionType.MOVE -> MoveAction("")
+                    ActionType.COPY -> CopyAction("")
+                }
+                viewModel.onSetActionType(idx, newAction)
+            },
+            onPromptChange = { idx, prompt ->
+                viewModel.onActionPromptChange(idx, prompt)
+            },
+            onValueChange = { idx, value ->
+                viewModel.onActionValueChange(idx, value)
+            },
+            onSelectFolder = {
+
+            },
+            onAddAction = { viewModel.onAddAction() },
+            canDeleteActions = true,
+            onDelete = { viewModel.onDeleteAction(it) }
+        )
+
+        HorizontalDivider(
+            modifier = Modifier.padding(vertical = 24.dp)
+        )
+
+        CheckboxWithLabel(
+            checked = state.enableImmediately,
+            onCheckedChange = { viewModel.onToggleEnable() },
+            label = stringResource(R.string.enable_immediately)
+        )
+
+        Button(
+            onClick = { viewModel.addRule() },
+            modifier = Modifier.padding(top = 14.dp)
+        ) {
+            Text(stringResource(R.string.save_rule))
         }
     }
 }

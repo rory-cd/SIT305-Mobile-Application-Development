@@ -18,5 +18,14 @@
     <string name="text">text</string>
     <string name="default_filesize_input">2</string>
     <string name="delete_button">Delete button</string>
-    <string name="and">AND THE</string>
+    <string name="and_then">AND THEN</string>
+    <string name="then">THEN</string>
+    <string name="add_action_button">Action</string>
+    <string name="tag_description">tag description</string>
+    <string name="new_name">new name</string>
+    <string name="select_folder">Select folder</string>
+    <string name="select_folder_icon">Folder select icon</string>
+    <string name="and_the">AND THE</string>
+    <string name="save_rule">Save rule</string>
+    <string name="enable_immediately">Enable immediately</string>
 </resources>

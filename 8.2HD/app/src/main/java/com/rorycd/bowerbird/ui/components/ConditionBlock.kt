@@ -25,17 +25,18 @@ fun ConditionBlock(
     onSelectUnit: (Int, FileSizeUnit) -> Unit,
     onAddCondition: () -> Unit,
     canDeleteConditions: Boolean,
-    onDelete: (Int) -> Unit
+    onDelete: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-
+        modifier = modifier
     ) {
         // IF
         Text(
             text = stringResource(R.string.if_the_image),
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(vertical = 14.dp, horizontal = 3.dp)
+            modifier = Modifier.padding(bottom = 14.dp, start = 3.dp)
         )
         conditions.forEachIndexed { idx, condition ->
             ConditionInput(
@@ -51,7 +52,7 @@ fun ConditionBlock(
             // AND
             if (idx < conditions.size - 1) {
                 Text(
-                    text = stringResource(R.string.and),
+                    text = stringResource(R.string.and_the),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(vertical = 14.dp, horizontal = 3.dp)
@@ -62,7 +63,7 @@ fun ConditionBlock(
         TextButtonAdd(
             label = stringResource(R.string.add_condition_button),
             onClick = onAddCondition,
-            modifier = Modifier.padding(vertical = 18.dp)
+            modifier = Modifier.padding(top = 18.dp)
         )
     }
 }

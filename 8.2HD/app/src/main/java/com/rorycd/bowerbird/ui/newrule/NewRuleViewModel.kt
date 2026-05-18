@@ -8,7 +8,11 @@ import com.rorycd.bowerbird.rules.FileSizeUnit
 import com.rorycd.bowerbird.rules.FilenameCondition
 import com.rorycd.bowerbird.rules.ImageCheckCondition
 import com.rorycd.bowerbird.rules.Operator
+import com.rorycd.bowerbird.rules.RenameAction
+import com.rorycd.bowerbird.rules.Rule
+import com.rorycd.bowerbird.rules.RuleAction
 import com.rorycd.bowerbird.rules.RuleCondition
+import com.rorycd.bowerbird.rules.TagExifAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +47,7 @@ class NewRuleViewModel @Inject constructor (
         ) }
     }
 
+    // CONDITIONS
     fun onToggleConditions(value: Boolean) {
         _uiState.update { it.copy(
             applyConditions = value
@@ -51,31 +56,26 @@ class NewRuleViewModel @Inject constructor (
 
     fun onSetConditionType(index: Int, updatedCondition: RuleCondition) {
         _uiState.update {
-            // Create new list with replaced item
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index) updatedCondition else condition
             }
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
     fun onConditionPromptChange(index: Int, prompt: String) {
         _uiState.update {
-            // Create new list with replaced item
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index && condition is ImageCheckCondition)
                     condition.copy(condition = prompt)
                 else condition
             }
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
     fun onSetConditionOperator(index: Int, operator: Operator) {
         _uiState.update {
-            // Create new list with replaced item
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index) {
                     when (condition) {
@@ -89,14 +89,12 @@ class NewRuleViewModel @Inject constructor (
                     }
                 } else condition
             }
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
     fun onConditionOperandChange(index: Int, operand: String) {
         _uiState.update {
-            // Create new list with replaced item
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index) {
                     when (condition) {
@@ -110,49 +108,107 @@ class NewRuleViewModel @Inject constructor (
                     }
                 } else condition
             }
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
     fun onSetConditionUnit(index: Int, unit: FileSizeUnit) {
         _uiState.update {
-            // Create new list with replaced item
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index && condition is FileSizeCondition) {
                     condition.copy(unit = unit)
                 } else condition
             }
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
     fun onDeleteCondition(index: Int) {
         _uiState.update {
-            // Create new list with condition filtered out
             val updatedConditionsList = it.conditions.filterIndexed { idx, _ ->
                 idx != index
             }
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
     fun onAddCondition() {
         _uiState.update {
-            // Create new list with the new condition
             val updatedConditionsList = it.conditions + ImageCheckCondition("")
-            // Set list in state
             it.copy(conditions = updatedConditionsList)
         }
     }
 
-    fun addRule() {
+    // ACTIONS
+    fun onSetActionType(index: Int, updatedAction: RuleAction) {
+        _uiState.update {
+            val updatedActionsList = it.actions.mapIndexed { idx, action ->
+                if (idx == index) updatedAction else action
+            }
+            it.copy(actions = updatedActionsList)
+        }
+    }
 
+    fun onActionPromptChange(index: Int, prompt: String) {
+        _uiState.update {
+            val updatedActionsList = it.actions.mapIndexed { idx, action ->
+                if (idx == index && action is TagExifAction)
+                    action.copy(prompt = prompt)
+                else action
+            }
+            it.copy(actions = updatedActionsList)
+        }
+    }
+
+    fun onActionValueChange(index: Int, value: String) {
+        _uiState.update {
+            val updatedActionsList = it.actions.mapIndexed { idx, action ->
+                if (idx == index) {
+                    when (action) {
+                        is RenameAction -> {
+                            action.copy(value = value)
+                        }
+                        else -> action
+                    }
+                } else action
+            }
+            it.copy(actions = updatedActionsList)
+        }
+    }
+
+    fun onDeleteAction(index: Int) {
+        _uiState.update {
+            val updatedActionsList = it.actions.filterIndexed { idx, _ ->
+                idx != index
+            }
+            it.copy(actions = updatedActionsList)
+        }
+    }
+
+    fun onAddAction() {
+        _uiState.update {
+            val updatedActionsList = it.actions + TagExifAction("")
+            it.copy(actions = updatedActionsList)
+        }
+    }
+
+    fun onToggleEnable() {
+        _uiState.update {
+            it.copy(enableImmediately = !it.enableImmediately)
+        }
+    }
+
+    fun addRule() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-
+                val newRule = Rule(
+                    id = 0,
+                    name = _uiState.value.name,
+                    conditions = _uiState.value.conditions,
+                    actions = _uiState.value.actions,
+                    isEnabled = _uiState.value.enableImmediately
+                )
+                ruleRepo.addRule(newRule)
             }
         }
     }

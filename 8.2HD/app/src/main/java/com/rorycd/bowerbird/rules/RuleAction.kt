@@ -21,7 +21,7 @@ sealed interface RuleAction {
 
 @Serializable
 @SerialName("tag_exif")
-data class TagExif(
+data class TagExifAction(
     val prompt: String
 ) : RuleAction.SmartAction {
     var tagList: List<String>? = null
@@ -45,8 +45,8 @@ data class TagExif(
 
 @Serializable
 @SerialName("rename")
-data class Rename(
-    val newName: String
+data class RenameAction(
+    val value: String
 ) : RuleAction.BasicAction {
     override fun executeAction(context: Context, fileUri: Uri?) {
         if (fileUri == null) return
@@ -58,14 +58,14 @@ data class Rename(
         val newUri = DocumentsContract.renameDocument(
             contentResolver,
             fileUri,
-            "$newName.$ext"
+            "$value.$ext"
         )
     }
 }
 
 @Serializable
 @SerialName("move")
-data class Move(
+data class MoveAction(
     val targetFolder: String?
 ) : RuleAction.BasicAction {
     override fun executeAction(context: Context, fileUri: Uri?) {
@@ -90,7 +90,7 @@ data class Move(
 
 @Serializable
 @SerialName("copy")
-data class Copy(
+data class CopyAction(
     val targetFolder: String?
 ) : RuleAction.BasicAction {
     override fun executeAction(context: Context, fileUri: Uri?) {

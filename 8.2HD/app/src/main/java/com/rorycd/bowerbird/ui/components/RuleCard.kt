@@ -20,7 +20,7 @@ import com.rorycd.bowerbird.rules.FileSizeUnit
 import com.rorycd.bowerbird.rules.FilenameCondition
 import com.rorycd.bowerbird.rules.Operator
 import com.rorycd.bowerbird.rules.Rule
-import com.rorycd.bowerbird.rules.TagExif
+import com.rorycd.bowerbird.rules.TagExifAction
 
 @Composable
 fun RuleCard(
@@ -61,7 +61,7 @@ fun RuleCardPreview() {
                 FileSizeCondition(Operator.GREATER_THAN, "100", FileSizeUnit.KILOBYTES)
             ),
             actions = listOf(
-                TagExif("detailed attributes of the person")
+                TagExifAction("detailed attributes of the person")
             )
         ),
         {}
