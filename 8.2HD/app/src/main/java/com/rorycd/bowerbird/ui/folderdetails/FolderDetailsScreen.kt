@@ -64,12 +64,13 @@ fun FolderDetailsScreen(
                 Text(stringResource(R.string.no_rules_for_folder))
             }
 
+            // Active rules
             item {
                 if (active.isNotEmpty()) Text(
                     text = stringResource(R.string.active_rules),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 14.dp, horizontal = 3.dp)
+                    modifier = Modifier.padding(top = 14.dp, start = 3.dp)
                 )
             }
 
@@ -83,12 +84,13 @@ fun FolderDetailsScreen(
                 )
             }
 
+            // Inactive rules
             item {
                 if (inactive.isNotEmpty()) Text(
                     text = stringResource(R.string.inactive_rules),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 14.dp, horizontal = 3.dp)
+                    modifier = Modifier.padding(top = 14.dp, start = 3.dp)
                 )
             }
 

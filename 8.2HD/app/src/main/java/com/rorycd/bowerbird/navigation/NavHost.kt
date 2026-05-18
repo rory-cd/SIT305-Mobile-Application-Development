@@ -12,6 +12,7 @@ import com.rorycd.bowerbird.ui.folderdetails.FolderDetailsScreen
 import com.rorycd.bowerbird.ui.rules.RulesScreen
 import com.rorycd.bowerbird.ui.folders.FoldersScreen
 import com.rorycd.bowerbird.ui.newrule.NewRuleScreen
+import com.rorycd.bowerbird.ui.ruleselect.RuleSelectScreen
 import com.rorycd.bowerbird.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
@@ -19,6 +20,7 @@ import kotlinx.serialization.Serializable
 @Serializable object RulesRoute
 @Serializable object NewRuleRoute
 @Serializable data class EditRuleRoute(val ruleId: Int)
+@Serializable data class RuleSelectRoute(val folderUri: String)
 @Serializable object FoldersRoute
 @Serializable data class FolderDetailsRoute(val uri: String)
 @Serializable object SettingsRoute
@@ -75,6 +77,12 @@ fun BowerbirdNavHost (
                         launchSingleTop = true
                     }
                 }
+            )
+        }
+        // Rule select screen
+        composable<RuleSelectRoute> {
+            RuleSelectScreen(
+                onSelectRule = { navController.navigateUp() }
             )
         }
         // Folders screen

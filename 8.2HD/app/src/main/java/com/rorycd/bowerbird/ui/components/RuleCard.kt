@@ -28,7 +28,8 @@ fun RuleCard(
     rule: Rule,
     onSelect: () -> Unit,
     onToggle: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showToggle: Boolean = true
 ) {
     Column(
         modifier = modifier.clickable(onClick = onSelect)
@@ -41,9 +42,8 @@ fun RuleCard(
         ) {
             Text(
                 text = rule.name,
-
             )
-            Switch(
+            if (showToggle) Switch(
                 checked = rule.isEnabled,
                 onCheckedChange = { onToggle(rule.id) },
                 colors = SwitchDefaults.colors(
@@ -51,7 +51,9 @@ fun RuleCard(
                 )
             )
         }
-        HorizontalDivider()
+        HorizontalDivider(
+            modifier = Modifier.padding(top = if (!showToggle) 8.dp else 0.dp)
+        )
     }
 }
 

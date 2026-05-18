@@ -37,4 +37,12 @@
     <string name="inactive_rules">INACTIVE RULES</string>
     <string name="no_rules_for_folder">No rules have been applied to this folder. Add some to get started!</string>
     <string name="folder_details_destination_title">Folder details</string>
+    <string name="apply_rule">Apply rule</string>
+    <string name="select_rule_destination_title">Select rule</string>
+    <string name="scan_interval">Scan for new images every:</string>
+    <string name="scan_interval_description">Determines how often folders are scanned for new images. Interval times are approximate only.</string>
+    <string name="processing_interval">Process images every:</string>
+    <string name="processing_interval_description">Determines how often images are processed according to the assigned rules. Interval times are approximate only.</string>
+    <string name="process_images_now">Process images now</string>
+    <string name="scan_folders_now">Scan folders now</string>
 </resources>

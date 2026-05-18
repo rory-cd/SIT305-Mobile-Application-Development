@@ -28,6 +28,11 @@ class FolderRepository @Inject constructor(
         }
     }
 
+    suspend fun addFolderRuleJoin(folderUri: String, ruleId: Int) {
+        val join = FolderRuleJoin(folderUri, ruleId)
+        folderDao.insertFolderRuleJoin(join)
+    }
+
     suspend fun deleteFolderRuleJoin(folderUri: String, ruleId: Int) {
         val join = FolderRuleJoin(folderUri, ruleId)
         folderDao.deleteFolderRuleJoin(join)
