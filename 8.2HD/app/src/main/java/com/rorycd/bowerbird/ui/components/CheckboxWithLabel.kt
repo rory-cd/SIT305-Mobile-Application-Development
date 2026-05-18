@@ -36,7 +36,7 @@ fun CheckboxWithLabel(
                 checkmarkColor = MaterialTheme.colorScheme.onPrimary,
                 uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant
             ),
-            modifier = Modifier.padding(end = 4.dp)
+            modifier = Modifier.padding(end = 2.dp)
         )
         Text(
             text = label

@@ -2,6 +2,7 @@ package com.rorycd.bowerbird.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,7 +37,14 @@ fun BowerbirdNavHost (
         }
         // New rule screen
         composable<NewRuleRoute> {
-            NewRuleScreen()
+            NewRuleScreen(
+                onAddRule = {
+                    navController.navigate(RulesRoute) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         // Folders screen
         composable<FoldersRoute> {

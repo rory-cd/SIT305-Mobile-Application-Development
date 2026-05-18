@@ -1,5 +1,6 @@
 package com.rorycd.bowerbird.ui.components
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +18,7 @@ fun ActionBlock(
     onSelectAction: (Int, ActionType) -> Unit,
     onPromptChange: (Int, String) -> Unit,
     onValueChange: (Int, String) -> Unit,
-    onSelectFolder: () -> Unit,
+    onSelectFolder: (Int, Uri) -> Unit,
     onAddAction: () -> Unit,
     canDeleteActions: Boolean,
     onDelete: (Int) -> Unit,
@@ -32,7 +33,7 @@ fun ActionBlock(
                 onSelectAction = { onSelectAction(idx, it)},
                 onPromptChange = { onPromptChange(idx, it) },
                 onValueChange = { onValueChange(idx, it) },
-                onSelectFolder = onSelectFolder,
+                onSelectFolder = { onSelectFolder(idx, it) },
                 canDelete = canDeleteActions && actions.size > 1,
                 onDelete = { onDelete(idx) }
             )

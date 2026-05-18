@@ -1,5 +1,6 @@
 package com.rorycd.bowerbird.ui.components
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import com.rorycd.bowerbird.R
 import com.rorycd.bowerbird.rules.CopyAction
 import com.rorycd.bowerbird.rules.FileSizeCondition
@@ -26,6 +28,7 @@ import com.rorycd.bowerbird.rules.RenameAction
 import com.rorycd.bowerbird.rules.RuleAction
 import com.rorycd.bowerbird.rules.RuleCondition
 import com.rorycd.bowerbird.rules.TagExifAction
+import com.rorycd.bowerbird.utils.getFolderNameFromUri
 
 enum class ActionType(
     val displayName: String
@@ -44,7 +47,7 @@ fun ActionInput(
     onSelectAction: (ActionType) -> Unit,
     onPromptChange: (String) -> Unit,
     onValueChange: (String) -> Unit,
-    onSelectFolder: () -> Unit,
+    onSelectFolder: (Uri) -> Unit,
     canDelete: Boolean,
     onDelete: () -> Unit
 ) {
@@ -59,7 +62,6 @@ fun ActionInput(
                 is RenameAction -> ActionType.RENAME.displayName
                 is MoveAction -> ActionType.MOVE.displayName
                 is CopyAction -> ActionType.COPY.displayName
-                else -> "Action"
             },
             onSelectOption = { onSelectAction(it) },
             optionToText = { it.displayName }
@@ -86,7 +88,7 @@ fun ActionInput(
 
         if (action is MoveAction) {
             FolderSelector(
-                value = action.targetFolder ?: "",
+                value = getFolderNameFromUri(action.targetFolder?.toUri()),
                 onSelect = onSelectFolder,
                 modifier = Modifier.weight(1f)
             )
@@ -94,7 +96,7 @@ fun ActionInput(
 
         if (action is CopyAction) {
             FolderSelector(
-                value = action.targetFolder ?: "",
+                value = getFolderNameFromUri(action.targetFolder?.toUri()),
                 onSelect = onSelectFolder,
                 modifier = Modifier.weight(1f)
             )

@@ -1,12 +1,15 @@
 package com.rorycd.bowerbird.ui.newrule
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rorycd.bowerbird.data.RuleRepository
+import com.rorycd.bowerbird.rules.CopyAction
 import com.rorycd.bowerbird.rules.FileSizeCondition
 import com.rorycd.bowerbird.rules.FileSizeUnit
 import com.rorycd.bowerbird.rules.FilenameCondition
 import com.rorycd.bowerbird.rules.ImageCheckCondition
+import com.rorycd.bowerbird.rules.MoveAction
 import com.rorycd.bowerbird.rules.Operator
 import com.rorycd.bowerbird.rules.RenameAction
 import com.rorycd.bowerbird.rules.Rule
@@ -188,6 +191,25 @@ class NewRuleViewModel @Inject constructor (
     fun onAddAction() {
         _uiState.update {
             val updatedActionsList = it.actions + TagExifAction("")
+            it.copy(actions = updatedActionsList)
+        }
+    }
+
+    fun onSelectFolder(index: Int, uri: Uri) {
+        _uiState.update {
+            val updatedActionsList = it.actions.mapIndexed { idx, action ->
+                if (idx == index) {
+                    when (action) {
+                        is MoveAction -> {
+                            action.copy(targetFolder = uri.toString())
+                        }
+                        is CopyAction -> {
+                            action.copy(targetFolder = uri.toString())
+                        }
+                        else -> action
+                    }
+                } else action
+            }
             it.copy(actions = updatedActionsList)
         }
     }

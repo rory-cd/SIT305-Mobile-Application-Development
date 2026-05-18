@@ -40,6 +40,7 @@ import com.rorycd.bowerbird.ui.components.MinimalTextInput
  */
 @Composable
 fun NewRuleScreen(
+    onAddRule: () -> Unit,
     viewModel: NewRuleViewModel = hiltViewModel()
 ) {
     // Collect state flow
@@ -134,8 +135,8 @@ fun NewRuleScreen(
             onValueChange = { idx, value ->
                 viewModel.onActionValueChange(idx, value)
             },
-            onSelectFolder = {
-
+            onSelectFolder = { idx, uri ->
+                viewModel.onSelectFolder(idx, uri)
             },
             onAddAction = { viewModel.onAddAction() },
             canDeleteActions = true,
@@ -153,7 +154,10 @@ fun NewRuleScreen(
         )
 
         Button(
-            onClick = { viewModel.addRule() },
+            onClick = {
+                viewModel.addRule()
+                onAddRule()
+            },
             modifier = Modifier.padding(top = 14.dp)
         ) {
             Text(stringResource(R.string.save_rule))
