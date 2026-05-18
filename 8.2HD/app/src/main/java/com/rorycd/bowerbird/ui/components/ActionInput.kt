@@ -2,31 +2,21 @@ package com.rorycd.bowerbird.ui.components
 
 import android.net.Uri
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import com.rorycd.bowerbird.R
 import com.rorycd.bowerbird.rules.CopyAction
-import com.rorycd.bowerbird.rules.FileSizeCondition
-import com.rorycd.bowerbird.rules.FileSizeUnit
-import com.rorycd.bowerbird.rules.FilenameCondition
-import com.rorycd.bowerbird.rules.ImageCheckCondition
 import com.rorycd.bowerbird.rules.MoveAction
-import com.rorycd.bowerbird.rules.Operator
 import com.rorycd.bowerbird.rules.RenameAction
 import com.rorycd.bowerbird.rules.RuleAction
-import com.rorycd.bowerbird.rules.RuleCondition
 import com.rorycd.bowerbird.rules.TagExifAction
 import com.rorycd.bowerbird.utils.getFolderNameFromUri
 

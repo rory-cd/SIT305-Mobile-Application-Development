@@ -6,7 +6,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.rorycd.bowerbird.ui.editrule.EditRuleScreen
 import com.rorycd.bowerbird.ui.folderdetails.FolderDetailsScreen
 import com.rorycd.bowerbird.ui.rules.RulesScreen

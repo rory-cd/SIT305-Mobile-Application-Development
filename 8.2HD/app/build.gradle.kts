@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -85,6 +86,7 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.57.1")
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
+    ksp("androidx.hilt:hilt-compiler:1.2.0")
     implementation(libs.hilt.navigation.compose)
 
 //    // Gemini Nano (ML Kit Prompt API)

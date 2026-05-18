@@ -5,7 +5,6 @@ import androidx.work.WorkerParameters
 import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorker
-import com.rorycd.bowerbird.data.AppDatabase
 import com.rorycd.bowerbird.data.FolderRepository
 import com.rorycd.bowerbird.data.QueueRepository
 import com.rorycd.bowerbird.prompt.PromptRepository
@@ -22,15 +21,8 @@ class ApplyRulesWorker @AssistedInject constructor(
     private val queueRepo: QueueRepository,
     private val promptRepo: PromptRepository
 ) : CoroutineWorker(context, params) {
+
     override suspend fun doWork(): Result {
-
-        val db = AppDatabase.getDatabase(applicationContext)
-        val folderRepo = FolderRepository(
-            db.folderDao(),
-            db.scannedFileDao()
-        )
-        val queueRepo = QueueRepository(db.queuedFileDao())
-
         return try {
             Log.d(TAG, "Processing...")
 
@@ -46,7 +38,6 @@ class ApplyRulesWorker @AssistedInject constructor(
                 promptRepo.loadModel()
 
                 // Get rules for folder
-
                 for (file in files) {
                     val response = promptRepo.getResponse("Describe this image in two sentences, each in JSON format with keys of '1' and '2' respectively.", file)
                     queueRepo.markAsDone(file, folder)

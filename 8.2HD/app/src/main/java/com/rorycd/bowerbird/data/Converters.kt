@@ -3,10 +3,8 @@ package com.rorycd.bowerbird.data
 import androidx.room.TypeConverter
 import com.rorycd.bowerbird.rules.RuleAction
 import com.rorycd.bowerbird.rules.RuleCondition
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
 
 /**
  * Room type converters for serialization

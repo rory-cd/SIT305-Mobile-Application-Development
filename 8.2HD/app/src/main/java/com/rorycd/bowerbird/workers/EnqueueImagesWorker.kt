@@ -7,7 +7,6 @@ import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import androidx.hilt.work.HiltWorker
-import com.rorycd.bowerbird.data.AppDatabase
 import com.rorycd.bowerbird.data.FolderRepository
 import com.rorycd.bowerbird.data.QueueRepository
 import dagger.assisted.Assisted
@@ -22,8 +21,6 @@ class EnqueueImagesWorker @AssistedInject constructor(
     private val folderRepo: FolderRepository,
     private val queueRepo: QueueRepository,
 ) : CoroutineWorker(context, params) {
-
-    private val db = AppDatabase.getDatabase(applicationContext)
 
     override suspend fun doWork(): Result {
         return try {
@@ -42,7 +39,7 @@ class EnqueueImagesWorker @AssistedInject constructor(
         // Convert to DocumentFile for scanning
         val folderDf = DocumentFile.fromTreeUri(applicationContext, folder)
 
-        if (folderDf != null) {
+        if (folderDf != null && folderDf.isDirectory) {
             // Get all files
             val files = folderDf.listFiles()
 

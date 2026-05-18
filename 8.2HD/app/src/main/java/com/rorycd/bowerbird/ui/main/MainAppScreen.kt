@@ -39,9 +39,11 @@ import com.rorycd.bowerbird.navigation.FoldersRoute
 import com.rorycd.bowerbird.navigation.RulesRoute
 import com.rorycd.bowerbird.navigation.SettingsRoute
 import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.toRoute
 import com.rorycd.bowerbird.navigation.EditRuleRoute
 import com.rorycd.bowerbird.navigation.FolderDetailsRoute
 import com.rorycd.bowerbird.navigation.NewRuleRoute
+import com.rorycd.bowerbird.navigation.RuleSelectRoute
 
 enum class NavBarOption(
     val destination: Any,
@@ -151,6 +153,7 @@ fun MainAppScreen() {
         },
         floatingActionButton = {
             when {
+                // Add rule
                 currentDestination?.hasRoute(RulesRoute::class) == true -> {
                     ExtendedFloatingActionButton(
                         onClick = { navController.navigate(NewRuleRoute) },
@@ -166,6 +169,7 @@ fun MainAppScreen() {
                         text = { Text(stringResource(R.string.new_rule)) }
                     )
                 }
+                // Add folder
                 currentDestination?.hasRoute(FoldersRoute::class) == true -> {
                     ExtendedFloatingActionButton(
                         onClick = {
@@ -181,6 +185,26 @@ fun MainAppScreen() {
                             )
                         },
                         text = { Text(stringResource(R.string.add_folder)) }
+                    )
+                }
+                // Assign rule to folder
+                currentDestination?.hasRoute(FolderDetailsRoute::class) == true -> {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            val uri = navBackStackEntry?.toRoute<FolderDetailsRoute>()?.uri
+                            if (uri?.isEmpty() ?: true) return@ExtendedFloatingActionButton
+                            navController.navigate(RuleSelectRoute(uri))
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        shape = CircleShape,
+                        icon = {
+                            Icon(
+                                Icons.Filled.Add,
+                                contentDescription = stringResource(R.string.new_rule)
+                            )
+                        },
+                        text = { Text(stringResource(R.string.apply_rule)) }
                     )
                 }
             }
@@ -201,6 +225,7 @@ fun getDestinationTitleRes(route: Any?): Int {
             route.hasRoute(RulesRoute::class) -> R.string.rules_destination_title
             route.hasRoute(NewRuleRoute::class) -> R.string.new_rule_destination_title
             route.hasRoute(EditRuleRoute::class) -> R.string.edit_rule_destination_title
+            route.hasRoute(RuleSelectRoute::class) -> R.string.select_rule_destination_title
             route.hasRoute(FoldersRoute::class) -> R.string.folders_destination_title
             route.hasRoute(FolderDetailsRoute::class) -> R.string.folder_details_destination_title
             route.hasRoute(SettingsRoute::class) -> R.string.settings_destination_title
@@ -210,6 +235,7 @@ fun getDestinationTitleRes(route: Any?): Int {
         is RulesRoute -> R.string.rules_destination_title
         is NewRuleRoute -> R.string.new_rule_destination_title
         is EditRuleRoute -> R.string.edit_rule_destination_title
+        is RuleSelectRoute -> R.string.select_rule_destination_title
         is FoldersRoute -> R.string.folders_destination_title
         is FolderDetailsRoute -> R.string.folder_details_destination_title
         is SettingsRoute -> R.string.settings_destination_title

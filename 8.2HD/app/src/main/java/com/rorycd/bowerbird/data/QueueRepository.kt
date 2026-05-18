@@ -2,8 +2,11 @@ package com.rorycd.bowerbird.data
 
 import android.net.Uri
 import androidx.core.net.toUri
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class QueueRepository(
+@Singleton
+class QueueRepository @Inject constructor(
     private val queuedFileDao: QueuedFileDao
 ) {
     suspend fun enqueue (file: Uri, originFolder: Uri) {

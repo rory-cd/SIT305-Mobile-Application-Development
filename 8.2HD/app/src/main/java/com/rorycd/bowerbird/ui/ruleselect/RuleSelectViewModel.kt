@@ -7,15 +7,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.rorycd.bowerbird.data.FolderRepository
 import com.rorycd.bowerbird.data.RuleRepository
-import com.rorycd.bowerbird.navigation.FolderDetailsRoute
 import com.rorycd.bowerbird.navigation.RuleSelectRoute
-import com.rorycd.bowerbird.rules.Rule
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**

@@ -5,7 +5,9 @@ import com.rorycd.bowerbird.rules.Rule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RuleRepository @Inject constructor(
     private val folderDao: FolderDao,
     private val ruleDao: RuleDao

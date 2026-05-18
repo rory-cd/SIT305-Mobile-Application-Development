@@ -20,9 +20,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rorycd.bowerbird.R
-import com.rorycd.bowerbird.ui.components.FolderCard
 import com.rorycd.bowerbird.ui.components.FolderRuleCard
-import com.rorycd.bowerbird.ui.components.MinimalTextInput
 import com.rorycd.bowerbird.utils.getFolderNameFromUri
 
 /**
