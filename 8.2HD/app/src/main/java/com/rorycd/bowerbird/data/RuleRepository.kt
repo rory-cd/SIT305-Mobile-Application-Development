@@ -19,6 +19,9 @@ class RuleRepository @Inject constructor(
     suspend fun deleteRule(id: Int) =
         ruleDao.deleteRuleById(id)
 
+    suspend fun getRuleById(id: Int) =
+        ruleDao.getRuleById(id)
+
     fun getAllRules(): Flow<List<Rule>> =
         ruleDao.getAllRules().map { list -> list.map { it.toDomain() }}
 

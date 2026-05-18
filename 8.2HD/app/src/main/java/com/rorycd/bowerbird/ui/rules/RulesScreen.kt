@@ -21,6 +21,7 @@ import com.rorycd.bowerbird.ui.components.RuleCard
  */
 @Composable
 fun RulesScreen(
+    onSelectRule: (Int) -> Unit,
     viewModel: RulesViewModel = hiltViewModel()
 ) {
     val rules by viewModel.rules.collectAsStateWithLifecycle()
@@ -36,7 +37,11 @@ fun RulesScreen(
         }
 
         items(rules ?: emptyList()) { rule ->
-            RuleCard(rule) { viewModel.toggleRule(rule) }
+            RuleCard(
+                rule = rule,
+                onSelect = { onSelectRule(rule.id) },
+                onToggle = { viewModel.toggleRule(rule) }
+            )
         }
     }
 }

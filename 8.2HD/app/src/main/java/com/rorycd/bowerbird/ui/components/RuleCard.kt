@@ -1,5 +1,6 @@
 package com.rorycd.bowerbird.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +26,13 @@ import com.rorycd.bowerbird.rules.TagExifAction
 @Composable
 fun RuleCard(
     rule: Rule,
-    onToggle: (Int) -> Unit
+    onSelect: () -> Unit,
+    onToggle: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(
+        modifier = modifier.clickable(onClick = onSelect)
+    ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -64,6 +69,7 @@ fun RuleCardPreview() {
                 TagExifAction("detailed attributes of the person")
             )
         ),
+        {},
         {}
     )
 }

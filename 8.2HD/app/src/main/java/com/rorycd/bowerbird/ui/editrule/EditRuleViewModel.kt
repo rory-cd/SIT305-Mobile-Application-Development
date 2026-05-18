@@ -1,9 +1,15 @@
-package com.rorycd.bowerbird.ui.newrule
+package com.rorycd.bowerbird.ui.editrule
 
+import com.rorycd.bowerbird.ui.newrule.NewRuleScreen
+import com.rorycd.bowerbird.ui.newrule.NewRuleUiState
+import kotlin.collections.plus
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.rorycd.bowerbird.data.RuleRepository
+import com.rorycd.bowerbird.navigation.EditRuleRoute
 import com.rorycd.bowerbird.rules.CopyAction
 import com.rorycd.bowerbird.rules.FileSizeCondition
 import com.rorycd.bowerbird.rules.FileSizeUnit
@@ -29,16 +35,37 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
- * View model for [NewRuleScreen]
+ * View model for [EditRuleScreen]
  */
 @HiltViewModel
-class NewRuleViewModel @Inject constructor (
-    private val ruleRepo: RuleRepository
+class EditRuleViewModel @Inject constructor (
+    private val ruleRepo: RuleRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    // Get rule id from route args
+    private val ruleId: Int = savedStateHandle.toRoute<EditRuleRoute>().ruleId
+
     // UI state
-    private val _uiState = MutableStateFlow(NewRuleUiState())
-    val uiState: StateFlow<NewRuleUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(EditRuleUiState())
+    val uiState: StateFlow<EditRuleUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+
+            val rule = ruleRepo.getRuleById(ruleId)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    name = rule.name,
+                    applyConditions = rule.conditions?.isNotEmpty() ?: false,
+                    conditions = rule.conditions ?: listOf(ImageCheckCondition("")),
+                    actions = rule.actions,
+                    isEnabled = rule.isEnabled
+                )
+            }
+        }
+    }
 
     // UI management
     fun onNameChanged(newName: String) {
@@ -213,21 +240,29 @@ class NewRuleViewModel @Inject constructor (
 
     fun onToggleEnable() {
         _uiState.update {
-            it.copy(enableImmediately = !it.enableImmediately)
+            it.copy(isEnabled = !it.isEnabled)
         }
     }
 
-    fun addRule() {
+    fun updateRule() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val newRule = Rule(
-                    id = 0,
+                    id = ruleId,
                     name = _uiState.value.name,
                     conditions = _uiState.value.conditions,
                     actions = _uiState.value.actions,
-                    isEnabled = _uiState.value.enableImmediately
+                    isEnabled = _uiState.value.isEnabled
                 )
-                ruleRepo.addRule(newRule)
+                ruleRepo.updateRule(newRule)
+            }
+        }
+    }
+
+    fun deleteRule() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                ruleRepo.deleteRule(ruleId)
             }
         }
     }

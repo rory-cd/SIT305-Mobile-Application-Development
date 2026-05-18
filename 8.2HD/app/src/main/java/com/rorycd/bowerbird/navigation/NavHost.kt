@@ -6,6 +6,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.rorycd.bowerbird.ui.editrule.EditRuleScreen
 import com.rorycd.bowerbird.ui.rules.RulesScreen
 import com.rorycd.bowerbird.ui.folders.FoldersScreen
 import com.rorycd.bowerbird.ui.newrule.NewRuleScreen
@@ -15,6 +17,7 @@ import kotlinx.serialization.Serializable
 // NavDestinations
 @Serializable object RulesRoute
 @Serializable object NewRuleRoute
+@Serializable data class EditRuleRoute(val ruleId: Int)
 @Serializable object FoldersRoute
 @Serializable object SettingsRoute
 
@@ -33,12 +36,38 @@ fun BowerbirdNavHost (
     ) {
         // Rules screen
         composable<RulesRoute> {
-            RulesScreen()
+            RulesScreen(
+                onSelectRule = {
+                    navController.navigate(EditRuleRoute(it)) {
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         // New rule screen
         composable<NewRuleRoute> {
             NewRuleScreen(
                 onAddRule = {
+                    // To rules list
+                    navController.navigate(RulesRoute) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+        // Edit rule screen
+        composable<EditRuleRoute> {
+            EditRuleScreen(
+                onSaveRule = {
+                    // To rules list
+                    navController.navigate(RulesRoute) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                },
+                onDeleteRule = {
+                    // To rules list
                     navController.navigate(RulesRoute) {
                         popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true

@@ -27,5 +27,8 @@
     <string name="select_folder_icon">Folder select icon</string>
     <string name="and_the">AND THE</string>
     <string name="save_rule">Save rule</string>
-    <string name="enable_immediately">Enable immediately</string>
+    <string name="enable_immediately">Activate immediately</string>
+    <string name="delete_rule">Delete rule</string>
+    <string name="enable">Activate</string>
+    <string name="edit_rule_destination_title">Edit rule</string>
 </resources>
