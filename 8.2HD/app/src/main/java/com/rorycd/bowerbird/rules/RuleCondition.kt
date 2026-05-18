@@ -20,15 +20,16 @@ enum class Operator(
 
 @Serializable
 sealed interface RuleCondition {
-    val displayName: String
-    interface BasicCondition : RuleCondition {
+    @Serializable
+    sealed interface BasicCondition : RuleCondition {
         val operator: Operator
         val operand: String
         val validOperators: List<Operator>
         fun check(context: Context, fileUri: Uri): Boolean
     }
 
-    interface SmartCondition : RuleCondition {
+    @Serializable
+    sealed interface SmartCondition : RuleCondition {
         val condition: String
     }
 }
@@ -44,8 +45,6 @@ data class FilenameCondition(
         Operator.ENDS_WITH
     )
 ) : RuleCondition.BasicCondition {
-
-    override val displayName: String get() = "Filename"
 
     override fun check(context: Context, fileUri: Uri): Boolean {
 
@@ -89,8 +88,6 @@ data class FileSizeCondition(
     )
 ) : RuleCondition.BasicCondition {
 
-    override val displayName: String get() = "File size"
-
     override fun check(context: Context, fileUri: Uri): Boolean {
 
         val fileSizeBytes = getFileSize(context, fileUri) ?: return false
@@ -124,7 +121,4 @@ data class FileSizeCondition(
 data class ImageCheckCondition(
     override val condition: String
 ) : RuleCondition.SmartCondition {
-
-    override val displayName: String get() = "Contains"
-
 }

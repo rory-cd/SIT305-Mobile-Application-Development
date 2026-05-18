@@ -14,9 +14,11 @@ import kotlinx.serialization.Serializable
 sealed interface RuleAction {
     fun executeAction(context: Context, fileUri: Uri?)
 
-    interface BasicAction : RuleAction {}
+    @Serializable
+    sealed interface BasicAction : RuleAction {}
 
-    interface SmartAction : RuleAction {}
+    @Serializable
+    sealed interface SmartAction : RuleAction {}
 }
 
 @Serializable
