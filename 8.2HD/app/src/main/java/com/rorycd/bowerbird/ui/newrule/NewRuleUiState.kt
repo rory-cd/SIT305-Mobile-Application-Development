@@ -13,5 +13,6 @@ data class NewRuleUiState(
     val applyConditions: Boolean = true,
     val conditions: List<RuleCondition> = listOf(ImageCheckCondition("")),
     val actions: List<RuleAction> = listOf(TagExifAction("")),
-    val enableImmediately: Boolean = true
+    val enableImmediately: Boolean = true,
+    val error: ValidationError? = null
 )

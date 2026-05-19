@@ -22,7 +22,8 @@ import com.rorycd.bowerbird.R
 fun FolderSelector(
     value: String,
     onSelect: (Uri) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    maxLines: Int = 1
 ) {
     val context = LocalContext.current
 
@@ -49,7 +50,7 @@ fun FolderSelector(
         )
         Text(
             text = value.ifEmpty { stringResource(R.string.select_folder) },
-            maxLines = 1
+            maxLines = maxLines
         )
     }
 }

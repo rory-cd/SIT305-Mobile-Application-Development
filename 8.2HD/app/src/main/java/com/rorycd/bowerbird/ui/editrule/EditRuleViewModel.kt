@@ -20,6 +20,7 @@ import com.rorycd.bowerbird.rules.Rule
 import com.rorycd.bowerbird.rules.RuleAction
 import com.rorycd.bowerbird.rules.RuleCondition
 import com.rorycd.bowerbird.rules.TagExifAction
+import com.rorycd.bowerbird.ui.newrule.ValidationError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,6 +66,7 @@ class EditRuleViewModel @Inject constructor (
 
     // UI management
     fun onNameChanged(newName: String) {
+        clearErrors()
         _uiState.update { it.copy(
             name = newName
         ) }
@@ -72,12 +74,14 @@ class EditRuleViewModel @Inject constructor (
 
     // CONDITIONS
     fun onToggleConditions(value: Boolean) {
+        clearErrors()
         _uiState.update { it.copy(
             applyConditions = value
         ) }
     }
 
     fun onSetConditionType(index: Int, updatedCondition: RuleCondition) {
+        clearErrors()
         _uiState.update {
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index) updatedCondition else condition
@@ -87,10 +91,11 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onConditionPromptChange(index: Int, prompt: String) {
+        clearErrors()
         _uiState.update {
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index && condition is ImageCheckCondition)
-                    condition.copy(condition = prompt)
+                    condition.copy(conditionPrompt = prompt)
                 else condition
             }
             it.copy(conditions = updatedConditionsList)
@@ -98,6 +103,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onSetConditionOperator(index: Int, operator: Operator) {
+        clearErrors()
         _uiState.update {
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index) {
@@ -117,6 +123,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onConditionOperandChange(index: Int, operand: String) {
+        clearErrors()
         _uiState.update {
             val updatedConditionsList = it.conditions.mapIndexed { idx, condition ->
                 if (idx == index) {
@@ -147,6 +154,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onDeleteCondition(index: Int) {
+        clearErrors()
         _uiState.update {
             val updatedConditionsList = it.conditions.filterIndexed { idx, _ ->
                 idx != index
@@ -164,6 +172,7 @@ class EditRuleViewModel @Inject constructor (
 
     // ACTIONS
     fun onSetActionType(index: Int, updatedAction: RuleAction) {
+        clearErrors()
         _uiState.update {
             val updatedActionsList = it.actions.mapIndexed { idx, action ->
                 if (idx == index) updatedAction else action
@@ -173,6 +182,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onActionPromptChange(index: Int, prompt: String) {
+        clearErrors()
         _uiState.update {
             val updatedActionsList = it.actions.mapIndexed { idx, action ->
                 if (idx == index && action is TagExifAction)
@@ -184,6 +194,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onActionValueChange(index: Int, value: String) {
+        clearErrors()
         _uiState.update {
             val updatedActionsList = it.actions.mapIndexed { idx, action ->
                 if (idx == index) {
@@ -200,6 +211,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onDeleteAction(index: Int) {
+        clearErrors()
         _uiState.update {
             val updatedActionsList = it.actions.filterIndexed { idx, _ ->
                 idx != index
@@ -216,6 +228,7 @@ class EditRuleViewModel @Inject constructor (
     }
 
     fun onSelectFolder(index: Int, uri: Uri) {
+        clearErrors()
         _uiState.update {
             val updatedActionsList = it.actions.mapIndexed { idx, action ->
                 if (idx == index) {
@@ -261,5 +274,63 @@ class EditRuleViewModel @Inject constructor (
                 ruleRepo.deleteRule(ruleId)
             }
         }
+    }
+
+    fun clearErrors() {
+        _uiState.update { it.copy(error = null) }
+    }
+
+    fun validateRuleInput(): Boolean {
+        // Wipe existing errors
+        clearErrors()
+
+        val state = _uiState.value
+
+        // Check name is not empty
+        if (state.name.isEmpty()) {
+            _uiState.update { it.copy( error = ValidationError.NameBlank ) }
+            return false
+        }
+
+        // Check each condition
+        state.conditions.forEach { condition ->
+            when (condition) {
+                is FilenameCondition -> if (condition.operand.isEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ConditionInputBlank ) }
+                    return false
+                }
+                is FileSizeCondition -> if (condition.operand.isEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ConditionInputBlank ) }
+                    return false
+                }
+                is ImageCheckCondition -> if (condition.conditionPrompt.isEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ConditionInputBlank ) }
+                    return false
+                }
+            }
+        }
+
+        // Check each action
+        state.actions.forEach { action ->
+            when (action) {
+                is CopyAction -> if (action.targetFolder.isNullOrEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ActionFolderNull ) }
+                    return false
+                }
+                is MoveAction -> if (action.targetFolder.isNullOrEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ActionFolderNull ) }
+                    return false
+                }
+                is RenameAction -> if (action.value.isEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ActionInputBlank ) }
+                    return false
+                }
+                is TagExifAction -> if (action.prompt.isEmpty()) {
+                    _uiState.update { it.copy( error = ValidationError.ActionInputBlank ) }
+                    return false
+                }
+            }
+        }
+        return true
     }
 }

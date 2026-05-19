@@ -14,14 +14,14 @@
     <string name="add_condition_button">Condition</string>
     <string name="if_the_image">IF THE</string>
     <string name="arrow_down_description">Dropdown arrow</string>
-    <string name="content_description">content description</string>
-    <string name="text">text</string>
+    <string name="content_description">has a cat</string>
+    <string name="text">term</string>
     <string name="default_filesize_input">2</string>
     <string name="delete_button">Delete button</string>
     <string name="and_then">AND THEN</string>
     <string name="then">THEN</string>
     <string name="add_action_button">Action</string>
-    <string name="tag_description">tag description</string>
+    <string name="tag_description">the breed of cat</string>
     <string name="new_name">new name</string>
     <string name="select_folder">Select folder</string>
     <string name="select_folder_icon">Folder select icon</string>
@@ -45,4 +45,10 @@
     <string name="processing_interval_description">Determines how often images are processed according to the assigned rules. Interval times are approximate only.</string>
     <string name="process_images_now">Process images now</string>
     <string name="scan_folders_now">Scan folders now</string>
+    <string name="ai_prompt_icon">AI prompt icon</string>
+    <string name="error_name_empty">Your rule needs a name.</string>
+    <string name="error_action_folder_null">One of your actions requires a folder to be set.</string>
+    <string name="error_action_input_empty">One of your actions is missing input text.</string>
+    <string name="error_condition_input_empty">One of your conditions is missing an input.</string>
+    <string name="validationFailed">Invalid rule: see error message.</string>
 </resources>

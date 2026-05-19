@@ -2,6 +2,7 @@ package com.rorycd.bowerbird.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
@@ -9,7 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.rorycd.bowerbird.R
 import com.rorycd.bowerbird.rules.FileSizeCondition
 import com.rorycd.bowerbird.rules.FileSizeUnit
@@ -49,17 +52,24 @@ fun ConditionInput(
                 is FilenameCondition -> ConditionType.FILENAME.displayName
                 is FileSizeCondition -> ConditionType.FILE_SIZE.displayName
                 is ImageCheckCondition -> ConditionType.IMAGE_CHECK.displayName
-                else -> "Condition"
             },
             onSelectOption = { onSelectCondition(it) },
             optionToText = { it.displayName }
         )
 
         if (condition is ImageCheckCondition) {
+            Icon(
+                painter = painterResource(R.drawable.ai_icon),
+                contentDescription = stringResource(R.string.ai_prompt_icon),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f),
+                modifier = Modifier.padding(end = 4.dp)
+            )
             MinimalTextInput(
-                value = condition.condition,
+                value = condition.conditionPrompt,
                 hint = stringResource(R.string.content_description),
                 onValueChange = onPromptChange,
+                maxLines = 7,
+                charLimit = 200,
                 modifier = Modifier.weight(1f)
             )
         }

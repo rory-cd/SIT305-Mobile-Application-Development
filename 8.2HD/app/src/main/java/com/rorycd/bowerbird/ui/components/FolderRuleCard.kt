@@ -31,7 +31,7 @@ fun FolderRuleCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 14.dp)
         ) {
             // Rule name
             Text(

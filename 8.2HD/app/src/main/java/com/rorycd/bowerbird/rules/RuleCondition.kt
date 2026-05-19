@@ -30,7 +30,7 @@ sealed interface RuleCondition {
 
     @Serializable
     sealed interface SmartCondition : RuleCondition {
-        val condition: String
+        val conditionPrompt: String
     }
 }
 
@@ -119,6 +119,6 @@ data class FileSizeCondition(
 @Serializable
 @SerialName("image_check")
 data class ImageCheckCondition(
-    override val condition: String
+    override val conditionPrompt: String
 ) : RuleCondition.SmartCondition {
 }

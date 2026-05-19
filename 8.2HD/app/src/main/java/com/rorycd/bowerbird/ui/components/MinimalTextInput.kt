@@ -20,10 +20,13 @@ fun MinimalTextInput(
     hint: String,
     modifier: Modifier = Modifier,
     largeText: Boolean = false,
-    numbersOnly: Boolean = false
+    numbersOnly: Boolean = false,
+    maxLines: Int = 1,
+    charLimit: Int = 100
 ) {
     Box(modifier = modifier) {
         if (value.isEmpty()) {
+            // Hint
             Text(
                 text = hint,
                 style =
@@ -38,7 +41,8 @@ fun MinimalTextInput(
         BasicTextField(
             value = value,
             onValueChange = { newValue ->
-                if (!numbersOnly || (newValue.all { it.isDigit() })) {
+                val isValidInputType = !numbersOnly || (newValue.all { it.isDigit() })
+                if (isValidInputType && newValue.length < charLimit) {
                     onValueChange(newValue)
                 }
             },
@@ -50,7 +54,7 @@ fun MinimalTextInput(
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp)
                 else MaterialTheme.typography.bodyLarge,
-            maxLines = 1,
+            maxLines = maxLines,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             modifier = Modifier.fillMaxWidth()
         )

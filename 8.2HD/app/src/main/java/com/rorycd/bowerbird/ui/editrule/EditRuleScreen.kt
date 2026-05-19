@@ -1,5 +1,6 @@
 package com.rorycd.bowerbird.ui.editrule
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,6 +41,7 @@ import com.rorycd.bowerbird.ui.components.CheckboxWithLabel
 import com.rorycd.bowerbird.ui.components.ConditionBlock
 import com.rorycd.bowerbird.ui.components.ConditionType
 import com.rorycd.bowerbird.ui.components.MinimalTextInput
+import com.rorycd.bowerbird.ui.newrule.ValidationError
 
 /**
  * Screen for editing a rule
@@ -50,6 +55,9 @@ fun EditRuleScreen(
     // Collect state flow
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
+    val validationFailedMessage = stringResource(R.string.validationFailed)
 
     Column(
         modifier = Modifier.padding(16.dp)
@@ -163,8 +171,12 @@ fun EditRuleScreen(
             // Save rule
             Button(
                 onClick = {
-                    viewModel.updateRule()
-                    onSaveRule()
+                    if (viewModel.validateRuleInput()) {
+                        viewModel.updateRule()
+                        onSaveRule()
+                    } else {
+                        Toast.makeText(context, validationFailedMessage, Toast.LENGTH_SHORT).show()
+                    }
                 },
                 modifier = Modifier.padding(end = 14.dp)
             ) {
@@ -182,6 +194,29 @@ fun EditRuleScreen(
             ) {
                 Text(stringResource(R.string.delete_rule))
             }
+        }
+
+        // Error message
+        if (state.error != null) {
+
+            val errorMessage = when(state.error) {
+                ValidationError.ActionFolderNull -> stringResource(R.string.error_action_folder_null)
+                ValidationError.ActionInputBlank -> stringResource(R.string.error_action_input_empty)
+                ValidationError.ConditionInputBlank -> stringResource(R.string.error_condition_input_empty)
+                ValidationError.NameBlank -> stringResource(R.string.error_name_empty)
+                null -> ""
+            }
+
+            Text(
+                text = "Error: $errorMessage",
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.padding(vertical = 24.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 }

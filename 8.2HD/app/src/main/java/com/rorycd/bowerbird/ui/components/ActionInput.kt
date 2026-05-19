@@ -3,6 +3,7 @@ package com.rorycd.bowerbird.ui.components
 import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Icon
@@ -10,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.rorycd.bowerbird.R
 import com.rorycd.bowerbird.rules.CopyAction
@@ -58,10 +61,18 @@ fun ActionInput(
         )
 
         if (action is TagExifAction) {
+            Icon(
+                painter = painterResource(R.drawable.ai_icon),
+                contentDescription = stringResource(R.string.ai_prompt_icon),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.25f),
+                modifier = Modifier.padding(end = 4.dp)
+            )
             MinimalTextInput(
                 value = action.prompt,
                 hint = stringResource(R.string.tag_description),
                 onValueChange = onPromptChange,
+                maxLines = 7,
+                charLimit = 200,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -80,6 +91,7 @@ fun ActionInput(
             FolderSelector(
                 value = getFolderNameFromUri(action.targetFolder?.toUri()),
                 onSelect = onSelectFolder,
+                maxLines = 3,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -88,6 +100,7 @@ fun ActionInput(
             FolderSelector(
                 value = getFolderNameFromUri(action.targetFolder?.toUri()),
                 onSelect = onSelectFolder,
+                maxLines = 3,
                 modifier = Modifier.weight(1f)
             )
         }

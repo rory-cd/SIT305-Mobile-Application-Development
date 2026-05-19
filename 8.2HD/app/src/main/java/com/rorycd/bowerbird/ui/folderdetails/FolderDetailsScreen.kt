@@ -34,13 +34,12 @@ fun FolderDetailsScreen(
     val folderDetails by viewModel.folderDetails.collectAsStateWithLifecycle()
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
         item {
-            // Rule name
+            // Folder name
             Text(
                 text = getFolderNameFromUri(folderDetails?.folderUri?.toUri()),
                 style = MaterialTheme.typography.bodyLarge.copy(
@@ -68,7 +67,7 @@ fun FolderDetailsScreen(
                     text = stringResource(R.string.active_rules),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 14.dp, start = 3.dp)
+                    modifier = Modifier.padding(top = 14.dp)
                 )
             }
 
@@ -88,7 +87,7 @@ fun FolderDetailsScreen(
                     text = stringResource(R.string.inactive_rules),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 14.dp, start = 3.dp)
+                    modifier = Modifier.padding(top = if (active.isNotEmpty()) 26.dp else 14.dp)
                 )
             }
 

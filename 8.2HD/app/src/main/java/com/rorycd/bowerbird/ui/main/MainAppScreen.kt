@@ -1,14 +1,19 @@
 package com.rorycd.bowerbird.ui.main
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -87,7 +92,10 @@ fun MainAppScreen() {
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets.safeDrawing,
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding(),
         topBar = {
             TopAppBar(
                 title = {
@@ -122,12 +130,8 @@ fun MainAppScreen() {
                         onClick = {
                             if (!isSelected) {
                                 navController.navigate(navOption.destination) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
+                                    popUpTo(navController.graph.findStartDestination().id)
                                     launchSingleTop = true
-                                    // Restore state when re-selecting a previously selected tab
-                                    restoreState = true
                                 }
                             }
                         },
@@ -200,7 +204,7 @@ fun MainAppScreen() {
                         shape = CircleShape,
                         icon = {
                             Icon(
-                                Icons.Filled.Add,
+                                Icons.Filled.Edit,
                                 contentDescription = stringResource(R.string.new_rule)
                             )
                         },
@@ -221,6 +225,7 @@ fun getDestinationTitleRes(route: Any?): Int {
     return when (route) {
         null -> R.string.app_name
 
+        // Top nav titles
         is NavDestination -> when {
             route.hasRoute(RulesRoute::class) -> R.string.rules_destination_title
             route.hasRoute(NewRuleRoute::class) -> R.string.new_rule_destination_title
@@ -232,12 +237,9 @@ fun getDestinationTitleRes(route: Any?): Int {
             else -> R.string.app_name
         }
 
+        // Bottom nav titles
         is RulesRoute -> R.string.rules_destination_title
-        is NewRuleRoute -> R.string.new_rule_destination_title
-        is EditRuleRoute -> R.string.edit_rule_destination_title
-        is RuleSelectRoute -> R.string.select_rule_destination_title
         is FoldersRoute -> R.string.folders_destination_title
-        is FolderDetailsRoute -> R.string.folder_details_destination_title
         is SettingsRoute -> R.string.settings_destination_title
 
         else -> R.string.app_name

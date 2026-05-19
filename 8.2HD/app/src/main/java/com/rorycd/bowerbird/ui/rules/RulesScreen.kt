@@ -27,7 +27,6 @@ fun RulesScreen(
     val rules by viewModel.rules.collectAsStateWithLifecycle()
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
         .fillMaxSize()
         .padding(horizontal = 16.dp)

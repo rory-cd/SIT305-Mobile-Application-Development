@@ -28,7 +28,6 @@ fun FoldersScreen(
     val folders by viewModel.folders.collectAsStateWithLifecycle()
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
